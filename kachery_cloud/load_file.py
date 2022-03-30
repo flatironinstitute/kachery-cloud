@@ -22,7 +22,8 @@ def load_file(uri: str) -> Union[str, None]:
         raise Exception(f'Temporary file exists.')
 
     # url = f'https://{cid}.ipfs.dweb.link'
-    url = f'https://cloudflare-ipfs.com/ipfs/{cid}'
+    # url = f'https://cloudflare-ipfs.com/ipfs/{cid}'
+    url = f'https://kachery-cloud.mypinata.cloud/ipfs/{cid}'
     
     if not os.path.exists(parent_dir):
         os.makedirs(parent_dir)
