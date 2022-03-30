@@ -12,7 +12,8 @@ def load_file(uri: str) -> Union[str, None]:
     cid = a[2]
 
     kachery_cloud_dir = get_kachery_cloud_dir()
-    parent_dir = f'{kachery_cloud_dir}/ipfs/{cid[0]}{cid[1]}/{cid[2]}{cid[3]}/{cid[4]}{cid[5]}'
+    e = cid[-6:]
+    parent_dir = f'{kachery_cloud_dir}/ipfs/{e[0]}{e[1]}/{e[2]}{e[3]}/{e[4]}{e[5]}'
     filename = f'{parent_dir}/{cid}'
     if os.path.exists(filename):
         return filename
@@ -23,7 +24,7 @@ def load_file(uri: str) -> Union[str, None]:
 
     # url = f'https://{cid}.ipfs.dweb.link'
     # url = f'https://cloudflare-ipfs.com/ipfs/{cid}'
-    url = f'https://kachery-cloud.mypinata.cloud/ipfs/{cid}'
+    url = f'https://ipfs.filebase.io/ipfs/{cid}'
     
     if not os.path.exists(parent_dir):
         os.makedirs(parent_dir)

@@ -57,7 +57,7 @@ From command line
 ```bash
 kachery-cloud-load ipfs://bafkreiajr6u7obg3mpunezz2mwarr2sptwr3zaedia665vdayvw6mpn5ga
 # output:
-# /home/user/.kachery-cloud/ipfs/ba/fk/re/bafkreiajr6u7obg3mpunezz2mwarr2sptwr3zaedia665vdayvw6mpn5ga
+# /home/<user>/.kachery-cloud/ipfs/mp/n5/ga/bafkreiajr6u7obg3mpunezz2mwarr2sptwr3zaedia665vdayvw6mpn5ga
 ```
 
 From Python

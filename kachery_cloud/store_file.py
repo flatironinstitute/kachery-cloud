@@ -1,5 +1,6 @@
 import os
 import requests
+from datetime import datetime
 
 from .get_client_id import get_client_id
 from ._client_keys import _sign_message_as_client
@@ -23,17 +24,59 @@ def store_file(filename: str):
         return f'ipfs://{cid}'
     elif _kachery_cloud_api_url:
         client_id = get_client_id()
-        signature = _sign_message_as_client({'type': 'uploadToIpfs'})
-        with open(filename, 'rb') as f:
-            url = f'{_kachery_cloud_api_url}/api/uploadToIpfs'
-            headers = {
-                'kachery-cloud-client-id': client_id,
-                'kachery-cloud-client-signature': signature
-            }
-            resp = requests.post(url, data=f, headers=headers)
+        url = f'{_kachery_cloud_api_url}/api/kacherycloud'
+        timestamp = int(datetime.timestamp(datetime.now()) * 1000)
+        size = os.path.getsize(filename)
+        payload = {
+            'type': 'initiateIpfsUpload',
+            'timestamp': timestamp,
+            'size': size
+        }
+        req = {
+            'payload': payload,
+            'fromClientId': client_id,
+            'signature': _sign_message_as_client(payload)
+        }
+        resp = requests.post(url, json=req)
         if resp.status_code != 200:
-            raise Exception(f'Error storing file ({resp.status_code}) {resp.reason}: {resp.text}')
-        cid = resp.json()['cid']
+            raise Exception(f'Error initiating ipfs upload ({resp.status_code}) {resp.reason}: {resp.text}')
+        response = resp.json()
+        signed_upload_url = response['signedUploadUrl']
+        object_key = response['objectKey']
+        with open(filename, 'rb') as f:
+            resp_upload = requests.put(signed_upload_url, data=f)
+            if resp_upload.status_code != 200:
+                raise Exception(f'Error uploading file to bucket ({resp_upload.status_code}) {resp_upload.reason}: {resp_upload.text}')
+            print('---', signed_upload_url)
+            print('---- resp_upload', resp_upload.status_code)
+        payload2 = {
+            'type': 'finalizeIpfsUpload',
+            'timestamp': timestamp,
+            'objectKey': object_key
+        }
+        req2 = {
+            'payload': payload2,
+            'fromClientId': client_id,
+            'signature': _sign_message_as_client(payload2)
+        }
+        resp2 = requests.post(url, json=req2)
+        if resp2.status_code != 200:
+            raise Exception(f'Error initiating ipfs upload ({resp2.status_code}) {resp2.reason}: {resp2.text}')
+        response2 = resp2.json()
+        cid = response2['cid']
         return f'ipfs://{cid}'
+
+        # signature = _sign_message_as_client({'type': 'uploadToIpfs'})
+        # with open(filename, 'rb') as f:
+        #     url = f'{_kachery_cloud_api_url}/api/uploadToIpfs'
+        #     headers = {
+        #         'kachery-cloud-client-id': client_id,
+        #         'kachery-cloud-client-signature': signature
+        #     }
+        #     resp = requests.post(url, data=f, headers=headers)
+        # if resp.status_code != 200:
+        #     raise Exception(f'Error storing file ({resp.status_code}) {resp.reason}: {resp.text}')
+        # cid = resp.json()['cid']
+        # return f'ipfs://{cid}'
     else:
         raise Exception('Unexpected: no method found for uploading file')
