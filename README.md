@@ -8,6 +8,12 @@ Note: This package is intended for collaborative sharing of data for scientific 
 
 ## Installation and setup
 
+It is best to use a conda environment or a venv.
+
+Requirements
+* Python >= 3.8
+* numpy
+
 ```bash
 pip install --upgrade git+https://github.com/scratchrealm/kachery-cloud
 ```

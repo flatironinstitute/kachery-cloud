@@ -52,7 +52,7 @@ def init():
         print('')
         print(url)
         print('')
-        print('Click the above link to register this kachery cloud client. Then press [Enter] to continue.')
+        print('Click the above link to register this kachery cloud client. After pressing the "Yes, proceed" button on the website, press [Enter] in this terminal to continue.')
         print('')
         input()
         print('Checking...')

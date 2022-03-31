@@ -41,7 +41,7 @@ def load_file(uri: str) -> Union[str, None]:
     }
     resp = requests.post(url, json=req)
     if resp.status_code != 200:
-        raise Exception(f'Error initiating ipfs upload ({resp.status_code}) {resp.reason}: {resp.text}')
+        raise Exception(f'Error finding ipfs file ({resp.status_code}) {resp.reason}: {resp.text}')
     response = resp.json()
     found = response['found']
     if found:

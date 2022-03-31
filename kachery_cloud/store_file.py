@@ -59,7 +59,7 @@ def store_file(filename: str):
         }
         resp2 = requests.post(url, json=req2)
         if resp2.status_code != 200:
-            raise Exception(f'Error initiating ipfs upload ({resp2.status_code}) {resp2.reason}: {resp2.text}')
+            raise Exception(f'Error finalizing ipfs upload ({resp2.status_code}) {resp2.reason}: {resp2.text}')
         response2 = resp2.json()
         cid = response2['cid']
         return f'ipfs://{cid}'
