@@ -1,5 +1,7 @@
 # kachery-cloud
 
+> :warning: This project is in alpha stage of development.
+
 Frictionless cloud sharing of scientific research data using Python.
 
 Note: This package is intended for the public sharing of scientific data for collaborative research. It should not be used for other purposes.
@@ -74,6 +76,6 @@ z = kc.load_pkl(uri)
 
 ## Limitations
 
-Uploads are subject to the limits of web3.storage (for example, no more than 30 uploads per 10 seconds).
+Uploads are subject to some limits which will change over time during development. Right now, uploads are limited to 50 MiB.
 
-If you are using our service for uploading to IPFS (not your own web3.storage token), then uploads are limited to 50 MiB and are not guaranteed to be available forever. Also, the upload rate may be throttled.
+During development, files stored are not guaranteed to be available forever. You may want to pin the files to your own IPFS node if you want them to stay available long term.

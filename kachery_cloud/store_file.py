@@ -47,8 +47,6 @@ def store_file(filename: str):
             resp_upload = requests.put(signed_upload_url, data=f)
             if resp_upload.status_code != 200:
                 raise Exception(f'Error uploading file to bucket ({resp_upload.status_code}) {resp_upload.reason}: {resp_upload.text}')
-            print('---', signed_upload_url)
-            print('---- resp_upload', resp_upload.status_code)
         payload2 = {
             'type': 'finalizeIpfsUpload',
             'timestamp': timestamp,
