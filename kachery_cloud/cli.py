@@ -22,6 +22,12 @@ def load_file(uri: str):
     fname = kc.load_file(uri)
     print(fname)
 
+@click.command(help="Load file from IPFS and write to stdout")
+@click.argument('uri')
+def cat_file(uri: str):
+    kc.cat_file(uri)
+
 cli.add_command(init)
 cli.add_command(store_file)
 cli.add_command(load_file)
+cli.add_command(cat_file)
