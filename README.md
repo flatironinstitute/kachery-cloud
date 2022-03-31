@@ -4,7 +4,7 @@
 
 Share scientific research data on the distributed web using Python.
 
-Note: This package is intended for collaborative sharing of scientific data for scientific research. It should not be used for other purposes.
+Note: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
 
 ## Installation and setup
 
@@ -17,11 +17,13 @@ To complete the setup, open a terminal and run
 ```bash
 # One-time initialization
 kachery-cloud-init
+
+# Outputs a link to click on
 ```
 
-Click on the link which will bring you to a page where you can log in with Google and associate this client with your Google user. This initialization only needs to be performed once on your computer. The client information will be stored in `~/.kachery-cloud`.
+Clicking the link will bring you to a page where you associate this account with a Google user ID for the purpose of managing projects and tracking usage. This initialization only needs to be performed once on your computer. The client information will be stored in `~/.kachery-cloud`.
 
-If you are using a colab or jupyter notebook and do not have easy access to a terminal, you can also run this step in the notebook:
+If you are using a colab or jupyter notebook and do not have easy access to a terminal, you can also run this one-time step in the notebook:
 
 ```python
 # One-time initialization (alternate method)
