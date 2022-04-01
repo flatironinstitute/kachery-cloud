@@ -1,3 +1,5 @@
+<img src="https://user-images.githubusercontent.com/3679296/161265718-1127dd6a-a7c4-419b-b9e0-915740c418bc.svg" width="400px" />
+
 # kachery-cloud
 
 > :warning: This project is in alpha stage of development.
@@ -5,6 +7,8 @@
 Share scientific research data on the distributed web using Python.
 
 Note: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
+
+See also [figurl](https://github.com/magland/figurl)
 
 ## Installation and setup
 
@@ -116,3 +120,11 @@ How is this free? For now we use extremely inexpensive storage on the distribute
 If you plan to make heavy use of kachery cloud, or if you want greater control of your uploaded data, then you should create your own [Filebase](https://filebase.com/) account and configure your client to store data on your own bucket. See their [pricing model](https://docs.filebase.com/billing-and-pricing/pricing-model).
 
 If you plan to use our freely-available storage space, you should be aware that uploaded files are not guaranteed to be available forever. You may want to pin the files to your own IPFS nodes (or use your own Filebase account) if you want them to stay available in the long term.
+
+## Authors
+
+Jeremy Magland and Jeff Soules, [Center for Computational Mathematics, Flatiron Institute](https://www.simonsfoundation.org/flatiron/center-for-computational-mathematics)
+
+## License
+
+Apache 2.0
