@@ -63,18 +63,5 @@ def store_file(filename: str):
         response2 = resp2.json()
         cid = response2['cid']
         return f'ipfs://{cid}'
-
-        # signature = _sign_message_as_client({'type': 'uploadToIpfs'})
-        # with open(filename, 'rb') as f:
-        #     url = f'{_kachery_cloud_api_url}/api/uploadToIpfs'
-        #     headers = {
-        #         'kachery-cloud-client-id': client_id,
-        #         'kachery-cloud-client-signature': signature
-        #     }
-        #     resp = requests.post(url, data=f, headers=headers)
-        # if resp.status_code != 200:
-        #     raise Exception(f'Error storing file ({resp.status_code}) {resp.reason}: {resp.text}')
-        # cid = resp.json()['cid']
-        # return f'ipfs://{cid}'
     else:
         raise Exception('Unexpected: no method found for uploading file')
