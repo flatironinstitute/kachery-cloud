@@ -1,7 +1,5 @@
 import os
 import base64
-from typing import Union, Any
-import shutil
 import numpy as np
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 
