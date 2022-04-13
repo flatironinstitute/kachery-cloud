@@ -20,13 +20,13 @@ class TaskClient:
     def request_task(self, *, task_type: str, task_name: str, task_input: dict):
         client_id = get_client_id()
 
-        req_sub = {
+        payload_sub = {
             'type': 'subscribeToPubsubChannel',
             'channelName': 'provideTasks'
         }
         if self._project_id is not None:
-            req_sub['projectId'] = self._project_id
-        response_sub = _kacherycloud_request(req_sub)
+            payload_sub['projectId'] = self._project_id
+        response_sub = _kacherycloud_request(payload_sub)
         subscribe_key = response_sub['subscribeKey']
         subscribe_token = response_sub['token']
         pubsub_channel_name = response_sub['pubsubChannelName']
@@ -66,7 +66,7 @@ class TaskClient:
             }))
         else:
             task_job_id = _sha1_of_string(_random_string(100))
-        req = {
+        payload = {
             'type': 'publishToPubsubChannel',
             'channelName': 'requestTasks',
             'message': {
@@ -78,8 +78,8 @@ class TaskClient:
             }
         }
         if self._project_id is not None:
-            req['projectId'] = self._project_id
-        _kacherycloud_request(req)
+            payload['projectId'] = self._project_id
+        _kacherycloud_request(payload)
         
         announced_started = False
         try:
@@ -98,13 +98,13 @@ class TaskClient:
 
     def listen_for_task_requests(self, callback: TaskRequestCallback):
         def subscribe_to_request_tasks_channel():
-            req = {
+            payload = {
                 'type': 'subscribeToPubsubChannel',
                 'channelName': 'requestTasks'
             }
             if self._project_id is not None:
-                req['projectId'] = self._project_id
-            return _kacherycloud_request(req)
+                payload['projectId'] = self._project_id
+            return _kacherycloud_request(payload)
         def renew_access_token():
             r = subscribe_to_request_tasks_channel()
             return r['token']

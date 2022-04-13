@@ -5,3 +5,5 @@ from .core import store_text, store_json, store_npy, store_pkl
 from .core import load_text, load_json, load_npy, load_pkl
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from .init import init
+from .feeds.create_feed import create_feed
+from .feeds.load_feed import load_feed

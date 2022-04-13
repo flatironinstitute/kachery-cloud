@@ -18,7 +18,7 @@ def _run_task(*, task_type: str, task_name: str, task_job_id: str, task_function
     return True
 
 def _set_task_status(*, task_name: str, task_job_id: str, status: str, error: Union[str, None]=None, project_id: Union[str, None]):
-    req = {
+    payload = {
         'type': 'publishToPubsubChannel',
         'channelName': 'provideTasks',
         'message': {
@@ -29,7 +29,7 @@ def _set_task_status(*, task_name: str, task_job_id: str, status: str, error: Un
         }
     }
     if error is not None:
-        req['message']['errorMessage'] = error
+        payload['message']['errorMessage'] = error
     if project_id is not None:
-        req['projectId'] = project_id
-    _kacherycloud_request(req)
+        payload['projectId'] = project_id
+    _kacherycloud_request(payload)
