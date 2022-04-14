@@ -23,6 +23,9 @@ class Feed:
         }
         resp = _kacherycloud_request(payload)
     @property
+    def uri(self):
+        return f'kachery-feed://{self._feed_id}'
+    @property
     def feed_id(self):
         return self._feed_id
     @property
