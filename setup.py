@@ -14,10 +14,8 @@ setup(
         'requests',
         'click',
         'simplejson',
-        'cryptography'
-        # Let's not require the following by default - require user to install them manually if needed
-        # pubnub
-        # dask
-        # dask[distributed]
+        'cryptography',
+        'pubnub',
+        'dask[distributed]'
     ]
 )

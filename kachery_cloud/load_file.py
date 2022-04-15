@@ -6,9 +6,9 @@ from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from ._kacherycloud_request import _kacherycloud_request
 
 
-def load_file(uri: str) -> Union[str, None]:
+def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
     assert uri.startswith('ipfs://'), f'Invalid or unsupported URI: {uri}'
-    a = uri.split('/')
+    a = uri.split('?')[0].split('/')
     assert len(a) >= 3, f'Invalid or unsupported URI: {uri}'
     cid = a[2]
 
@@ -32,10 +32,13 @@ def load_file(uri: str) -> Union[str, None]:
     if found:
         url = response['url']
     else:
+        raise Exception(f'File not found: {uri}')
         # url = f'https://{cid}.ipfs.dweb.link'
-        url = f'https://cloudflare-ipfs.com/ipfs/{cid}'
+        # url = f'https://cloudflare-ipfs.com/ipfs/{cid}'
         # url = f'https://ipfs.filebase.io/ipfs/{cid}'
-    
+
+    if verbose:
+        print(f'Loading file from kachery cloud: {uri}')    
     if not os.path.exists(parent_dir):
         os.makedirs(parent_dir)
     tmp_filename = f'{filename}.tmp.{_random_string(8)}'

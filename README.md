@@ -4,9 +4,9 @@
 
 > :warning: This project is in alpha stage of development.
 
-Share scientific research data on the distributed web using Python.
+> **IMPORTANT**: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
 
-Note: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
+Share scientific research data on the distributed web using Python.
 
 See also [figurl](https://github.com/magland/figurl)
 
@@ -19,7 +19,9 @@ Requirements
 * numpy
 
 ```bash
-pip install --upgrade git+https://github.com/scratchrealm/kachery-cloud
+pip install kachery-cloud
+
+# or for the development version, clone this repo and install via "pip install -e ."
 ```
 
 To complete the setup, open a terminal and run 
@@ -28,7 +30,7 @@ To complete the setup, open a terminal and run
 # One-time initialization
 kachery-cloud-init
 
-# Outputs a link to click on
+# Follow the instructions to associate your computer with your Google user on the kachery-cloud network
 ```
 
 Clicking the link will bring you to a page where you associate this account with a Google user ID for the purpose of managing projects and tracking usage. This initialization only needs to be performed once on your computer. The client information will be stored in `~/.kachery-cloud`.
@@ -39,6 +41,8 @@ If you are using a colab or jupyter notebook and do not have easy access to a te
 # One-time initialization (alternate method)
 import kachery_cloud as kcl
 kcl.init()
+
+# Follow the instructions to associate the client with your Google user on the kachery-cloud network
 ```
 
 ## Storing data
@@ -113,13 +117,15 @@ z = kcl.load_pkl("ipfs://bafkreihdk3qrmf4665bn7m72t2niah3lujblbcnlevly5l5mequnft
 
 All uploaded data is publicly available on [IPFS](https://ipfs.io/), although a person needs to know the URI in order to download it.
 
-Uploads are subject to some limits which will change over time during development. Right now, individual uploads are limited to 50 MiB.
+Uploads are subject to some limits which will change over time during development. Right now, individual uploads are limited to 5 GiB.
 
 How is this free? For now we use extremely inexpensive storage on the distributed web using [Filebase](https://filebase.com/). This service stores data on the [sia](https://sia.tech/) decentralized storage network and pins it to [IPFS](https://ipfs.io/).
 
 If you plan to make heavy use of kachery cloud, or if you want greater control of your uploaded data, then you should create your own [Filebase](https://filebase.com/) account and configure your client to store data on your own bucket. See their [pricing model](https://docs.filebase.com/billing-and-pricing/pricing-model).
 
 If you plan to use our freely-available storage space, you should be aware that uploaded files are not guaranteed to be available forever. You may want to pin the files to your own IPFS nodes (or use your own Filebase account) if you want them to stay available in the long term.
+
+This project is still in the alpha stage of development and we do not guarantee that your data will be available forever.
 
 ## Authors
 
