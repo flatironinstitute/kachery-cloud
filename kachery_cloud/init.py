@@ -48,11 +48,18 @@ def init():
             raise Exception('Failed to initialize this kachery client')
         print(f'Client initialized successfully.')
     else:
+        client_id = get_client_id()
         print('This client has already been registered.')
+        print('Click the following link to configure the client:')
+        print('')
+        url = f'{_kachery_cloud_api_url}/client/{client_id}'
+        print(url)
+        print('')
     client = client_info['client']
     label = client['label']
     default_project_id = client.get('defaultProjectId', None)
     client_owner = client['ownerId']
+    print(f'Client ID: {client_id}')
     print(f'Label: {label}')
     print(f'Owner: {client_owner}')
     print(f'Default project ID: {default_project_id}')
