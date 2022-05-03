@@ -18,6 +18,7 @@ def _run_task(*, task_type: str, task_name: str, task_job_id: str, task_function
     return True
 
 def _set_task_status(*, task_name: str, task_job_id: str, status: str, error: Union[str, None]=None, project_id: Union[str, None]):
+    print(f'Task {status}: {task_name}')
     payload = {
         'type': 'publishToPubsubChannel',
         'channelName': 'provideTasks',

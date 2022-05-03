@@ -5,6 +5,7 @@ from kachery_cloud.TaskBackend.PubsubListener import PubsubListener
 from kachery_cloud.load_file import _random_string
 from .._kacherycloud_request import _kacherycloud_request
 from ..get_client_id import get_client_id
+from .._client_keys import _deterministic_json_dumps
 
 
 class Feed:
@@ -15,11 +16,13 @@ class Feed:
         self._pubsub_listener: Union[PubsubListener, None] = None
         self._project_id = project_id
         self._messages_appended_callbacks = {}
+    def append_message(self, message: dict):
+        self.append_messages([message])
     def append_messages(self, messages: List[dict]):
         payload = {
             'type': 'appendFeedMessages',
             'feedId': self._feed_id,
-            'messages': messages
+            'messagesJson': [_deterministic_json_dumps(x) for x in messages]
         }
         resp = _kacherycloud_request(payload)
     @property
@@ -31,7 +34,9 @@ class Feed:
     @property
     def current_message_number(self):
         return self._current_message_number
-    def get_next_messages(self, *, timeout_sec: float=0):
+    def set_position(self, position: int):
+        self._current_message_number = position
+    def get_next_messages(self, *, timeout_sec: float=0) -> List[dict]:
         payload = {
             'type': 'getFeedMessages',
             'feedId': self._feed_id,
@@ -56,7 +61,11 @@ class Feed:
         project_id = response['projectId']
         return Feed(feed_id=feed_id, project_id=project_id)
     @staticmethod
-    def load(feed_id: str):
+    def load(feed_id_or_uri: str):
+        if feed_id_or_uri.startswith('kachery-feed://'):
+            feed_id = feed_id_or_uri.split('/')[2]
+        else:
+            feed_id = feed_id_or_uri
         payload = {
             'type': 'getFeedInfo',
             'feedId': feed_id

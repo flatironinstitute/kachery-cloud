@@ -1,10 +1,11 @@
 import os
 import requests
+from typing import Union
 
 from ._kachery_cloud_api_url import _kachery_cloud_api_url
 from ._kacherycloud_request import _kacherycloud_request
 
-def store_file(filename: str):
+def store_file(filename: str, *, label: Union[str, None]=None):
     # web3_storage_token = os.environ.get('HASHIO_WEB3_STORAGE_TOKEN', None)
     web3_storage_token = None
     # if not web3_storage_token and not hashio_api_url:
@@ -19,7 +20,7 @@ def store_file(filename: str):
         if resp.status_code != 200:
             raise Exception(f'Error storing file ({resp.status_code}) {resp.reason}: {resp.text}')
         cid = resp.json()['cid']
-        return f'ipfs://{cid}'
+        uri = f'ipfs://{cid}'
     elif _kachery_cloud_api_url:
         size = os.path.getsize(filename)
         payload = {
@@ -39,6 +40,9 @@ def store_file(filename: str):
         }
         response2 = _kacherycloud_request(payload2)
         cid = response2['cid']
-        return f'ipfs://{cid}'
+        uri = f'ipfs://{cid}'
     else:
         raise Exception('Unexpected: no method found for uploading file')
+    if label is not None:
+        uri = f'{uri}?label={label}'
+    return uri
