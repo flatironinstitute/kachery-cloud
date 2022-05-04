@@ -53,6 +53,23 @@ kcl.init()
 * [Feeds (append-only logs)](doc/feeds.md)
 * [Tasks](doc/tasks.md)
 
+## Environment
+
+You can use environment variables to control the storage/configuration directory used by kachery-cloud and the project ID used for storing data in the cloud.
+
+```bash
+# Set the storage/configuration directory used by kachery-cloud
+# If unset, $HOME/.kachery-cloud will be used
+# The client ID will be determined by this directory
+# You can share the same kachery-cloud directory between multiple users,
+# but they must all have read/write privileges
+export KACHERY_CLOUD_DIR="..."
+
+# Set the project ID for storing data in the cloud
+# If unset, the default project associated with the client will be used
+# The default project can be configured at https://cloud.kacheryhub.org
+export KACHERY_CLOUD_PROJECT_ID="..."
+```
 
 ## Notes
 

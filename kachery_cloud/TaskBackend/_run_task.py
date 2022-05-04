@@ -1,5 +1,7 @@
 from os import stat
 from typing import Any, Callable, Union
+
+from ..get_project_id import get_project_id
 from .._kacherycloud_request import _kacherycloud_request
 from .upload_task_result import upload_task_result
 from .._serialize import _serialize
@@ -33,4 +35,6 @@ def _set_task_status(*, task_name: str, task_job_id: str, status: str, error: Un
         payload['message']['errorMessage'] = error
     if project_id is not None:
         payload['projectId'] = project_id
+    else:
+        payload['projectId'] = get_project_id()
     _kacherycloud_request(payload)

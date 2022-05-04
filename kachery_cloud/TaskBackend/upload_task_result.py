@@ -3,9 +3,9 @@ import requests
 import simplejson
 import time
 
+from ..get_project_id import get_project_id
 from .._serialize import _serialize, _deserialize
 from .._json_stringify_deterministic import _json_stringify_deterministic
-from .._sha1_of_string import _sha1_of_string
 from .._get_project_bucket_base_url import _get_project_bucket_base_url
 from .._kacherycloud_request import _kacherycloud_request
 
@@ -22,6 +22,8 @@ def upload_task_result(*, task_name: str, task_job_id: dict, task_result: dict, 
     }
     if project_id is not None:
         payload['projectId'] = project_id
+    else:
+        payload['projectId'] = get_project_id()
     response = _kacherycloud_request(payload)
     signed_upload_url = response['signedUploadUrl']
     resp_upload = requests.put(signed_upload_url, data=task_result_text)
@@ -35,6 +37,8 @@ def upload_task_result(*, task_name: str, task_job_id: dict, task_result: dict, 
     }
     if project_id is not None:
         payload2['projectId'] = project_id
+    else:
+        payload2['projectId'] = get_project_id()
     response2 = _kacherycloud_request(payload2)
 
 def download_task_result(*, task_name: str, task_job_id: dict, project_id: str):

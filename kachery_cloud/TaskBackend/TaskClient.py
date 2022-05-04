@@ -2,6 +2,7 @@ from typing import Any, Union, Protocol
 import random
 import time
 
+from ..get_project_id import get_project_id
 from .upload_task_result import upload_task_result, download_task_result
 from .PubsubListener import PubsubListener
 from .._kacherycloud_request import _kacherycloud_request
@@ -26,6 +27,8 @@ class TaskClient:
         }
         if self._project_id is not None:
             payload_sub['projectId'] = self._project_id
+        else:
+            payload_sub['projectId'] = get_project_id()
         response_sub = _kacherycloud_request(payload_sub)
         subscribe_key = response_sub['subscribeKey']
         subscribe_token = response_sub['token']
@@ -79,6 +82,8 @@ class TaskClient:
         }
         if self._project_id is not None:
             payload['projectId'] = self._project_id
+        else:
+            payload['projectId'] = get_project_id()
         _kacherycloud_request(payload)
         
         announced_started = False
@@ -104,6 +109,8 @@ class TaskClient:
             }
             if self._project_id is not None:
                 payload['projectId'] = self._project_id
+            else:
+                payload['projectId'] = get_project_id()
             return _kacherycloud_request(payload)
         def renew_access_token():
             while True:

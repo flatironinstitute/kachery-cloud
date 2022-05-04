@@ -1,8 +1,9 @@
 import time
 from typing import List, Union
 
-from kachery_cloud.TaskBackend.PubsubListener import PubsubListener
-from kachery_cloud.load_file import _random_string
+from ..TaskBackend.PubsubListener import PubsubListener
+from ..get_project_id import get_project_id
+from ..load_file import _random_string
 from .._kacherycloud_request import _kacherycloud_request
 from ..get_client_id import get_client_id
 from .._client_keys import _deterministic_json_dumps
@@ -56,6 +57,8 @@ class Feed:
         }
         if project_id is not None:
             payload['projectId'] = project_id
+        else:
+            payload['projectId'] = get_project_id()
         response = _kacherycloud_request(payload)
         feed_id = response['feedId']
         project_id = response['projectId']

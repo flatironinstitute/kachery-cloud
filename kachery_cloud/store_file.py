@@ -5,6 +5,7 @@ from urllib.parse import quote
 
 from ._kachery_cloud_api_url import _kachery_cloud_api_url
 from ._kacherycloud_request import _kacherycloud_request
+from .get_project_id import get_project_id
 
 def store_file(filename: str, *, label: Union[str, None]=None):
     # web3_storage_token = os.environ.get('HASHIO_WEB3_STORAGE_TOKEN', None)
@@ -26,7 +27,8 @@ def store_file(filename: str, *, label: Union[str, None]=None):
         size = os.path.getsize(filename)
         payload = {
             'type': 'initiateIpfsUpload',
-            'size': size
+            'size': size,
+            'projectId': get_project_id()
         }
         response = _kacherycloud_request(payload)
         signed_upload_url = response['signedUploadUrl']
@@ -37,7 +39,8 @@ def store_file(filename: str, *, label: Union[str, None]=None):
                 raise Exception(f'Error uploading file to bucket ({resp_upload.status_code}) {resp_upload.reason}: {resp_upload.text}')
         payload2 = {
             'type': 'finalizeIpfsUpload',
-            'objectKey': object_key
+            'objectKey': object_key,
+            'projectId': get_project_id()
         }
         response2 = _kacherycloud_request(payload2)
         cid = response2['cid']
