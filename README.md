@@ -56,6 +56,7 @@ kcl.init()
 
 ## Notes
 
+This project is still in the alpha stage of development and we do not guarantee that your data will be available forever.
 
 
 ## Authors
