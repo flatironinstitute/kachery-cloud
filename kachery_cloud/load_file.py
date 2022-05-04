@@ -7,6 +7,13 @@ from ._kacherycloud_request import _kacherycloud_request
 
 
 def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
+    if uri.startswith('/'):
+        if os.path.exists(uri):
+            return uri
+        else:
+            raise Exception(f'File does not exist: {uri}')
+    if uri.startswith('sha1://'):
+        return load_file_local(uri)
     assert uri.startswith('ipfs://'), f'Invalid or unsupported URI: {uri}'
     a = uri.split('?')[0].split('/')
     assert len(a) >= 3, f'Invalid or unsupported URI: {uri}'
@@ -53,6 +60,22 @@ def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
         if not os.path.exists(filename): # maybe some other process beat us to it
             raise Exception(f'Unexpected problem moving file {tmp_filename}')
     return filename
+
+def load_file_local(uri: str):
+    assert uri.startswith('sha1://'), f'Invalid local URI: {uri}'
+    a = uri.split('?')[0].split('/')
+    assert len(a) >= 3, f'Invalid or unsupported URI: {uri}'
+    sha1 = a[2]
+
+    kachery_cloud_dir = get_kachery_cloud_dir()
+
+    s = sha1
+    parent_dir = f'{kachery_cloud_dir}/sha1/{s[0]}{s[1]}/{s[2]}{s[3]}/{s[4]}{s[5]}'
+    filename = f'{parent_dir}/{sha1}'
+    if os.path.exists(filename):
+        return filename
+    else:
+        raise Exception(f'Unable to find local file: {uri}')
 
 def _random_string(num_chars: int) -> str:
     chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'

@@ -106,7 +106,14 @@ class TaskClient:
                 payload['projectId'] = self._project_id
             return _kacherycloud_request(payload)
         def renew_access_token():
-            r = subscribe_to_request_tasks_channel()
+            while True:
+                try:
+                    r = subscribe_to_request_tasks_channel()
+                    break
+                except Exception as e:
+                    print(e)
+                    print('Problem renewing access token. Will retry in 30 seconds...')
+                    time.sleep(30)
             return r['token']
         def handle_message(*, channel: str, message: dict):
             if message['type'] == 'requestTask':
