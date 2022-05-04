@@ -1,6 +1,7 @@
 import os
 import requests
 from typing import Union
+from urllib.parse import quote
 
 from ._kachery_cloud_api_url import _kachery_cloud_api_url
 from ._kacherycloud_request import _kacherycloud_request
@@ -44,5 +45,5 @@ def store_file(filename: str, *, label: Union[str, None]=None):
     else:
         raise Exception('Unexpected: no method found for uploading file')
     if label is not None:
-        uri = f'{uri}?label={label}'
+        uri = f'{uri}?label={quote(label)}'
     return uri

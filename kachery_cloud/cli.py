@@ -1,3 +1,4 @@
+import os
 import click
 import kachery_cloud as kc
 
@@ -13,7 +14,7 @@ def init():
 @click.command(help="Store file in IPFS")
 @click.argument('filename')
 def store_file(filename: str):
-    uri = kc.store_file(filename)
+    uri = kc.store_file(filename, label=os.path.basename(filename))
     print(uri)
 
 @click.command(help="Load file from IPFS")
@@ -27,7 +28,14 @@ def load_file(uri: str):
 def cat_file(uri: str):
     kc.cat_file(uri)
 
+@click.command(help="Store file in the local cache")
+@click.argument('filename')
+def store_file_local(filename: str):
+    uri = kc.store_file_local(filename, label=os.path.basename(filename))
+    print(uri)
+
 cli.add_command(init)
 cli.add_command(store_file)
 cli.add_command(load_file)
 cli.add_command(cat_file)
+cli.add_command(store_file_local)

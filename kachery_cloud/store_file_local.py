@@ -2,7 +2,8 @@ import os
 import hashlib
 import shutil
 import random
-from typing import Union, Optional
+from urllib.parse import quote
+from typing import Union
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 
 
@@ -10,7 +11,7 @@ def store_file_local(filename: str, *, label: Union[str, None]=None):
     sha1 = _compute_file_hash(filename, algorithm='sha1')
     uri = f'sha1://{sha1}'
     if label is not None:
-        uri = f'{uri}?label={label}'
+        uri = f'{uri}?label={quote(label)}'
     kachery_cloud_dir = get_kachery_cloud_dir()
     kachery_storage_parent_dir = f'{kachery_cloud_dir}/sha1/{sha1[0]}{sha1[1]}/{sha1[2]}{sha1[3]}/{sha1[4]}{sha1[5]}'
     kachery_storage_file_name = f'{kachery_storage_parent_dir}/{sha1}'

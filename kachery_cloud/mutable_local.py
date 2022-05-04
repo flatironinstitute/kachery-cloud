@@ -28,4 +28,4 @@ def get_mutable_local(key: str, default_value: Union[None, str]=None):
     if not os.path.exists(file_name):
         return default_value
     with open(file_name, 'r') as f:
-        return f.read(file_name)
+        return f.read()
