@@ -31,8 +31,9 @@ def cat_file(uri: str):
 
 @click.command(help="Store file in the local cache")
 @click.argument('filename')
-def store_file_local(filename: str):
-    uri = kc.store_file_local(filename, label=os.path.basename(filename))
+@click.option('--reference', is_flag=True)
+def store_file_local(filename: str, reference: bool):
+    uri = kc.store_file_local(filename, label=os.path.basename(filename), reference=reference)
     print(uri)
 
 cli.add_command(init)

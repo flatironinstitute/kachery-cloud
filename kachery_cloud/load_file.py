@@ -4,6 +4,7 @@ import requests
 import random
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from ._kacherycloud_request import _kacherycloud_request
+from .store_file_local import _compute_file_hash
 
 
 def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
@@ -58,6 +59,7 @@ def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
     return filename
 
 def load_file_local(uri: str):
+    query = _get_query_from_uri(uri)
     assert uri.startswith('sha1://'), f'Invalid local URI: {uri}'
     a = uri.split('?')[0].split('/')
     assert len(a) >= 3, f'Invalid or unsupported URI: {uri}'
@@ -70,8 +72,25 @@ def load_file_local(uri: str):
     filename = f'{parent_dir}/{sha1}'
     if os.path.exists(filename):
         return filename
-    else:
+    
+    if 'location' in query:
+        location = query['location']
+        if os.path.isabs(location) and os.path.exists(location):
+            sha1_2 = _compute_file_hash(location, 'sha1')
+            if sha1_2 == sha1:
+                return location
         raise Exception(f'Unable to find local file: {uri}')
+
+def _get_query_from_uri(uri: str):
+    a = uri.split('?')
+    ret = {}
+    if len(a) < 2: return ret
+    b = a[1].split('&')
+    for c in b:
+        d = c.split('=')
+        if len(d) == 2:
+            ret[d[0]] = d[1]
+    return ret
 
 def _random_string(num_chars: int) -> str:
     chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
