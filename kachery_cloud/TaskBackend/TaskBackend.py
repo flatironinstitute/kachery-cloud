@@ -3,6 +3,7 @@ import random
 from typing import Callable, Dict, Union
 from .TaskClient import TaskClient
 from ._run_task import _run_task
+from ..get_project_id import get_project_id
 
 try:
     from dask.distributed import Client, Future, LocalCluster
@@ -23,6 +24,12 @@ class TaskBackend:
             task_function=task_function
         )
     def run(self):
+        task_names = sorted(list(self._registered_task_handlers.keys()))
+        for task_name in task_names:
+            handler = self._registered_task_handlers[task_name]
+            print(f'Task handler: {task_name} ({handler._task_type})')
+        project_id = get_project_id()
+        print(f'Listening for tasks on project {project_id}')
         dask_cluster = LocalCluster(n_workers=self._num_workers, threads_per_worker=self._threads_per_worker)
         dask_client = Client(dask_cluster)
         task_client = TaskClient(project_id=self._project_id)

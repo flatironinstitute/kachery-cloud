@@ -26,10 +26,6 @@ def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
     if os.path.exists(filename):
         return filename
 
-    tmp_filename = filename + '.downloading'
-    if os.path.exists(tmp_filename):
-        raise Exception(f'Temporary file exists.')
-
     payload = {
         'type': 'findIpfsFile',
         'cid': cid

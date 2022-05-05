@@ -21,7 +21,7 @@ From Python
 import numpy as np
 import kachery_cloud as kcl
 
-uri1 = kcl.store_file('/path/to/filename.dat')
+uri1 = kcl.store_file('/path/to/filename.dat', cache_locally=True)
 
 uri2 = kcl.store_text('example text', label='example.txt')
 # uri2 = "ipfs://bafkreiaossxdnwtp6a4zfjl73w67i4ulmcoq277g5maz7kprxg23kqgygu?label=example.txt"

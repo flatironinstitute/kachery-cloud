@@ -6,30 +6,30 @@ from .store_file_local import store_file_local
 from .TemporaryDirectory import TemporaryDirectory
 from ._safe_pickle import _safe_pickle, _safe_unpickle
     
-def store_text(text: str, label: Union[str, None]=None) -> str:
+def store_text(text: str, *, label: Union[str, None]=None, cache_locally: bool=False) -> str:
     with TemporaryDirectory() as tmpdir:
         fname = f'{tmpdir}/file.dat'
         with open(fname, 'w') as f:
             f.write(text)
-        return store_file(fname, label=label)
+        return store_file(fname, label=label, cache_locally=cache_locally)
 
-def store_json(x: Any, *, separators=(',', ':'), indent=None, label: Union[str, None]=None) -> str:
+def store_json(x: Any, *, separators=(',', ':'), indent=None, label: Union[str, None]=None, cache_locally: bool=False) -> str:
     import simplejson
     text = simplejson.dumps(x, separators=separators, indent=indent, allow_nan=False)
-    return store_text(text, label=label)
+    return store_text(text, label=label, cache_locally=cache_locally)
 
-def store_npy(array: Any, label: Union[str, None]=None) -> str:
+def store_npy(array: Any, *, label: Union[str, None]=None, cache_locally: bool=False) -> str:
     import numpy as np
     with TemporaryDirectory() as tmpdir:
         fname = f'{tmpdir}/file.npy'
         np.save(fname, array, allow_pickle=False)
-        return store_file(fname, label=label)
+        return store_file(fname, label=label, cache_locally=cache_locally)
 
-def store_pkl(x: Any, label: Union[str, None]=None) -> str:
+def store_pkl(x: Any, *, label: Union[str, None]=None, cache_locally: bool=False) -> str:
     with TemporaryDirectory() as tmpdir:
         fname = f'{tmpdir}/file.npy'
         _safe_pickle(fname, x)
-        return store_file(fname, label=label)
+        return store_file(fname, label=label, cache_locally=cache_locally)
 
 def load_text(uri: str) -> Union[str, None]:
     local_path = load_file(uri)
