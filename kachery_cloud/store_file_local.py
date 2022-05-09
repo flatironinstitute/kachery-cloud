@@ -8,6 +8,7 @@ from typing import Union
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from .mutable_local import get_mutable_local, set_mutable_local
 from ._sha1_of_string import _sha1_of_string
+from ._fs_operations import _makedirs, _chmod_file
 
 
 def store_file_local(filename: str, *, label: Union[str, None]=None, reference: Union[str, None]=None):
@@ -26,11 +27,12 @@ def store_file_local(filename: str, *, label: Union[str, None]=None, reference: 
     kachery_storage_file_name = f'{kachery_storage_parent_dir}/{sha1}'
     if not os.path.exists(kachery_storage_file_name):
         if not os.path.exists(kachery_storage_parent_dir):
-            os.makedirs(kachery_storage_parent_dir)
+            _makedirs(kachery_storage_parent_dir)
         tmp_filename = f'{kachery_storage_file_name}.{_random_string(10)}'
         shutil.copyfile(filename, tmp_filename)
         try:
             os.rename(tmp_filename, kachery_storage_file_name)
+            _chmod_file(kachery_storage_file_name)
         except:
             # Maybe another client renamed the file
             if not os.path.exists(kachery_storage_file_name):

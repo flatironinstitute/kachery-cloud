@@ -10,6 +10,7 @@ from ._kachery_cloud_api_url import _kachery_cloud_api_url
 from ._kacherycloud_request import _kacherycloud_request
 from .get_project_id import get_project_id
 from .load_file import _random_string
+from ._fs_operations import _makedirs, _chmod_file
 
 def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bool=False):
     size = os.path.getsize(filename)
@@ -39,13 +40,14 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
         e = cid[-6:]
         cache_parent_dir = f'{kachery_cloud_dir}/ipfs/{e[0]}{e[1]}/{e[2]}{e[3]}/{e[4]}{e[5]}'
         if not os.path.exists(cache_parent_dir):
-            os.makedirs(cache_parent_dir)
+            _makedirs(cache_parent_dir)
         cache_filename = f'{cache_parent_dir}/{cid}'
         if not os.path.exists(cache_filename):
             tmp_filename = f'{cache_filename}.tmp.{_random_string(8)}'
             shutil.copyfile(filename, tmp_filename)
             try:
                 os.rename(tmp_filename, filename)
+                _chmod_file(filename)
             except:
                 if not os.path.exists(cache_filename):
                     raise Exception(f'Problem renaming file: {tmp_filename} {filename}')

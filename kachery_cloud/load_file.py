@@ -5,6 +5,7 @@ import random
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from ._kacherycloud_request import _kacherycloud_request
 from .store_file_local import _compute_file_hash
+from ._fs_operations import _makedirs, _chmod_file
 
 
 def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
@@ -44,7 +45,7 @@ def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
     if verbose:
         print(f'Loading file from kachery cloud: {uri}')    
     if not os.path.exists(parent_dir):
-        os.makedirs(parent_dir)
+        _makedirs(parent_dir)
     tmp_filename = f'{filename}.tmp.{_random_string(8)}'
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
@@ -53,6 +54,7 @@ def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
                 f.write(chunk)
     try:
         os.rename(tmp_filename, filename)
+        _chmod_file(filename)
     except:
         if not os.path.exists(filename): # maybe some other process beat us to it
             raise Exception(f'Unexpected problem moving file {tmp_filename}')

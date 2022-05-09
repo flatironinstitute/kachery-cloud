@@ -1,3 +1,4 @@
+from email.policy import default
 import os
 import click
 import kachery_cloud as kc
@@ -14,8 +15,10 @@ def init():
 @click.command(help="Store file in IPFS")
 @click.argument('filename')
 @click.option('--cache-locally', is_flag=True)
-def store_file(filename: str, cache_locally: bool):
-    uri = kc.store_file(filename, label=os.path.basename(filename), cache_locally=cache_locally)
+@click.option('--label', required=False, default='')
+def store_file(filename: str, cache_locally: bool, label: str):
+    if label == '': label = os.path.basename(filename)
+    uri = kc.store_file(filename, label=label, cache_locally=cache_locally)
     print(uri)
 
 @click.command(help="Load file from IPFS")
@@ -32,8 +35,10 @@ def cat_file(uri: str):
 @click.command(help="Store file in the local cache")
 @click.argument('filename')
 @click.option('--reference', is_flag=True)
-def store_file_local(filename: str, reference: bool):
-    uri = kc.store_file_local(filename, label=os.path.basename(filename), reference=reference)
+@click.option('--label', required=False, default='')
+def store_file_local(filename: str, reference: bool, label: str):
+    if label == '': label = os.path.basename(filename)
+    uri = kc.store_file_local(filename, label=label, reference=reference)
     print(uri)
 
 cli.add_command(init)

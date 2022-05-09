@@ -1,10 +1,14 @@
+import yaml
 import socket
 import urllib.parse
+
+from kachery_cloud.get_kachery_cloud_dir import get_kachery_cloud_dir
 
 from .get_client_id import get_client_id
 from ._client_keys import _sign_message_as_client
 from ._kachery_cloud_api_url import _kachery_cloud_api_url
 from ._kacherycloud_request import _kacherycloud_request
+from ._get_local_client_config import _get_local_client_config
 
 
 _global_init = {
@@ -63,3 +67,9 @@ def init():
     print(f'Label: {label}')
     print(f'Owner: {client_owner}')
     print(f'Default project ID: {default_project_id}')
+
+    print('')
+    print('Local configuration:')
+    config = _get_local_client_config()
+    print(yaml.safe_dump(config))
+    print(f'Edit the local configuration: {get_kachery_cloud_dir()}/config.yaml')
