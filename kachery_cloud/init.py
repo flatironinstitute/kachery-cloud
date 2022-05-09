@@ -69,7 +69,6 @@ def init():
     print(f'Default project ID: {default_project_id}')
 
     print('')
-    print('Local configuration:')
+    print('Local configuration')
     config = _get_local_client_config()
     print(yaml.safe_dump(config))
-    print(f'Edit the local configuration: {get_kachery_cloud_dir()}/config.yaml')
