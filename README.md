@@ -69,6 +69,12 @@ export KACHERY_CLOUD_DIR="..."
 # If unset, the default project associated with the client will be used
 # The default project can be configured at https://cloud.kacheryhub.org
 export KACHERY_CLOUD_PROJECT_ID="..."
+
+# In ephemeral mode, the client does not need to actually be registered
+# but you will only be able to perform a subset of operations (mostly readonly)
+# This can be useful for unit testing environments when you want to download
+# test files from the kachery network without registering a client.
+export KACHERY_CLOUD_EPHEMERAL="FALSE"
 ```
 
 It is recommend that you set these variables in your `~/.bashrc` file.

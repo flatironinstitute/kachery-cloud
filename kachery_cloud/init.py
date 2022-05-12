@@ -55,7 +55,6 @@ def init():
         client_id = get_client_id()
         print('This client has already been registered.')
         print('Click the following link to configure the client:')
-        print('')
         url = f'{_kachery_cloud_api_url}/client/{client_id}'
         print(url)
         print('')
@@ -72,3 +71,5 @@ def init():
     print('Local configuration')
     config = _get_local_client_config()
     print(yaml.safe_dump(config))
+    print('')
+    print('* Kachery-cloud is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.')

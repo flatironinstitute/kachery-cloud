@@ -9,6 +9,9 @@ _global = {
     'client_public_key_hex': None
 }
 
+def _ephemeral_mode():
+    return os.environ.get('KACHERY_CLOUD_EPHEMERAL') == 'TRUE'
+
 def _get_client_private_key_hex():
     if _global['client_private_key_hex'] is not None:
         return _global['client_private_key_hex']

@@ -15,7 +15,7 @@ def store_text(text: str, *, label: Union[str, None]=None, cache_locally: bool=F
 
 def store_json(x: Any, *, separators=(',', ':'), indent=None, label: Union[str, None]=None, cache_locally: bool=False) -> str:
     import simplejson
-    text = simplejson.dumps(x, separators=separators, indent=indent, allow_nan=False)
+    text = simplejson.dumps(x, separators=separators, indent=indent, allow_nan=False, sort_keys=True)
     return store_text(text, label=label, cache_locally=cache_locally)
 
 def store_npy(array: Any, *, label: Union[str, None]=None, cache_locally: bool=False) -> str:
@@ -68,7 +68,7 @@ def store_text_local(text: str, label: Union[str, None]=None) -> str:
 
 def store_json_local(x: Any, *, separators=(',', ':'), indent=None, label: Union[str, None]=None) -> str:
     import simplejson
-    text = simplejson.dumps(x, separators=separators, indent=indent, allow_nan=False)
+    text = simplejson.dumps(x, separators=separators, indent=indent, allow_nan=False, sort_keys=True)
     return store_text_local(text, label=label)
 
 def store_npy_local(array: Any, label: Union[str, None]=None) -> str:
