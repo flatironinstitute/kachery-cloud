@@ -7,6 +7,8 @@ from .load_file import load_file
 # returns None if write_to_stdout is True
 def load_bytes(uri: str, start: Union[int, None], end: Union[int, None], *, write_to_stdout=False) -> bytes: 
     local_path = load_file(uri)
+    if local_path is None:
+        return None
     
     return _load_bytes_from_local_file(local_path, start=start, end=end, write_to_stdout=write_to_stdout)
 
