@@ -15,7 +15,12 @@ def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
         else:
             raise Exception(f'File does not exist: {uri}')
     if uri.startswith('sha1://'):
-        return load_file_local(uri)
+        x = load_file_local(uri)
+        if x is not None:
+            return x
+        sha1 = uri.split('?')[0].split('/')[2]
+        return _load_sha1_file_from_cloud(sha1, verbose=verbose)
+        
     assert uri.startswith('ipfs://'), f'Invalid or unsupported URI: {uri}'
     a = uri.split('?')[0].split('/')
     assert len(a) >= 3, f'Invalid or unsupported URI: {uri}'
@@ -44,6 +49,42 @@ def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
 
     if verbose:
         print(f'Loading file from kachery cloud: {uri}')    
+    if not os.path.exists(parent_dir):
+        _makedirs(parent_dir)
+    tmp_filename = f'{filename}.tmp.{_random_string(8)}'
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(tmp_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+    try:
+        os.rename(tmp_filename, filename)
+        _chmod_file(filename)
+    except:
+        if not os.path.exists(filename): # maybe some other process beat us to it
+            raise Exception(f'Unexpected problem moving file {tmp_filename}')
+    return filename
+
+def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool):
+    payload = {
+        'type': 'findFile',
+        'hashAlg': 'sha1',
+        'hash': sha1
+    }
+    response= _kacherycloud_request(payload)
+    found = response['found']
+    uri = f'sha1://{sha1}'
+    if found:
+        url = response['url']
+    else:
+        raise Exception(f'File not found: {uri}')
+
+    kachery_cloud_dir = get_kachery_cloud_dir()
+    e = sha1
+    parent_dir = f'{kachery_cloud_dir}/sha1/{e[0]}{e[1]}/{e[2]}{e[3]}/{e[4]}{e[5]}'
+    filename = f'{parent_dir}/{sha1}'
+    if verbose:
+        print(f'Loading file from kachery cloud: {uri}') 
     if not os.path.exists(parent_dir):
         _makedirs(parent_dir)
     tmp_filename = f'{filename}.tmp.{_random_string(8)}'
