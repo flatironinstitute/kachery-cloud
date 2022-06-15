@@ -68,7 +68,7 @@ export KACHERY_CLOUD_DIR="..."
 # Set the project ID for storing data in the cloud
 # If unset, the default project associated with the client will be used
 # The default project can be configured at https://cloud.kacheryhub.org
-export KACHERY_CLOUD_PROJECT_ID="..."
+export KACHERY_CLOUD_PROJECT="..."
 
 # In ephemeral mode, the client does not need to actually be registered
 # but you will only be able to perform a subset of operations (mostly readonly)

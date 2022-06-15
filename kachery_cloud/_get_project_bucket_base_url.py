@@ -15,8 +15,8 @@ def _get_project_bucket_base_url(project_id: str):
     found = response['found']
     if not found:
         raise Exception(f'Project not found: {project_id}')
-    bucket_base_url = response['bucketBaseUrl']
-    if not bucket_base_url:
-        raise Exception('Unexpected, no bucket base url')
-    _global_data['project_base_urls'][project_id] = bucket_base_url
-    return bucket_base_url
+    project_base_url = response['projectBaseUrl']
+    if not project_base_url:
+        raise Exception('Unexpected, no project base url')
+    _global_data['project_base_urls'][project_id] = project_base_url
+    return project_base_url
