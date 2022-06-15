@@ -35,6 +35,7 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
     with open(filename, 'rb') as f:
         resp_upload = requests.put(signed_upload_url, data=f)
         if resp_upload.status_code != 200:
+            print(signed_upload_url)
             raise Exception(f'Error uploading file to bucket ({resp_upload.status_code}) {resp_upload.reason}: {resp_upload.text}')
     payload2 = {
         'type': 'finalizeFileUpload',
