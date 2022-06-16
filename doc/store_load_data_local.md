@@ -9,10 +9,10 @@
 From command line
 
 ```bash
-echo "test-content" > test_content.txt
+echo "test-content-local" > test_content.txt
 kachery-cloud-store-local test_content.txt
 # output:
-# sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt
+# sha1://414c7409445a8712a5e5c55d5554c84a515bd7f0?label=test_content.txt
 ```
 
 From Python
@@ -42,14 +42,14 @@ uri5 = kcl.store_pkl_local({'example': array}, label='example.pkl')
 From command line
 
 ```bash
-kachery-cloud-load sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt
+kachery-cloud-load sha1://414c7409445a8712a5e5c55d5554c84a515bd7f0?label=test_content.txt
 # output:
-# /home/<user>/.kachery-cloud/sha1/b9/71/c6/b971c6ef19b1d70ae8f0feb989b106c319b36230
+# /home/<user>/.kachery-cloud/sha1/41/4c/74/414c7409445a8712a5e5c55d5554c84a515bd7f0
 
 # Or write the file to stdout
-kachery-cloud-cat sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt
+kachery-cloud-cat sha1://414c7409445a8712a5e5c55d5554c84a515bd7f0?label=test_content.txt
 # output:
-# test-content
+# test-content-local
 ```
 
 From Python
@@ -57,7 +57,7 @@ From Python
 ```python
 import kachery_cloud as kcl
 
-local_fname = kcl.load_file('sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt')
+local_fname = kcl.load_file('sha1://414c7409445a8712a5e5c55d5554c84a515bd7f0?label=test_content.txt')
 
 text = kcl.load_text('sha1://d9e989f651cdd269d7f9bb8a215d024d8d283688?label=example')
 # example text

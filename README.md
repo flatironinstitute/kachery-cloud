@@ -6,9 +6,9 @@
 
 > **IMPORTANT**: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
 
-Share scientific research data on the distributed web using Python.
+Share scientific research data in the cloud using Python.
 
-See also [figurl](https://github.com/scratchrealm/figurl2)
+Kachery-cloud is the foundation of [figurl](https://github.com/scratchrealm/figurl2).
 
 ## Installation and setup
 
@@ -47,7 +47,7 @@ kcl.init()
 
 ## Basic usage
 
-* [Storing and loading data in the IPFS cloud](doc/store_load_data.md)
+* [Storing and loading data in the kachery cloud](doc/store_load_data.md)
 * [Storing and loading data in the local cache](doc/store_load_data_local.md)
 * [Setting and getting mutables in the cloud or locally](doc/set_get_mutable.md)
 * [Feeds (append-only logs)](doc/feeds.md)
