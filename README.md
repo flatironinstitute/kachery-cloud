@@ -53,6 +53,27 @@ kcl.init()
 * [Feeds (append-only logs)](doc/feeds.md)
 * [Tasks](doc/tasks.md)
 
+## Using your own cloud storage
+
+By default, projects will use our inexpensive cloud storage, and your data is not guaranteed to be available forever. However, it is also possible to configure your own cloud storage provider, which you pay for. This configuration is available in the web app at the time you configure your kachery-cloud client.
+
+There are four main choices for configuring your own storage bucket for use with kachery-cloud.
+
+* Google cloud storage
+* AWS S3
+* Wasabi
+* Filebase
+
+The first two options are more expensive, but presumably more reliable.
+
+The third (Wasabi) is the recommended choice in terms of cost.
+
+All methods use an S3-compatible configuration - so with a Google bucket you need to obtain S3-style credentials.
+
+In all cases, if you plan to use figurl, CORS needs to be configured to allow requests from figurl.org and www.figurl.org.
+
+More details and guides about setting all of this up will be coming soon.
+
 ## Environment
 
 You can use environment variables to control the storage/configuration directory used by kachery-cloud and the project ID used for storing data in the cloud.
