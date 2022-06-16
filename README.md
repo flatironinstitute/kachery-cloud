@@ -59,10 +59,14 @@ By default, projects will use our inexpensive cloud storage, and your data is no
 
 There are four main choices for configuring your own storage bucket for use with kachery-cloud.
 
-* Google cloud storage
-* AWS S3
-* Wasabi
-* Filebase
+> Note: The following prices are estimates based on glancing at the websites. Actual pricing may depend on other factors.
+
+| Provider | Storage per TB month | Download per TB | Notes |
+| -------- | ------------- | ----- | --- |
+| AWS   | $23 | $90 | |
+| Google | $23  | $120 | |
+| Wasabi | $6 | Free for reasonable use | |
+| Filebase | $6 | $6 | |
 
 The first two options are more expensive, but presumably more reliable.
 
