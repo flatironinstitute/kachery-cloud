@@ -63,9 +63,9 @@ There are four main choices for configuring your own storage bucket for use with
 
 | Provider | Storage per TB month | Download per TB | Notes |
 | -------- | ------------- | ----- | --- |
-| [AWS](./doc/aws_bucket_instructions.md)   | $23 | $90 |  |
-| Google | $23  | $120 | You need to obtain S3-style credentials |
-| Wasabi | $6 | Free for reasonable use | Not suitable if monthly download is expected to be greater than monthly storage |
+| [AWS](./doc/aws_bucket_instructions.md) | $23 | $90 |  |
+| [Google](./doc/google_bucket_instructions.md) | $23  | $120 | You need to obtain S3-style credentials |
+| [Wasabi](./doc/wasabi_bucket_instructions.md) | $6 | Free for reasonable use | |
 | Filebase | $6 | $6 | |
 
 The first two options are more expensive, but presumably more reliable.

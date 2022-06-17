@@ -74,11 +74,6 @@ Guide outline
 * Phew
     - You did it!
 
-
-
-
-
-
 ## Example CORS configuration
 You may want to be more specific and target just `figurl.org` and `www.figurl.org`
 
