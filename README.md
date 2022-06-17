@@ -74,7 +74,7 @@ The third (Wasabi) is the recommended choice in terms of cost.
 
 All methods use an S3-compatible configuration - so with a Google bucket you need to obtain S3-style credentials.
 
-In all cases, if you plan to use figurl, CORS needs to be configured to allow requests from figurl.org and www.figurl.org.
+In all cases, if you plan to use figurl, CORS needs to be configured to allow requests from `figurl.org` and `www.figurl.org`.
 
 More details and guides about setting all of this up will be coming soon.
 
