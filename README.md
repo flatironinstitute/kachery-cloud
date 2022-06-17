@@ -10,7 +10,18 @@ Share scientific research data in the cloud using Python.
 
 Kachery-cloud is the foundation of [figurl](https://github.com/scratchrealm/figurl2).
 
+Contents
+
+* [Installation and setup](#installation-and-setup)
+* [Basic usage](#basic-usage)
+* [Using your own storage bucket](#using-your-own-storage-bucket)
+* [Environment variables](#environment-variables)
+* [Sharing the kachery cloud directory between multiple users](#sharing-the-kachery-cloud-directory-between-multiple-users)
+* [Notes](#notes)
+
 ## Installation and setup
+
+Kachery-cloud is often installed as a dependency of other projects, but there are times when you may want to use it stand-alone.
 
 It is best to use a conda environment or a venv.
 
@@ -47,13 +58,15 @@ kcl.init()
 
 ## Basic usage
 
+The four entities managed by kachery-cloud are files, feeds, tasks, and mutables.
+
 * [Storing and loading data in the kachery cloud](doc/store_load_data.md)
 * [Storing and loading data in the local cache](doc/store_load_data_local.md)
 * [Setting and getting mutables in the cloud or locally](doc/set_get_mutable.md)
 * [Feeds (append-only logs)](doc/feeds.md)
 * [Tasks](doc/tasks.md)
 
-## Using your own cloud storage
+## Using your own storage bucket
 
 By default, projects will use our inexpensive cloud storage, and your data is not guaranteed to be available forever. However, it is also possible to configure your own cloud storage provider, which you pay for. This configuration is available in the web app at the time you configure your kachery-cloud client.
 
@@ -68,17 +81,9 @@ There are four main choices for configuring your own storage bucket for use with
 | [Wasabi](./doc/wasabi_bucket_instructions.md) | $6 | Free for reasonable use | |
 | Filebase | $6 | $6 | |
 
-The first two options are more expensive, but presumably more reliable.
+Wasabi is the recommended choice right now. The first two options are a lot more expensive, but presumably more reliable.
 
-The third (Wasabi) is the recommended choice in terms of cost.
-
-All methods use an S3-compatible configuration - so with a Google bucket you need to obtain S3-style credentials.
-
-In all cases, if you plan to use figurl, CORS needs to be configured to allow requests from `figurl.org` and `www.figurl.org`.
-
-More details and guides about setting all of this up will be coming soon.
-
-## Environment
+## Environment variables
 
 You can use environment variables to control the storage/configuration directory used by kachery-cloud and the project ID used for storing data in the cloud.
 
