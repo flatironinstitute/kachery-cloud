@@ -57,15 +57,15 @@ kcl.init()
 
 By default, projects will use our inexpensive cloud storage, and your data is not guaranteed to be available forever. However, it is also possible to configure your own cloud storage provider, which you pay for. This configuration is available in the web app at the time you configure your kachery-cloud client.
 
-There are four main choices for configuring your own storage bucket for use with kachery-cloud.
+There are four main choices for configuring your own storage bucket for use with kachery-cloud. Click the links in the table below to get detailed instructions on configuring a bucket for each service.
 
 > Note: The following prices are estimates based on glancing at the websites. Actual pricing may depend on other factors.
 
 | Provider | Storage per TB month | Download per TB | Notes |
 | -------- | ------------- | ----- | --- |
-| AWS   | $23 | $90 | |
-| Google | $23  | $120 | |
-| Wasabi | $6 | Free for reasonable use | |
+| [AWS](./doc/aws_bucket_instructions.md)   | $23 | $90 |  |
+| Google | $23  | $120 | You need to obtain S3-style credentials |
+| Wasabi | $6 | Free for reasonable use | Not suitable if monthly download is expected to be greater than monthly storage |
 | Filebase | $6 | $6 | |
 
 The first two options are more expensive, but presumably more reliable.
