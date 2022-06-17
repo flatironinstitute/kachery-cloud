@@ -8,7 +8,7 @@
 
 Share scientific research data in the cloud using Python.
 
-Kachery-cloud is the foundation of [figurl](https://github.com/scratchrealm/figurl2).
+Kachery-cloud is the foundation of [figurl](https://github.com/flatironinstitute/figurl).
 
 Contents
 
