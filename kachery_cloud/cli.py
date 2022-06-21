@@ -12,7 +12,7 @@ def cli():
 def init():
     kc.init()
 
-@click.command(help="Store file in IPFS")
+@click.command(help="Store file in kachery cloud")
 @click.argument('filename')
 @click.option('--cache-locally', is_flag=True)
 @click.option('--label', required=False, default='')
@@ -21,13 +21,13 @@ def store_file(filename: str, cache_locally: bool, label: str):
     uri = kc.store_file(filename, label=label, cache_locally=cache_locally)
     print(uri)
 
-@click.command(help="Load file from IPFS")
+@click.command(help="Load file from kachery cloud")
 @click.argument('uri')
 def load_file(uri: str):
     fname = kc.load_file(uri)
     print(fname)
 
-@click.command(help="Load file from IPFS and write to stdout")
+@click.command(help="Load file from kachery cloud and write to stdout")
 @click.argument('uri')
 def cat_file(uri: str):
     kc.cat_file(uri)

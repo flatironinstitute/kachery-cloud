@@ -1,4 +1,4 @@
-# Storing and loading data in the IPFS cloud
+# Storing and loading data in the kachery cloud
 
 > :warning: This project is in BETA.
 
