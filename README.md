@@ -2,13 +2,13 @@
 
 # kachery-cloud
 
-> :warning: This project is in alpha stage of development.
+> :warning: This project is in BETA.
 
 > **IMPORTANT**: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
 
 Share scientific research data in the cloud using Python.
 
-Kachery-cloud is the foundation of [figurl](https://github.com/flatironinstitute/figurl).
+Kachery-cloud is a core part of [figurl](https://github.com/flatironinstitute/figurl).
 
 Contents
 
