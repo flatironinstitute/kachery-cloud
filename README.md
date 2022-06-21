@@ -12,12 +12,17 @@ Kachery-cloud is a core part of [figurl](https://github.com/flatironinstitute/fi
 
 Contents
 
+* [Overview](#overview)
 * [Installation and setup](#installation-and-setup)
 * [Basic usage](#basic-usage)
 * [Using your own storage bucket](#using-your-own-storage-bucket)
 * [Environment variables](#environment-variables)
 * [Sharing the kachery cloud directory between multiple users](#sharing-the-kachery-cloud-directory-between-multiple-users)
 * [Notes](#notes)
+
+## Overview
+
+Kachery-cloud is a network for sharing scientific data files, live feeds, mutable data and calculation results between lab computers and [browser-based user interfaces](https://github.com/flatironinstitute/figurl). Resources are organized into projects which are accessed via registered Python clients. Using simple Python commands you can store [files](doc/store_load_data.md), [data objects](doc/store_load_data.md), [mutables](doc/set_get_mutable.md) or [live feeds](doc/feeds.md), and then retrieve or access these on a remote machine (or in a browser via JavaScript) by referencing universal URI strings. In the case of static content, URIs are essentially content hashes, thus forming a [content-addressable storage database](https://en.wikipedia.org/wiki/Content-addressable_storage). While the primary purpose of kachery-cloud at this time is to support [figurl](https://github.com/flatironinstitute/figurl), it can also be used independently in collaborative scientific research workflows and for improving scientific reproducibility and dissemination.
 
 ## Installation and setup
 
@@ -70,18 +75,16 @@ The four entities managed by kachery-cloud are files, feeds, tasks, and mutables
 
 By default, projects will use our inexpensive cloud storage, and your data is not guaranteed to be available forever. However, it is also possible to configure your own cloud storage provider, which you pay for. This configuration is available in the web app at the time you configure your kachery-cloud client.
 
-There are four main choices for configuring your own storage bucket for use with kachery-cloud. Click the links in the table below to get detailed instructions on configuring a bucket for each service.
+There are four main choices for configuring your own storage bucket for use with kachery-cloud. Click the links to get detailed instructions on configuring a bucket for each service.
 
-> Note: The following prices are estimates based on glancing at the websites. Actual pricing may depend on other factors.
-
-| Provider | Storage per TB month | Download per TB | Notes |
-| -------- | ------------- | ----- | --- |
-| [AWS](./doc/aws_bucket_instructions.md) | $23 | $90 |  |
-| [Google](./doc/google_bucket_instructions.md) | $23  | $120 | You need to obtain S3-style credentials |
-| [Wasabi](./doc/wasabi_bucket_instructions.md) | $6 | Free for reasonable use | |
-| [Filebase](./doc/filebase_bucket_instructions.md) | $6 | $6 | |
+* [AWS](./doc/aws_bucket_instructions.md)
+* [Google](./doc/google_bucket_instructions.md)
+* [Wasabi](./doc/wasabi_bucket_instructions.md)
+* [Filebase](./doc/filebase_bucket_instructions.md)
 
 Wasabi is the recommended choice right now. The first two options are a lot more expensive, but presumably more reliable.
+
+[Here are pricing estimates for these services](./doc//bucket_comparison.md)
 
 ## Environment variables
 
