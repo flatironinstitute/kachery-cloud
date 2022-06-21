@@ -1,6 +1,6 @@
 # Feeds (append-only logs)
 
-> :warning: This project is in alpha stage of development.
+> :warning: This project is in BETA.
 
 > **IMPORTANT**: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
 

@@ -1,6 +1,6 @@
 # Setting and getting mutables
 
-> :warning: This project is in alpha stage of development.
+> :warning: This project is in BETA.
 
 > **IMPORTANT**: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
 
@@ -36,4 +36,4 @@ txt2 = kcl.load_text(uri2)
 
 ## Limitations
 
-This project is still in the alpha stage of development and we do not guarantee that your data will be available forever.
+This project is in the beta stage of development and we do not guarantee that your data will be available forever.

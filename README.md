@@ -79,7 +79,7 @@ There are four main choices for configuring your own storage bucket for use with
 | [AWS](./doc/aws_bucket_instructions.md) | $23 | $90 |  |
 | [Google](./doc/google_bucket_instructions.md) | $23  | $120 | You need to obtain S3-style credentials |
 | [Wasabi](./doc/wasabi_bucket_instructions.md) | $6 | Free for reasonable use | |
-| Filebase | $6 | $6 | |
+| [Filebase](./doc/filebase_bucket_instructions.md) | $6 | $6 | |
 
 Wasabi is the recommended choice right now. The first two options are a lot more expensive, but presumably more reliable.
 
@@ -127,7 +127,7 @@ all users.
 
 ## Notes
 
-This project is still in the alpha stage of development and we do not guarantee that your data will be available forever.
+This project is in the beta stage of development and we do not guarantee that your data will be available forever.
 
 ## Authors
 
