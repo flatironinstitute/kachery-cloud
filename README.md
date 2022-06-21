@@ -75,7 +75,7 @@ The four entities managed by kachery-cloud are files, feeds, tasks, and mutables
 
 By default, projects will use our inexpensive cloud storage, and your data is not guaranteed to be available forever. However, it is also possible to configure your own cloud storage provider, which you pay for. This configuration is available in the web app at the time you configure your kachery-cloud client.
 
-There are four main choices for configuring your own storage bucket for use with kachery-cloud. Click the links to get detailed instructions on configuring a bucket for each service.
+If you elect to configure your own storage bucket for use with kachery-cloud, there are four main choices. Click the links to get detailed instructions on configuring a bucket for each service.
 
 * [AWS](./doc/aws_bucket_instructions.md)
 * [Google](./doc/google_bucket_instructions.md)
