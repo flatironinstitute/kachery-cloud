@@ -10,6 +10,9 @@ def cat_file(uri: str):
 
     sys.stdout = old_stdout
 
+    if local_fname is None:
+        return
+
     with open(local_fname, 'rb') as f:
         while True:
             data = os.read(f.fileno(), 4096)

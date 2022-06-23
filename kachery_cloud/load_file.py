@@ -1,7 +1,10 @@
+import json
 import os
 from typing import Union
 import requests
 import random
+
+from kachery_cloud.mutable_local import get_mutable_local, set_mutable_local
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from ._kacherycloud_request import _kacherycloud_request
 from .store_file_local import _compute_file_hash
@@ -15,7 +18,7 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False) -> Union
         if os.path.exists(uri):
             return uri
         else:
-            raise Exception(f'File does not exist: {uri}')
+            return None
     if uri.startswith('sha1://'):
         x = load_file_local(uri)
         if x is not None:
@@ -44,7 +47,7 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False) -> Union
     if found:
         url = response['url']
     else:
-        raise Exception(f'File not found: {uri}')
+        return None
         # url = f'https://{cid}.ipfs.dweb.link'
         # url = f'https://cloudflare-ipfs.com/ipfs/{cid}'
         # url = f'https://ipfs.filebase.io/ipfs/{cid}'
@@ -67,7 +70,7 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False) -> Union
             raise Exception(f'Unexpected problem moving file {tmp_filename}')
     return filename
 
-def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool):
+def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool) -> Union[str, None]:
     payload = {
         'type': 'findFile',
         'hashAlg': 'sha1',
@@ -79,7 +82,7 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool):
     if found:
         url = response['url']
     else:
-        raise Exception(f'File not found: {uri}')
+        return None
 
     kachery_cloud_dir = get_kachery_cloud_dir()
     e = sha1
@@ -103,7 +106,7 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool):
             raise Exception(f'Unexpected problem moving file {tmp_filename}')
     return filename
 
-def load_file_local(uri: str):
+def load_file_local(uri: str) -> Union[str, None]:
     query = _get_query_from_uri(uri)
     assert uri.startswith('sha1://'), f'Invalid local URI: {uri}'
     a = uri.split('?')[0].split('/')
@@ -124,7 +127,30 @@ def load_file_local(uri: str):
             sha1_2 = _compute_file_hash(location, 'sha1')
             if sha1_2 == sha1:
                 return location
-        raise Exception(f'Unable to find local file: {uri}')
+    
+    # check for linked file
+    a_txt = get_mutable_local(f'linked_files/sha1/{sha1}')
+    if a_txt is not None:
+        a = json.loads(a_txt)
+        path0 = a['path']
+        size0 = a['size']
+        mtime0 = a['mtime']
+        if os.path.exists(path0):
+            if os.path.getsize(path0) == size0 and os.stat(path0).st_mtime == mtime0:
+                return path0
+            sha1_0 = _compute_file_hash(path0, algorithm='sha1')
+            if sha1_0 == sha1:
+                set_mutable_local(f'linked_files/sha1/{sha1}', json.dumps({
+                    'path': path0,
+                    'size': os.path.getsize(path0),
+                    'mtime': os.stat(path0).st_mtime,
+                    'sha1': sha1
+                }))
+                return path0
+            else:
+                print(f'Warning: sha1 of linked file has changed: {path0} {uri}')
+    
+    return None
 
 def _get_query_from_uri(uri: str):
     a = uri.split('?')

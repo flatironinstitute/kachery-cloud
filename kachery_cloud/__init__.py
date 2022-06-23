@@ -1,6 +1,7 @@
 from .store_file import store_file
 from .load_file import load_file
 from .store_file_local import store_file_local
+from .link_file import link_file
 from .cat_file import cat_file
 from .core import store_text, store_json, store_npy, store_pkl
 from .core import load_text, load_json, load_npy, load_pkl

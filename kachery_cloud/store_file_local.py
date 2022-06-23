@@ -11,7 +11,7 @@ from ._sha1_of_string import _sha1_of_string
 from ._fs_operations import _makedirs, _chmod_file
 
 
-def store_file_local(filename: str, *, label: Union[str, None]=None, reference: Union[str, None]=None):
+def store_file_local(filename: str, *, label: Union[str, None]=None, reference: Union[bool, None]=None):
     if not os.path.isabs(filename):
         filename = os.path.abspath(filename)
     sha1 = _compute_file_hash(filename, algorithm='sha1')

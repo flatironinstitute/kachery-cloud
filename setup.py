@@ -5,6 +5,7 @@ setup(
     scripts=[
         'bin/kachery-cloud',
         'bin/kachery-cloud-store',
+        'bin/kachery-cloud-link',
         'bin/kachery-cloud-load',
         'bin/kachery-cloud-init',
         'bin/kachery-cloud-cat',

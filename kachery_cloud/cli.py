@@ -21,11 +21,20 @@ def store_file(filename: str, cache_locally: bool, label: str):
     uri = kc.store_file(filename, label=label, cache_locally=cache_locally)
     print(uri)
 
+@click.command(help="Store file in kachery cloud")
+@click.argument('filename')
+@click.option('--label', required=False, default='')
+def link_file(filename: str, label: str):
+    if label == '': label = os.path.basename(filename)
+    uri = kc.link_file(filename, label=label)
+    print(uri)
+
 @click.command(help="Load file from kachery cloud")
 @click.argument('uri')
 def load_file(uri: str):
     fname = kc.load_file(uri)
-    print(fname)
+    if fname is not None:
+        print(fname)
 
 @click.command(help="Load file from kachery cloud and write to stdout")
 @click.argument('uri')
@@ -43,6 +52,7 @@ def store_file_local(filename: str, reference: bool, label: str):
 
 cli.add_command(init)
 cli.add_command(store_file)
+cli.add_command(link_file)
 cli.add_command(load_file)
 cli.add_command(cat_file)
 cli.add_command(store_file_local)
