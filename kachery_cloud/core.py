@@ -31,30 +31,30 @@ def store_pkl(x: Any, *, label: Union[str, None]=None, cache_locally: bool=False
         _safe_pickle(fname, x)
         return store_file(fname, label=label, cache_locally=cache_locally)
 
-def load_text(uri: str) -> Union[str, None]:
-    local_path = load_file(uri)
+def load_text(uri: str, *, local_only: Union[bool, None]) -> Union[str, None]:
+    local_path = load_file(uri, local_only=local_only)
     if local_path is None:
         return None
     with open(local_path, 'r') as f:
         return f.read()
 
-def load_json(uri: str) -> Union[dict, None]:
+def load_json(uri: str, *, local_only: Union[bool, None]) -> Union[dict, None]:
     import simplejson
-    local_path = load_file(uri)
+    local_path = load_file(uri, local_only=local_only)
     if local_path is None:
         return None
     with open(local_path, 'r') as f:
         return simplejson.load(f)
 
-def load_npy(uri: str) -> Union[Any, None]:
+def load_npy(uri: str, *, local_only: Union[bool, None]) -> Union[Any, None]:
     import numpy as np
-    local_path = load_file(uri)
+    local_path = load_file(uri, local_only=local_only)
     if local_path is None:
         return None
     return np.load(local_path, allow_pickle=False)
 
-def load_pkl(uri: str) -> Union[Any, None]:
-    local_path = load_file(uri)
+def load_pkl(uri: str, *, local_only: Union[bool, None]) -> Union[Any, None]:
+    local_path = load_file(uri, local_only=local_only)
     if local_path is None:
         return None
     return _safe_unpickle(local_path)

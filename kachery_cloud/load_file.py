@@ -8,7 +8,9 @@ from .store_file_local import _compute_file_hash
 from ._fs_operations import _makedirs, _chmod_file
 
 
-def load_file(uri: str, *, verbose: bool=False) -> Union[str, None]:
+def load_file(uri: str, *, verbose: bool=False, local_only: bool=False) -> Union[str, None]:
+    if local_only:
+        return load_file_local(uri)
     if uri.startswith('/'):
         if os.path.exists(uri):
             return uri
