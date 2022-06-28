@@ -9,9 +9,18 @@ from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from ._kacherycloud_request import _kacherycloud_request
 from .store_file_local import _compute_file_hash
 from ._fs_operations import _makedirs, _chmod_file
+from ._access_group_encrypt import _access_group_decrypt
 
 
 def load_file(uri: str, *, verbose: bool=False, local_only: bool=False) -> Union[str, None]:
+    if uri.startswith('sha1-enc://'):
+        query = _get_query_from_uri(uri)
+        ag = query['ag']
+        sha1_enc = uri.split('?')[0].split('/')[2]
+        sha1 = _access_group_decrypt(sha1_enc, access_group=ag)
+        uri2 = f'sha1://{sha1}?{uri.split("?")[1]}'
+        return load_file(uri2, verbose=verbose, local_only=local_only)
+
     if local_only:
         return load_file_local(uri)
     if uri.startswith('/'):

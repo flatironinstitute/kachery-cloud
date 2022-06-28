@@ -18,3 +18,4 @@ from .mutable import get_mutable, set_mutable
 from .mutable_local import get_mutable_local, set_mutable_local
 from .TemporaryDirectory import TemporaryDirectory
 from ._sha1_of_dict import sha1_of_dict
+from .encrypt_uri import encrypt_uri
