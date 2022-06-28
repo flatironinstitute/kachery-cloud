@@ -5,7 +5,7 @@ from ._kacherycloud_request import _kacherycloud_request
 
 
 def set_mutable(key: str, value: str, *, project_id: Union[str, None]=None):
-    if len(value) > 1000:
+    if len(value) > 100000:
         raise Exception('Value too large for mutable')
     payload = {
         'type': 'setMutable',
