@@ -62,6 +62,8 @@ class Feed:
                 return self.get_next_messages(timeout_sec=0)
             else:
                 return []
+        else:
+            return []
     @staticmethod
     def create(*, project_id: Union[str, None]=None):
         payload = {
