@@ -12,20 +12,16 @@ from ._kacherycloud_request import _kacherycloud_request
 from .store_file_local import _compute_file_hash
 from ._fs_operations import _makedirs, _chmod_file
 from ._access_group_encrypt import _access_group_decrypt
+from .encrypt_uri import decrypt_uri
 
 
 def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Union[None, str]=None) -> Union[str, None]:
     if uri.startswith('sha1-enc://'):
-        aa = uri.split('?')[0].split('/')[2]
-        bb = aa.split('.')
-        assert len(bb) == 2
-        sha1_enc = bb[0]
-        access_group_str = bb[1]
-        assert access_group_str.startswith('ag_')
-        access_group = access_group_str[3:]
-        sha1 = _access_group_decrypt(sha1_enc, access_group=access_group)
-        uri2 = f'sha1://{sha1}?{uri.split("?")[1]}'
-        return load_file(uri2, verbose=verbose, local_only=local_only, dest=dest)
+        # While it would be nice to send the sha1-enc hash directly to the API findFile,
+        # we need to do it this way so that we can check locally... because files are stored
+        # locally by the sha1 hash. Unfortunately, this means two http calls.
+        uri_decrypted = decrypt_uri(uri)
+        return load_file(uri_decrypted, verbose=verbose, local_only=local_only, dest=dest)
 
     if local_only:
         return load_file_local(uri, dest=dest)

@@ -14,6 +14,7 @@ class Feed:
         self._feed_id = feed_id
         self._project_id = project_id
         self._current_message_number = 0
+        self._messages = []
         self._pubsub_listener: Union[PubsubListener, None] = None
         self._project_id = project_id
         self._messages_appended_callbacks = {}
@@ -38,18 +39,29 @@ class Feed:
     def set_position(self, position: int):
         self._current_message_number = position
     def get_next_messages(self, *, timeout_sec: float=0) -> List[dict]:
+        if self._current_message_number < len(self._messages):
+            ret = self._messages[self._current_message_number:]
+            self._current_message_number = len(self._messages)
+            return ret
+        num = len(self._messages)
         payload = {
             'type': 'getFeedMessages',
             'feedId': self._feed_id,
-            'startMessageNumber': self._current_message_number
+            'startMessageNumber': num
         }
         resp = _kacherycloud_request(payload)
         messages = resp['messages']
-        if len(messages) == 0 and timeout_sec > 0:
-            return self._wait_for_next_messages(timeout_sec=timeout_sec)
-        start_message_number = resp['startMessageNumber']
-        self._current_message_number = start_message_number + len(messages)
-        return messages
+        if len(messages) > 0:
+            for ii in range(len(messages)):
+                if num + ii == len(self._messages):
+                    self._messages.append(messages[ii])
+            return self.get_next_messages(timeout_sec=0)
+        elif timeout_sec > 0:
+            got_new = self._wait_for_next_messages(timeout_sec=timeout_sec)
+            if got_new:
+                return self.get_next_messages(timeout_sec=0)
+            else:
+                return []
     @staticmethod
     def create(*, project_id: Union[str, None]=None):
         payload = {
@@ -87,17 +99,12 @@ class Feed:
             got_new_messages = True
         self._messages_appended_callbacks[callback_id] = on_new_messages
         try:
-            messages0 = self.get_next_messages()
-            if len(messages0) > 0:
-                return messages0
             while True:
                 if got_new_messages:
-                    messages1 = self.get_next_messages()
-                    if len(messages1) > 0:
-                        return messages1
+                    return True
                 elapsed = time.time() - timer
                 if elapsed > timeout_sec:
-                    return []
+                    return False
                 self._pubsub_listener.wait(0.05)
         finally:
             del self._messages_appended_callbacks[callback_id]
