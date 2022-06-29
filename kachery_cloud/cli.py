@@ -31,8 +31,9 @@ def link_file(filename: str, label: str):
 
 @click.command(help="Load file from kachery cloud")
 @click.argument('uri')
-def load_file(uri: str):
-    fname = kc.load_file(uri)
+@click.option('--dest', required=False, default='')
+def load_file(uri: str, dest: str):
+    fname = kc.load_file(uri, dest=dest if len(dest) > 0 else None)
     if fname is not None:
         print(fname)
 
