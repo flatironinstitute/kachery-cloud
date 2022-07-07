@@ -46,7 +46,7 @@ class TaskClient:
                 if message['taskName'] == task_name:
                     if message['taskJobId'] == task_job_id:
                         if status == 'error':
-                            error = message['error']
+                            error = message['errorMessage']
                         elif status == 'finished':
                             result = self.download_task_result(task_name=task_name, task_job_id=task_job_id)
                         status = message['status']
