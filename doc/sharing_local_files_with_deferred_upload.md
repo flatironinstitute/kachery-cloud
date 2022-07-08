@@ -1,6 +1,6 @@
 # Sharing local files with deferred upload (experimental)
 
-Sometimes you may want to share a large number of files, but not upload them immediately to kachery-cloud, but rather upload on demand when they are requested.
+Sometimes you may want to share a large number of files, but not upload them immediately to kachery-cloud. By running a file sharing backend, you can have files upload automatically on demand, only when they are requested.
 
 To store files locally (and not upload immediately):
 
@@ -15,6 +15,7 @@ kachery-cloud-link <path>
 Share all of your local files (allow them to be requested):
 
 ```bash
+# Run in a terminal
 kachery-cloud-share-local-files-experimental
 ```
 
@@ -25,6 +26,7 @@ Keep this service running and make note of the printed project ID.
 On a different computer, files can be requested via:
 
 ```bash
+# Run in a terminal
 kachery-cloud-request-file-experimental <URI> --project <project-id>
 ```
 
@@ -44,13 +46,10 @@ uri4 = kcl.store_npy_local(arr0)
 uri5 = kcl.store_pkl_local(obj1)
 uri7 = kcl.link_file(path)
 
-# Request files from remote computer
+# Request files or data from remote computer
 path = kcl.request_file_experimental(uri, project_id='...')
 text = kcl.request_text_experimental(uri, project_id='...')
 obj0 = kcl.request_json_experimental(uri, project_id='...')
 arr0 = kcl.request_npy_experimental(uri, project_id='...')
 obj1 = kcl.request_pkl_experimental(uri, project_id='...')
 ```
-
-
-

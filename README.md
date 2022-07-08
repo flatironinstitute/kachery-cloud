@@ -18,6 +18,7 @@ Contents
 * [Using your own storage bucket](#using-your-own-storage-bucket)
 * [Environment variables](#environment-variables)
 * [Sharing the kachery cloud directory between multiple users](#sharing-the-kachery-cloud-directory-between-multiple-users)
+* [Sharing local files with deferred upload (experimental)](#sharing-local-files-with-deferred-upload-experimental)
 * [Notes](#notes)
 
 ## Overview
