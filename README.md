@@ -128,6 +128,10 @@ directory on their system (see above)
 The last step is necessary so that all files are created with read/write access for
 all users.
 
+## Sharing local files with deferred upload (experimental)
+
+[Sharing local files with deferred upload](./doc/sharing_local_files_with_deferred_upload.md)
+
 ## Notes
 
 This project is in the beta stage of development and we do not guarantee that your data will be available forever.
