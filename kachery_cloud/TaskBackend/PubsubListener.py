@@ -55,7 +55,6 @@ class PubsubListener:
         self._check_token()
         time.sleep(timeout_sec)
     def stop(self):
-        print('Unsubscribing from channels')
         self._pubnub.unsubscribe_all()
         time.sleep(1)
     def _check_token(self):
