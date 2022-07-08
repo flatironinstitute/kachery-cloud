@@ -13,11 +13,16 @@ from .._sha1_of_string import _sha1_of_string
 class TaskRequestCallback(Protocol):
     def __call__(self, *, task_type: str, task_name: str, task_input: dict, task_job_id: str): ...
 
+class TaskErrorException(Exception):
+    def __init__(self, message: str) -> None:
+        self.error_message = message
+        super().__init__(message)
+
 class TaskClient:
     def __init__(self, *, project_id: Union[None, str]=None) -> None:
         self._project_id = project_id
     def download_task_result(self, *, task_name: str, task_job_id: str):
-        return download_task_result(task_name=task_name, task_job_id=task_job_id)
+        return download_task_result(task_name=task_name, task_job_id=task_job_id, project_id=self._project_id)
     def request_task(self, *, task_type: str, task_name: str, task_input: dict):
         client_id = get_client_id()
 
@@ -45,11 +50,12 @@ class TaskClient:
             if message['type'] == 'setTaskStatus':
                 if message['taskName'] == task_name:
                     if message['taskJobId'] == task_job_id:
+                        status = message['status']
                         if status == 'error':
                             error = message['errorMessage']
                         elif status == 'finished':
-                            result = self.download_task_result(task_name=task_name, task_job_id=task_job_id)
-                        status = message['status']
+                            if task_type == 'calculation':
+                                result = self.download_task_result(task_name=task_name, task_job_id=task_job_id)
         def renew_access_token():
             raise Exception('not used')
         listener = PubsubListener(
@@ -93,7 +99,7 @@ class TaskClient:
                 if status == 'finished':
                     return result
                 elif status == 'error':
-                    raise Exception(error)
+                    raise TaskErrorException(error)
                 elif status == 'started':
                     if not announced_started:
                         print('Task started')

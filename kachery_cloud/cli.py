@@ -51,9 +51,24 @@ def store_file_local(filename: str, reference: bool, label: str):
     uri = kc.store_file_local(filename, label=label, reference=reference)
     print(uri)
 
+@click.command(help="Share local files")
+@click.option('--project', required=False, default='')
+def share_local_files_experimental(project: str):
+    project = project if project is not '' else None
+    kc.share_local_files_experimental(project_id=project)
+
+@click.command(help="Request file")
+@click.argument('uri')
+@click.option('--project', required=True)
+def request_file_experimental(uri: str, project: str):
+    fname = kc.request_file_experimental(uri, project_id=project)
+    print(fname)
+
 cli.add_command(init)
 cli.add_command(store_file)
 cli.add_command(link_file)
 cli.add_command(load_file)
 cli.add_command(cat_file)
 cli.add_command(store_file_local)
+cli.add_command(share_local_files_experimental)
+cli.add_command(request_file_experimental)

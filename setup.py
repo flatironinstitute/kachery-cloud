@@ -9,7 +9,9 @@ setup(
         'bin/kachery-cloud-load',
         'bin/kachery-cloud-init',
         'bin/kachery-cloud-cat',
-        'bin/kachery-cloud-store-local'
+        'bin/kachery-cloud-store-local',
+        'bin/kachery-cloud-share-local-files-experimental',
+        'bin/kachery-cloud-request-file-experimental'
     ],
     include_package_data = True,
     install_requires=[

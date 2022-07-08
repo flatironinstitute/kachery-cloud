@@ -33,6 +33,9 @@ def _set_task_status(*, task_name: str, task_job_id: str, status: str, error: Un
     }
     if error is not None:
         payload['message']['errorMessage'] = error
+    else:
+        if status == 'error':
+            raise Exception('Status is error, but no error string provided.')
     if project_id is not None:
         payload['projectId'] = project_id
     else:
