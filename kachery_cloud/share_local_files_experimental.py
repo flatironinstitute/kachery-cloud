@@ -30,12 +30,19 @@ def _kachery_store_shared_file(*, uri: str):
     """
     # impose restrictions on uri here
     if uri != '' and uri is not None:
-        fname = kcl.load_file(uri, local_only=True) # requires kachery-cloud >= 0.1.19
-        if fname is not None:
-            print(f'storing {fname} in cloud')
-            kcl.store_file(fname)
+        if uri.startswith('sha1://'):
+            fname = kcl.load_file(uri, local_only=True) # requires kachery-cloud >= 0.1.19
+            if fname is not None:
+                print(f'storing {fname} in cloud')
+                kcl.store_file(fname)
+            else:
+                raise Exception(f'Unable to load file: {uri}')
+        elif uri.startswith('sha1-enc://'):
+            # Important not to share files from encrypted URIs
+            # This is how we restrict access
+            raise Exception('Cannot share file from encrypted URI')
         else:
-            raise Exception(f'Unable to load file: {uri}')
+            raise Exception(f'Unexpected uri: {uri}')
     else:
         raise Exception(f'Invalid uri: {uri}')
 

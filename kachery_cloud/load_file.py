@@ -114,6 +114,8 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, st
         _makedirs(parent_dir)
     tmp_filename = f'{filename}.tmp.{_random_string(8)}'
     with requests.get(url, stream=True) as r:
+        if r.status_code == 404:
+            raise Exception(f'Unexpected: file not found in bucket: {url}')
         r.raise_for_status()
         with open(tmp_filename, 'wb') as f:
             for chunk in r.iter_content(chunk_size=8192):
