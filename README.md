@@ -18,6 +18,7 @@ Contents
 * [Using your own storage bucket](#using-your-own-storage-bucket)
 * [Environment variables](#environment-variables)
 * [Sharing the kachery cloud directory between multiple users](#sharing-the-kachery-cloud-directory-between-multiple-users)
+* [Access groups and encrypted URIs](#access-groups-and-encrypted-uris)
 * [Sharing local files with deferred upload (experimental)](#sharing-local-files-with-deferred-upload-experimental)
 * [Notes](#notes)
 
@@ -128,6 +129,10 @@ directory on their system (see above)
 
 The last step is necessary so that all files are created with read/write access for
 all users.
+
+## Access groups and encrypted URIs
+
+[Access groups and encrypted URIs](./doc/access_groups_and_encrypted_uris.md)
 
 ## Sharing local files with deferred upload (experimental)
 
