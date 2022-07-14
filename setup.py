@@ -19,7 +19,7 @@ setup(
         'click',
         'simplejson',
         'cryptography',
-        'pubnub',
+        'pubnub==6.3.*', # There is a bug in 6.4.0
         'dask[distributed]'
     ]
 )
