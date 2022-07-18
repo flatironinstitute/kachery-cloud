@@ -13,7 +13,7 @@ def set_mutable_local(key: str, value: str):
         _makedirs(parent_dir)
     with open(file_name, 'w') as f:
         f.write(value)
-    _chmod_file(file_name)
+    # _chmod_file(file_name)
 
 def _is_valid_key(key: str):
     a = key.split('/')

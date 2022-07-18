@@ -8,20 +8,23 @@ all_file_mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat
 
 def _makedirs(path: str):
     config = _get_local_client_config()
-    multiuser = config['multiuser']
-    if multiuser:
-        os.makedirs(path, mode=all_dir_mode)
-    else:
-        os.makedirs(path)
+    # multiuser = config['multiuser']
+    # if multiuser:
+    #     os.makedirs(path, mode=all_dir_mode)
+    # else:
+    #     os.makedirs(path)
+    os.makedirs(path)
 
 def _chmod_dir(path: str):
-    config = _get_local_client_config()
-    multiuser = config['multiuser']
-    if multiuser:
-        os.chmod(path, mode=all_dir_mode)
+    raise Exception('Should not be used')
+    # config = _get_local_client_config()
+    # multiuser = config['multiuser']
+    # if multiuser:
+    #     os.chmod(path, mode=all_dir_mode)
 
 def _chmod_file(path: str):
-    config = _get_local_client_config()
-    multiuser = config['multiuser']
-    if multiuser:
-        os.chmod(path, mode=all_file_mode)
+    raise Exception('Should not be used')
+    # config = _get_local_client_config()
+    # multiuser = config['multiuser']
+    # if multiuser:
+    #     os.chmod(path, mode=all_file_mode)

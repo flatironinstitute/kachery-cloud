@@ -81,7 +81,7 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
                 f.write(chunk)
     try:
         os.rename(tmp_filename, filename)
-        _chmod_file(filename)
+        # _chmod_file(filename)
     except:
         if not os.path.exists(filename): # maybe some other process beat us to it
             raise Exception(f'Unexpected problem moving file {tmp_filename}')
@@ -122,7 +122,7 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, st
                 f.write(chunk)
     try:
         os.rename(tmp_filename, filename)
-        _chmod_file(filename)
+        # _chmod_file(filename)
     except:
         if not os.path.exists(filename): # maybe some other process beat us to it
             raise Exception(f'Unexpected problem moving file {tmp_filename}')

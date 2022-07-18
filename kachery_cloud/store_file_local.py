@@ -32,7 +32,7 @@ def store_file_local(filename: str, *, label: Union[str, None]=None, reference: 
         shutil.copyfile(filename, tmp_filename)
         try:
             os.rename(tmp_filename, kachery_storage_file_name)
-            _chmod_file(kachery_storage_file_name)
+            # _chmod_file(kachery_storage_file_name)
         except:
             # Maybe another client renamed the file
             if not os.path.exists(kachery_storage_file_name):

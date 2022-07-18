@@ -17,9 +17,9 @@ def _get_local_client_config():
             with open(fname, 'r') as f:
                 config = yaml.safe_load(f)
         modified = False
-        if 'multiuser' not in config:
-            config['multiuser'] = False
-            modified = True
+        # if 'multiuser' not in config:
+        #     config['multiuser'] = False
+        #     modified = True
         if modified:
             with open(fname, 'w') as f:
                 yaml.safe_dump(config, f)

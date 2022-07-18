@@ -58,7 +58,7 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
             shutil.copyfile(filename, tmp_filename)
             try:
                 os.rename(tmp_filename, filename)
-                _chmod_file(filename)
+                # _chmod_file(filename)
             except:
                 if not os.path.exists(cache_filename):
                     raise Exception(f'Problem renaming file: {tmp_filename} {filename}')
