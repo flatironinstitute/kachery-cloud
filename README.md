@@ -144,7 +144,7 @@ Set the SGID bit set on all directories. With this set, all new files and direct
 
 ```bash
 chmod g+s $KACHERY_CLOUD_DIR
-find $KACHERY_CLOUD_DIR -type d -exec chmod g+s {} +
+find $KACHERY_CLOUD_DIR -type d -print0 | xargs -0 -n1 chmod g+s
 ```
 
 **Set file permissions so that group members can read/write the files**
