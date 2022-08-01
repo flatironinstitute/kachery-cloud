@@ -3,6 +3,11 @@ import base64
 import numpy as np
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 
+KACHERY_CLOUD_CLIENT_ID = os.getenv('KACHERY_CLOUD_CLIENT_ID', None)
+KACHERY_CLOUD_PRIVATE_KEY = os.getenv('KACHERY_CLOUD_PRIVATE_KEY', None)
+if KACHERY_CLOUD_CLIENT_ID is not None:
+    if KACHERY_CLOUD_PRIVATE_KEY is None:
+        raise Exception('Environment variable not set: KACHERY_CLOUD_PRIVATE_KEY (even though KACHERY_CLOUD_CLIENT_ID is set)')
 
 _global = {
     'client_private_key_hex': None,
@@ -13,6 +18,8 @@ def _ephemeral_mode():
     return os.environ.get('KACHERY_CLOUD_EPHEMERAL') == 'TRUE'
 
 def _get_client_private_key_hex():
+    if KACHERY_CLOUD_PRIVATE_KEY is not None:
+        return KACHERY_CLOUD_PRIVATE_KEY
     if _global['client_private_key_hex'] is not None:
         return _global['client_private_key_hex']
     kachery_cloud_dir = get_kachery_cloud_dir()
@@ -26,6 +33,8 @@ def _get_client_private_key_hex():
     return private_key_hex
 
 def _get_client_public_key_hex():
+    if KACHERY_CLOUD_CLIENT_ID is not None:
+        return KACHERY_CLOUD_CLIENT_ID
     if _global['client_public_key_hex'] is not None:
         return _global['client_public_key_hex']
     kachery_cloud_dir = get_kachery_cloud_dir()

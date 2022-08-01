@@ -85,7 +85,8 @@ You may want to be more specific and target just `figurl.org` and `www.figurl.or
         ],
         "AllowedMethods": [
             "HEAD",
-            "GET"
+            "GET",
+            "PUT"
         ],
         "AllowedOrigins": [
             "*"

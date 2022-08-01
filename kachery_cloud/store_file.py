@@ -1,8 +1,10 @@
+from hashlib import sha1
 import os
 import shutil
 import requests
 from typing import Union
 from urllib.parse import quote
+import time
 
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 
@@ -24,12 +26,24 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
         'hash': hash0,
         'projectId': get_project_id()
     }
-    response = _kacherycloud_request(payload)
-    already_exists = response['alreadyExists']
-    if already_exists:
-        if label is not None:
-            uri = f'{uri}?label={quote(label)}'
-        return uri
+    timer = time.time()
+    while True:
+        response: dict = _kacherycloud_request(payload)
+        already_exists = response.get('alreadyExists', False)
+        already_pending = response.get('alreadyPending', False)
+        if already_exists:
+            if label is not None:
+                uri = f'{uri}?label={quote(label)}'
+            return uri
+        elif already_pending:
+            elapsed = time.time() - timer
+            if elapsed > 60:
+                raise Exception(f'Upload is already pending... timeout: {uri}')
+            print(f'Upload is already pending... waiting to retry {uri}')
+            time.sleep(5)
+        else:
+            break
+        
     signed_upload_url = response['signedUploadUrl']
     object_key = response['objectKey']
     with open(filename, 'rb') as f:
