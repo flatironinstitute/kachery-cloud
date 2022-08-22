@@ -31,3 +31,27 @@ def get_mutable(key: str, *, project_id: Union[str, None]=None):
     if not response['found']:
         return None
     return response['value']
+
+def delete_mutable(key: str, *, project_id: Union[str, None]=None):
+    payload = {
+        'type': 'deleteMutable',
+        'mutableKey': key,
+        'isFolder': False
+    }
+    if project_id is not None:
+        payload['projectId'] = project_id
+    else:
+        payload['projectId'] = get_project_id()
+    response = _kacherycloud_request(payload)
+
+def delete_mutable_folder(key: str, *, project_id: Union[str, None]=None):
+    payload = {
+        'type': 'deleteMutable',
+        'mutableKey': key,
+        'isFolder': True
+    }
+    if project_id is not None:
+        payload['projectId'] = project_id
+    else:
+        payload['projectId'] = get_project_id()
+    response = _kacherycloud_request(payload)

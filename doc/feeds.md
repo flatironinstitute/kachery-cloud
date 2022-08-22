@@ -17,7 +17,7 @@ feed = kcl.create_feed()
 # get the feed URI for loading later or on a different device
 uri = feed.uri
 print(uri)
-kcl.set_mutable_local('test/feed_uri', uri)
+kcl.set_mutable_local('@test/feed_uri', uri)
 
 # Append a message to the feed
 feed.append_message({'message': 1})
@@ -44,7 +44,7 @@ Leave this program running. Open a new terminal and append a message to this fee
 ```python
 import kachery_cloud as kcl
 
-uri = kcl.get_mutable_local('test/feed_uri')
+uri = kcl.get_mutable_local('@test/feed_uri')
 feed = kcl.load_feed(uri)
 
 feed.append_message({'test': 'message'})

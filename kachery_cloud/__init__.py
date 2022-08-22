@@ -16,8 +16,8 @@ from .feeds.load_feed import load_feed
 from .feeds.Feed import Feed
 from .get_client_id import get_client_id
 from .get_project_id import get_project_id
-from .mutable import get_mutable, set_mutable
-from .mutable_local import get_mutable_local, set_mutable_local
+from .mutable import delete_mutable, delete_mutable_folder, get_mutable, set_mutable
+from .mutable_local import delete_mutable_folder_local, delete_mutable_local, get_mutable_local, set_mutable_local
 from .TemporaryDirectory import TemporaryDirectory
 from ._sha1_of_dict import sha1_of_dict
 from .encrypt_uri import encrypt_uri, decrypt_uri

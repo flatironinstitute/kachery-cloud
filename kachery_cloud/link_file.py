@@ -14,7 +14,7 @@ def link_file(filename: str, *, label: Union[str, None]=None):
     sha1 = _compute_file_hash(filename, algorithm='sha1')
 
     size0 = os.path.getsize(filename)
-    set_mutable_local(f'linked_files/sha1/{sha1}', json.dumps({
+    set_mutable_local(f'@linked_files/@sha1/{sha1}', json.dumps({
         'path': filename,
         'size': size0,
         'mtime': os.stat(filename).st_mtime,

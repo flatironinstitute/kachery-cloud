@@ -14,10 +14,10 @@ Mutable keys are strings, resembling file paths. Mutable values are strings. It 
 import kachery_cloud as kcl
 
 uri1 = kcl.store_text('example text', label='example.txt')
-kcl.set_mutable('test/key1', uri1)
+kcl.set_mutable('@test/key1', uri1)
 
 uri2 = kcl.store_text('example text local', label='example.txt')
-kcl.set_mutable_local('test/key1', uri2)
+kcl.set_mutable_local('@test/key1', uri2)
 ```
 
 ## Getting mutables
@@ -25,13 +25,25 @@ kcl.set_mutable_local('test/key1', uri2)
 ```python
 import kachery_cloud as kcl
 
-uri1 = kcl.get_mutable('test/key1')
+uri1 = kcl.get_mutable('@test/key1')
 txt1 = kcl.load_text(uri1)
 # txt1 = "example text"
 
-uri2 = kcl.get_mutable_local('test/key1')
+uri2 = kcl.get_mutable_local('@test/key1')
 txt2 = kcl.load_text(uri2)
 # txt2 = "example text local"
+```
+
+## Deleting mutables
+
+```python
+import kachery_cloud as kcl
+
+kcl.delete_mutable('@test/@folder/key1')
+kcl.delete_mutable_folder('@test/@folder')
+
+kcl.delete_mutable_local('@test/@folder/key1')
+kcl.delete_mutable_folder_local('@test/@folder')
 ```
 
 ## Limitations

@@ -160,7 +160,7 @@ def load_file_local(uri: str, *, dest: Union[None, str]=None) -> Union[str, None
                 return location
     
     # check for linked file
-    a_txt = get_mutable_local(f'linked_files/sha1/{sha1}')
+    a_txt = get_mutable_local(f'@linked_files/@sha1/{sha1}')
     if a_txt is not None:
         a = json.loads(a_txt)
         path0 = a['path']
@@ -174,7 +174,7 @@ def load_file_local(uri: str, *, dest: Union[None, str]=None) -> Union[str, None
                 return path0
             sha1_0 = _compute_file_hash(path0, algorithm='sha1')
             if sha1_0 == sha1:
-                set_mutable_local(f'linked_files/sha1/{sha1}', json.dumps({
+                set_mutable_local(f'@linked_files/@sha1/{sha1}', json.dumps({
                     'path': path0,
                     'size': os.path.getsize(path0),
                     'mtime': os.stat(path0).st_mtime,

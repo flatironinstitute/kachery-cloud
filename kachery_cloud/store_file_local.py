@@ -46,7 +46,7 @@ def _compute_file_hash(path: str, algorithm: str) -> str:
         raise Exception(f'File does not exist: {path}')
     size0 = os.path.getsize(path)
     if size0 > 1000 * 1000:
-        a = get_mutable_local(f'compute_sha1_cache/{_sha1_of_string(path)}')
+        a = get_mutable_local(f'@compute_sha1_cache/{_sha1_of_string(path)}')
         if a:
             a = json.loads(a)
             mtime = os.stat(path).st_mtime
@@ -63,7 +63,7 @@ def _compute_file_hash(path: str, algorithm: str) -> str:
             buf = file.read(BLOCKSIZE)
     ret = hashsum.hexdigest()
     if size0 > 1000 * 1000:
-        set_mutable_local(f'compute_sha1_cache/{_sha1_of_string(path)}', json.dumps({
+        set_mutable_local(f'@compute_sha1_cache/{_sha1_of_string(path)}', json.dumps({
             'path': path,
             'size': size0,
             'mtime': os.stat(path).st_mtime,
