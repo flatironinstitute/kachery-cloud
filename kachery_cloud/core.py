@@ -8,30 +8,30 @@ from ._safe_pickle import _safe_pickle, _safe_unpickle
 
 from .request_file_experimental import request_file_experimental
     
-def store_text(text: str, *, label: Union[str, None]=None, cache_locally: bool=False) -> str:
+def store_text(text: str, *, label: Union[str, None]=None, cache_locally: bool=False, local: bool=False) -> str:
     with TemporaryDirectory() as tmpdir:
         fname = f'{tmpdir}/file.dat'
         with open(fname, 'w') as f:
             f.write(text)
-        return store_file(fname, label=label, cache_locally=cache_locally)
+        return store_file(fname, label=label, cache_locally=cache_locally, local=local)
 
-def store_json(x: Any, *, separators=(',', ':'), indent=None, label: Union[str, None]=None, cache_locally: bool=False) -> str:
+def store_json(x: Any, *, separators=(',', ':'), indent=None, label: Union[str, None]=None, cache_locally: bool=False, local: bool=False) -> str:
     import simplejson
     text = simplejson.dumps(x, separators=separators, indent=indent, allow_nan=False, sort_keys=True)
-    return store_text(text, label=label, cache_locally=cache_locally)
+    return store_text(text, label=label, cache_locally=cache_locally, local=local)
 
-def store_npy(array: Any, *, label: Union[str, None]=None, cache_locally: bool=False) -> str:
+def store_npy(array: Any, *, label: Union[str, None]=None, cache_locally: bool=False, local: bool=False) -> str:
     import numpy as np
     with TemporaryDirectory() as tmpdir:
         fname = f'{tmpdir}/file.npy'
         np.save(fname, array, allow_pickle=False)
-        return store_file(fname, label=label, cache_locally=cache_locally)
+        return store_file(fname, label=label, cache_locally=cache_locally, local=local)
 
-def store_pkl(x: Any, *, label: Union[str, None]=None, cache_locally: bool=False) -> str:
+def store_pkl(x: Any, *, label: Union[str, None]=None, cache_locally: bool=False, local: bool=False) -> str:
     with TemporaryDirectory() as tmpdir:
         fname = f'{tmpdir}/file.npy'
         _safe_pickle(fname, x)
-        return store_file(fname, label=label, cache_locally=cache_locally)
+        return store_file(fname, label=label, cache_locally=cache_locally, local=local)
 
 def load_text(uri: str, *, local_only: bool=False) -> Union[str, None]:
     local_path = load_file(uri, local_only=local_only)

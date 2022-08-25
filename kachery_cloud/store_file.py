@@ -12,9 +12,11 @@ from ._kacherycloud_request import _kacherycloud_request
 from .get_project_id import get_project_id
 from .load_file import _random_string
 from ._fs_operations import _makedirs, _chmod_file
-from .store_file_local import _compute_file_hash
+from .store_file_local import _compute_file_hash, store_file_local
 
-def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bool=False):
+def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bool=False, local: bool=False):
+    if local:
+        return store_file_local(filename, label=label)
     size = os.path.getsize(filename)
     alg = 'sha1'
     hash0 = _compute_file_hash(filename, algorithm=alg)
