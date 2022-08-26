@@ -3,49 +3,39 @@ import base64
 import numpy as np
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 
-KACHERY_CLOUD_CLIENT_ID = os.getenv('KACHERY_CLOUD_CLIENT_ID', None)
-KACHERY_CLOUD_PRIVATE_KEY = os.getenv('KACHERY_CLOUD_PRIVATE_KEY', None)
-if KACHERY_CLOUD_CLIENT_ID is not None:
-    if KACHERY_CLOUD_PRIVATE_KEY is None:
-        raise Exception('Environment variable not set: KACHERY_CLOUD_PRIVATE_KEY (even though KACHERY_CLOUD_CLIENT_ID is set)')
-
-_global = {
-    'client_private_key_hex': None,
-    'client_public_key_hex': None
-}
+# {dir: {client_private_key_hex: '...', client_public_key_hex: '...}}
+_global_client_keys_by_kachery_dir = {}
 
 def _ephemeral_mode():
     return os.environ.get('KACHERY_CLOUD_EPHEMERAL') == 'TRUE'
 
-def _get_client_private_key_hex():
-    if KACHERY_CLOUD_PRIVATE_KEY is not None:
-        return KACHERY_CLOUD_PRIVATE_KEY
-    if _global['client_private_key_hex'] is not None:
-        return _global['client_private_key_hex']
+def _get_client_keys_hex(): # public, private
+    KACHERY_CLOUD_CLIENT_ID = os.getenv('KACHERY_CLOUD_CLIENT_ID', None)
+    KACHERY_CLOUD_PRIVATE_KEY = os.getenv('KACHERY_CLOUD_PRIVATE_KEY', None)
+    if KACHERY_CLOUD_CLIENT_ID is not None:
+        if KACHERY_CLOUD_PRIVATE_KEY is None:
+            raise Exception('Environment variable not set: KACHERY_CLOUD_PRIVATE_KEY (even though KACHERY_CLOUD_CLIENT_ID is set)')
+    if KACHERY_CLOUD_CLIENT_ID is not None:
+        return KACHERY_CLOUD_CLIENT_ID, KACHERY_CLOUD_PRIVATE_KEY
     kachery_cloud_dir = get_kachery_cloud_dir()
+    kk = _global_client_keys_by_kachery_dir.get(kachery_cloud_dir, None)
+    if kk is not None:
+        return kk['client_public_key_hex'], kk['client_private_key_hex']
     private_key_fname = f'{kachery_cloud_dir}/private.pem'
+    public_key_fname = f'{kachery_cloud_dir}/public.pem'
     if not os.path.exists(private_key_fname):
         _generate_client_keys()
     with open(private_key_fname, 'r') as f:
         private_key = f.read()
-    private_key_hex = _private_key_to_hex(private_key)
-    _global['client_private_key_hex'] = private_key_hex
-    return private_key_hex
-
-def _get_client_public_key_hex():
-    if KACHERY_CLOUD_CLIENT_ID is not None:
-        return KACHERY_CLOUD_CLIENT_ID
-    if _global['client_public_key_hex'] is not None:
-        return _global['client_public_key_hex']
-    kachery_cloud_dir = get_kachery_cloud_dir()
-    public_key_fname = f'{kachery_cloud_dir}/public.pem'
-    if not os.path.exists(public_key_fname):
-        _generate_client_keys()
     with open(public_key_fname, 'r') as f:
         public_key = f.read()
+    private_key_hex = _private_key_to_hex(private_key)
     public_key_hex = _public_key_to_hex(public_key)
-    _global['client_public_key_hex'] = public_key_hex
-    return public_key_hex
+    _global_client_keys_by_kachery_dir[kachery_cloud_dir] = {
+        'client_private_key_hex': private_key_hex,
+        'client_public_key_hex': public_key_hex
+    }
+    return public_key_hex, private_key_hex
 
 def _generate_client_keys():
     kachery_cloud_dir = get_kachery_cloud_dir()
@@ -65,8 +55,7 @@ def _generate_client_keys():
     os.chmod(private_key_fname, 0o600) # only owner can read and write
 
 def _sign_message_as_client(msg: dict):
-    public_key_hex = _get_client_public_key_hex()
-    private_key_hex = _get_client_private_key_hex()
+    public_key_hex, private_key_hex = _get_client_keys_hex()
     return _sign_message(msg, public_key_hex, private_key_hex)
 
 ed25519PubKeyPrefix = "302a300506032b6570032100"
