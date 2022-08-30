@@ -1,9 +1,12 @@
 from typing import Any, Union, Protocol
 import random
+import math
 import time
 
+from .LocalPubsubListener import LocalPubsubListener
+
 from ..get_project_id import get_project_id
-from .upload_task_result import upload_task_result, download_task_result
+from .upload_task_result import download_task_result
 from .PubsubListener import PubsubListener
 from .._kacherycloud_request import _kacherycloud_request
 from ..get_client_id import get_client_id
@@ -19,26 +22,12 @@ class TaskErrorException(Exception):
         super().__init__(message)
 
 class TaskClient:
-    def __init__(self, *, project_id: Union[None, str]=None) -> None:
+    def __init__(self, *, project_id: Union[None, str]=None, backend_id: Union[str, None]=None) -> None:
+        if project_id is None:
+            project_id = get_project_id()
         self._project_id = project_id
-    def download_task_result(self, *, task_name: str, task_job_id: str):
-        return download_task_result(task_name=task_name, task_job_id=task_job_id, project_id=self._project_id)
+        self._backend_id = backend_id
     def request_task(self, *, task_type: str, task_name: str, task_input: dict):
-        client_id = get_client_id()
-
-        payload_sub = {
-            'type': 'subscribeToPubsubChannel',
-            'channelName': 'provideTasks'
-        }
-        if self._project_id is not None:
-            payload_sub['projectId'] = self._project_id
-        else:
-            payload_sub['projectId'] = get_project_id()
-        response_sub = _kacherycloud_request(payload_sub)
-        subscribe_key = response_sub['subscribeKey']
-        subscribe_token = response_sub['token']
-        pubsub_channel_name = response_sub['pubsubChannelName']
-
         status: Union[str, None] = None
         result: Union[Any, None] = None
         error: Union[str, None] = None
@@ -55,18 +44,7 @@ class TaskClient:
                             error = message['errorMessage']
                         elif status == 'finished':
                             if task_type == 'calculation':
-                                result = self.download_task_result(task_name=task_name, task_job_id=task_job_id)
-        def renew_access_token():
-            raise Exception('not used')
-        listener = PubsubListener(
-            channels=[pubsub_channel_name],
-            uuid=client_id,
-            subscribe_key=subscribe_key,
-            access_token=subscribe_token,
-            renew_access_token_callback=renew_access_token
-        )
-        listener.on_message(handle_message)
-        listener.start()
+                                result = download_task_result(task_name=task_name, task_job_id=task_job_id, project_id=self._project_id)
         
         if task_type == 'calculation':
             task_job_id = _sha1_of_string(_json_stringify_deterministic({
@@ -75,23 +53,70 @@ class TaskClient:
             }))
         else:
             task_job_id = _sha1_of_string(_random_string(100))
-        payload = {
-            'type': 'publishToPubsubChannel',
-            'channelName': 'requestTasks',
-            'message': {
-                'type': 'requestTask',
-                'taskType': task_type,
-                'taskName': task_name,
-                'taskInput': task_input,
-                'taskJobId': task_job_id
-            }
-        }
-        if self._project_id is not None:
-            payload['projectId'] = self._project_id
-        else:
-            payload['projectId'] = get_project_id()
-        _kacherycloud_request(payload)
         
+        if task_type == 'calculation':
+            try:
+                result = download_task_result(task_name=task_name, task_job_id=task_job_id, project_id=self._project_id)
+            except:
+                result = None
+            if result is not None:
+                return result
+        
+        request_task_message = {
+            'type': 'requestTask',
+            'taskType': task_type,
+            'taskName': task_name,
+            'taskInput': task_input,
+            'taskJobId': task_job_id
+        }
+        if self._backend_id is not None:
+            request_task_message['backendId'] = self._backend_id
+        if not self._project_id.startswith('local:'):
+            client_id = get_client_id()
+
+            # subscribe to the provideTasks channel
+            # to get notified when a task status has changed
+            payload_sub = {
+                'type': 'subscribeToPubsubChannel',
+                'channelName': 'provideTasks'
+            }
+            payload_sub['projectId'] = self._project_id
+            response_sub = _kacherycloud_request(payload_sub)
+            subscribe_key = response_sub['subscribeKey']
+            subscribe_token = response_sub['token']
+            pubsub_channel_name = response_sub['pubsubChannelName']
+
+            def renew_access_token():
+                raise Exception('not used')
+            listener = PubsubListener(
+                channels=[pubsub_channel_name],
+                uuid=client_id,
+                subscribe_key=subscribe_key,
+                access_token=subscribe_token,
+                renew_access_token_callback=renew_access_token
+            )
+            listener.on_message(handle_message)
+            listener.start()
+            
+            # request a task on the requestTasks pubsub channel
+            payload = {
+                'type': 'publishToPubsubChannel',
+                'channelName': 'requestTasks',
+                'message': request_task_message
+            }
+            if self._project_id is not None:
+                payload['projectId'] = self._project_id
+            else:
+                payload['projectId'] = get_project_id()
+            _kacherycloud_request(payload)
+        else:
+            from ._run_task import _get_port_from_project_id, _publish_local_pubsub_message
+            port = _get_port_from_project_id(self._project_id)
+            listener = LocalPubsubListener(channel=f'provideTasks', port=port)
+            listener.on_message(handle_message)
+            listener.start()
+            _publish_local_pubsub_message(channel=f'requestTasks', message=request_task_message, port=port)
+
         announced_started = False
         try:
             while True:
@@ -108,32 +133,13 @@ class TaskClient:
             listener.stop()
 
     def listen_for_task_requests(self, callback: TaskRequestCallback):
-        def subscribe_to_request_tasks_channel():
-            payload = {
-                'type': 'subscribeToPubsubChannel',
-                'channelName': 'requestTasks'
-            }
-            if self._project_id is not None:
-                payload['projectId'] = self._project_id
-            else:
-                payload['projectId'] = get_project_id()
-            return _kacherycloud_request(payload)
-        def renew_access_token():
-            while True:
-                try:
-                    r = subscribe_to_request_tasks_channel()
-                    break
-                except Exception as e:
-                    print(e)
-                    print('Problem renewing access token. Will retry in 30 seconds...')
-                    time.sleep(30)
-            return r['token']
         def handle_message(*, channel: str, message: dict):
             if message['type'] == 'requestTask':
                 task_type = message['taskType']
                 task_name = message['taskName']
                 task_input = message['taskInput']
                 task_job_id = message['taskJobId']
+                backend_id = message.get('backendId', None)
                 if task_type == 'calculation':
                     check_task_job_id = _sha1_of_string(_json_stringify_deterministic({
                         'taskName': task_name,
@@ -141,20 +147,50 @@ class TaskClient:
                     }))
                     if check_task_job_id != task_job_id:
                         raise Exception('Mismatch between task job ID and computed task job ID')
-                callback(task_type=task_type, task_name=task_name, task_input=task_input, task_job_id=task_job_id)
-                
-        client_id = get_client_id()
-        response = subscribe_to_request_tasks_channel()
-        listener = PubsubListener(
-            channels=[response['pubsubChannelName']],
-            uuid=client_id,
-            subscribe_key=response['subscribeKey'],
-            access_token=response['token'],
-            renew_access_token_callback=renew_access_token
-        )
-        listener.on_message(handle_message)
-        listener.start()
-        return listener
+                callback(task_type=task_type, task_name=task_name, task_input=task_input, task_job_id=task_job_id, backend_id=backend_id)
+        if not self._project_id.startswith('local:'):
+            def subscribe_to_request_tasks_channel():
+                # subscribe to the requestTasks channel
+                # to listen for incoming tasks
+                payload = {
+                    'type': 'subscribeToPubsubChannel',
+                    'channelName': 'requestTasks'
+                }
+                if self._project_id is not None:
+                    payload['projectId'] = self._project_id
+                else:
+                    payload['projectId'] = get_project_id()
+                return _kacherycloud_request(payload)
+            def renew_access_token():
+                while True:
+                    try:
+                        r = subscribe_to_request_tasks_channel()
+                        break
+                    except Exception as e:
+                        print(e)
+                        print('Problem renewing access token. Will retry in 30 seconds...')
+                        time.sleep(30)
+                return r['token']
+                    
+            client_id = get_client_id()
+            response = subscribe_to_request_tasks_channel()
+            listener = PubsubListener(
+                channels=[response['pubsubChannelName']],
+                uuid=client_id,
+                subscribe_key=response['subscribeKey'],
+                access_token=response['token'],
+                renew_access_token_callback=renew_access_token
+            )
+            listener.on_message(handle_message)
+            listener.start()
+            return listener
+        else:
+            from ._run_task import _get_port_from_project_id
+            port = _get_port_from_project_id(self._project_id)
+            listener = LocalPubsubListener(channel=f'requestTasks', port=port)
+            listener.on_message(handle_message)
+            listener.start()
+            return listener
 
 def _random_string(num_chars: int) -> str:
     chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'

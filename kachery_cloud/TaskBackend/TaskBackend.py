@@ -12,29 +12,36 @@ except:
 
 
 class TaskBackend:
-    def __init__(self, *, project_id: Union[str, None]=None, num_workers=1, threads_per_worker=4) -> None:
+    def __init__(self, *, project_id: Union[str, None]=None, backend_id: Union[str, None]=None, num_workers=1, threads_per_worker=4) -> None:
+        if project_id is None:
+            project_id = get_project_id()
         self._project_id = project_id
+        self._backend_id = backend_id
         self._registered_task_handlers: Dict[str, TaskHandler] = {}
         self._num_workers = num_workers
         self._threads_per_worker = threads_per_worker
     def register_task_handler(self, *, task_type: str, task_name: str, task_function: Callable):
-        self._registered_task_handlers[task_name] = TaskHandler(
-            task_type=task_type,
-            task_name=task_name,
-            task_function=task_function
-        )
+        if self._registered_task_handlers.get(task_name, None) is None:
+            self._registered_task_handlers[task_name] = TaskHandler(
+                task_type=task_type,
+                task_name=task_name,
+                task_function=task_function
+            )
     def run(self):
         task_names = sorted(list(self._registered_task_handlers.keys()))
         for task_name in task_names:
             handler = self._registered_task_handlers[task_name]
             print(f'Task handler: {task_name} ({handler._task_type})')
-        project_id = get_project_id()
+        project_id = self._project_id
         print(f'Listening for tasks on project {project_id}')
         dask_cluster = LocalCluster(n_workers=self._num_workers, threads_per_worker=self._threads_per_worker)
         dask_client = Client(dask_cluster)
-        task_client = TaskClient(project_id=self._project_id)
+        task_client = TaskClient(project_id=project_id)
         task_jobs: Dict[str, TaskJob] = {}
-        def handle_task_request(*, task_type: str, task_name: str, task_input: dict, task_job_id: str):
+        def handle_task_request(*, task_type: str, task_name: str, task_input: dict, task_job_id: str, backend_id: Union[str, None]=None):
+            if self._backend_id is not None:
+                if self._backend_id != backend_id:
+                    return
             if task_name in self._registered_task_handlers:
                 print(f'Task: {task_name}')
                 task_handler = self._registered_task_handlers[task_name]
@@ -68,7 +75,7 @@ class TaskBackend:
         listener = task_client.listen_for_task_requests(handle_task_request)
         try:
             while True:
-                listener.wait(1)
+                listener.wait(10)
         finally:
             dask_cluster.close() # important, otherwise all the workers get restarted
             listener.stop()
