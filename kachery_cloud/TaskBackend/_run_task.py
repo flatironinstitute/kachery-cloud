@@ -7,10 +7,10 @@ from .._kacherycloud_request import _kacherycloud_request
 from .upload_task_result import upload_task_result
 from .._serialize import _serialize
 
-def _run_task(*, task_type: str, task_name: str, task_job_id: str, task_function: Callable, task_input: Any, project_id: str):
+def _run_task(*, task_type: str, task_name: str, task_job_id: str, task_function: Callable, task_input: Any, project_id: str, extra_kwargs: dict):
     _set_task_status(task_name=task_name, task_job_id=task_job_id, status='started', project_id=project_id)
     try:
-        result = task_function(**task_input)
+        result = task_function(**task_input, **extra_kwargs)
         serialized_result = _serialize(result)
     except Exception as err:
         _set_task_status(task_name=task_name, task_job_id=task_job_id, status='error', error=str(err), project_id=project_id)
@@ -21,6 +21,8 @@ def _run_task(*, task_type: str, task_name: str, task_job_id: str, task_function
     return True
 
 def _set_task_status(*, task_name: str, task_job_id: str, status: str, error: Union[str, None]=None, project_id: str):
+    if status == 'error':
+        print(f'Error in task {task_name}: {error}')
     print(f'Task {status}: {task_name}')
     message = {
         'type': 'setTaskStatus',

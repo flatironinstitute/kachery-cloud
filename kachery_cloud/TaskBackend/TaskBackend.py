@@ -20,12 +20,20 @@ class TaskBackend:
         self._registered_task_handlers: Dict[str, TaskHandler] = {}
         self._num_workers = num_workers
         self._threads_per_worker = threads_per_worker
-    def register_task_handler(self, *, task_type: str, task_name: str, task_function: Callable):
+    def register_task_handler(self, *,
+        task_type: str,
+        task_name: str,
+        task_function: Callable,
+        extra_kwargs: Union[dict, None]=None,
+        can_pickle: bool=True
+    ):
         if self._registered_task_handlers.get(task_name, None) is None:
             self._registered_task_handlers[task_name] = TaskHandler(
                 task_type=task_type,
                 task_name=task_name,
-                task_function=task_function
+                task_function=task_function,
+                extra_kwargs=extra_kwargs,
+                can_pickle=can_pickle
             )
     def run(self):
         task_names = sorted(list(self._registered_task_handlers.keys()))
@@ -53,16 +61,30 @@ class TaskBackend:
                     if result_future.status == 'pending':
                         print(f'Task already running: {task_name}')
                         return
-                result_future: Future = dask_client.submit(
-                    _run_task,
-                    pure=False,
-                    task_type=task_handler._task_type,
-                    task_name=task_handler._task_name,
-                    task_job_id=task_job_id,
-                    task_function=task_handler._task_function,
-                    task_input=task_input,
-                    project_id=self._project_id
-                )
+                if task_handler._can_pickle:
+                    result_future: Future = dask_client.submit(
+                        _run_task,
+                        pure=False,
+                        task_type=task_handler._task_type,
+                        task_name=task_handler._task_name,
+                        task_job_id=task_job_id,
+                        task_function=task_handler._task_function,
+                        task_input=task_input,
+                        project_id=self._project_id,
+                        extra_kwargs=task_handler._extra_kwargs
+                    )
+                else:
+                    _run_task(
+                        task_type=task_handler._task_type,
+                        task_name=task_handler._task_name,
+                        task_job_id=task_job_id,
+                        task_function=task_handler._task_function,
+                        task_input=task_input,
+                        project_id=self._project_id,
+                        extra_kwargs=task_handler._extra_kwargs
+                    )
+                    result_future = None
+
                 # seems to be important to store the result future in memory
                 # hypothesis: if the result is not used, it may get garbage collected and not actually run
                 task_jobs[task_job_id] = TaskJob(
@@ -70,7 +92,8 @@ class TaskBackend:
                     task_name=task_handler._task_name,
                     task_input=task_input,
                     task_job_id=task_job_id,
-                    result_future=result_future
+                    # result_future=result_future
+                    result_future=None
                 )
         listener = task_client.listen_for_task_requests(handle_task_request)
         try:
@@ -81,12 +104,20 @@ class TaskBackend:
             listener.stop()
 
 class TaskHandler:
-    def __init__(self, *, task_type: str, task_name: str, task_function: Callable) -> None:
+    def __init__(self, *,
+        task_type: str,
+        task_name: str,
+        task_function: Callable,
+        extra_kwargs: Union[dict, None]=None,
+        can_pickle: bool=True
+    ) -> None:
         self._task_type = task_type
         self._task_name = task_name
         self._task_function = task_function
+        self._extra_kwargs = extra_kwargs if extra_kwargs is not None else {}
+        self._can_pickle = can_pickle
     def run_task(self, *, task_input: dict):
-        return self._task_function(**task_input)
+        return self._task_function(**task_input, **self._extra_kwargs)
 
 class TaskJob:
     def __init__(self, *,
@@ -94,7 +125,7 @@ class TaskJob:
         task_name: str,
         task_input: dict,
         task_job_id: str,
-        result_future: Future
+        result_future: Union[Future, None]
     ) -> None:
         self._task_type = task_type
         self._task_name = task_name
