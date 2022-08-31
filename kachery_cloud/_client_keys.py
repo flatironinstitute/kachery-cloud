@@ -17,7 +17,8 @@ def _get_client_keys_hex(): # public, private
             raise Exception('Environment variable not set: KACHERY_CLOUD_PRIVATE_KEY (even though KACHERY_CLOUD_CLIENT_ID is set)')
     if KACHERY_CLOUD_CLIENT_ID is not None:
         return KACHERY_CLOUD_CLIENT_ID, KACHERY_CLOUD_PRIVATE_KEY
-    kachery_cloud_dir = get_kachery_cloud_dir()
+    # don't use sandbox directory for getting the keys, use the normal one
+    kachery_cloud_dir = get_kachery_cloud_dir(respect_sandbox=False)
     kk = _global_client_keys_by_kachery_dir.get(kachery_cloud_dir, None)
     if kk is not None:
         return kk['client_public_key_hex'], kk['client_private_key_hex']

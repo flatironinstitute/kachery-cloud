@@ -15,9 +15,9 @@ def use_sandbox(use: bool=True):
         # We turn off the sandbox, but if we turn it back on again, we want to use the same dir for this process
         os.environ['KACHERY_CLOUD_USE_SANDBOX'] = '0'
 
-def get_kachery_cloud_dir():
+def get_kachery_cloud_dir(*, respect_sandbox: bool=True):
     from pathlib import Path
-    if os.getenv('KACHERY_CLOUD_USE_SANDBOX', '') == '1':
+    if respect_sandbox and (os.getenv('KACHERY_CLOUD_USE_SANDBOX', '') == '1'):
         return os.environ['KACHERY_CLOUD_SANDBOX_DIR']
     homedir = str(Path.home())
     hsd = os.getenv('KACHERY_CLOUD_DIR', f'{homedir}/.kachery-cloud')
