@@ -58,7 +58,7 @@ class TaskBackend:
                 if task_job_id in task_jobs:
                     tj = task_jobs[task_job_id]
                     result_future: Future = tj._result_future
-                    if result_future not None:
+                    if result_future is not None:
                         if result_future.status == 'pending':
                             print(f'Task already running: {task_name}')
                             return
