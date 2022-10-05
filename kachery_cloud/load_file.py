@@ -22,6 +22,13 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
         # locally by the sha1 hash. Unfortunately, this means two http calls.
         uri_decrypted = decrypt_uri(uri)
         return load_file(uri_decrypted, verbose=verbose, local_only=local_only, dest=dest)
+    
+    if uri.startswith('jot://'):
+        jot_id = uri.split('?')[0].split('/')[2]
+        uri2 = _get_jot_value(jot_id)
+        if uri2 is None:
+            raise Exception('Unable to get jot')
+        uri = uri2
 
     if local_only:
         return load_file_local(uri, dest=dest)
@@ -188,6 +195,20 @@ def load_file_local(uri: str, *, dest: Union[None, str]=None) -> Union[str, None
                 print(f'Warning: sha1 of linked file has changed: {path0} {uri}')
     
     return None
+
+def _get_jot_value(jot_id):
+    jot_url = 'https://jot.figurl.org/api/jot'
+    req = {
+        'type': 'getJotValue',
+        'jotId': jot_id
+    }
+    resp = requests.post(jot_url, json=req)
+    if resp.status_code != 200:
+        raise Exception(f'Error getting jot value: ({resp.status_code}) {resp.reason}: {resp.text}')
+    response = resp.json()
+    if response['type'] != 'getJotValue':
+        raise Exception('Unexpected problem getting jot value')
+    return response['value']
 
 def _get_query_from_uri(uri: str):
     a = uri.split('?')
