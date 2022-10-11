@@ -6,6 +6,8 @@
 
 > **IMPORTANT**: This package is intended for collaborative sharing of data for scientific research. It should not be used for other purposes.
 
+> **PLEASE NOTE**: At this point, uploaded files are not guaranteed to be available forever.
+
 Share scientific research data in the cloud using Python.
 
 Kachery-cloud is a core part of [figurl](https://github.com/flatironinstitute/figurl).
