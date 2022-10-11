@@ -7,6 +7,7 @@ setup(
         'bin/kachery-cloud-store',
         'bin/kachery-cloud-link',
         'bin/kachery-cloud-load',
+        'bin/kachery-cloud-load-info',
         'bin/kachery-cloud-init',
         'bin/kachery-cloud-cat',
         'bin/kachery-cloud-store-local',

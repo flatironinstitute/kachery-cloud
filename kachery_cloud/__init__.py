@@ -1,5 +1,5 @@
 from .store_file import store_file
-from .load_file import load_file
+from .load_file import load_file, load_file_info
 from .request_file_experimental import request_file_experimental
 from .store_file_local import store_file_local
 from .link_file import link_file

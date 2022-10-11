@@ -37,6 +37,15 @@ def load_file(uri: str, dest: str):
     if fname is not None:
         print(fname)
 
+@click.command(help="Load file from kachery cloud")
+@click.argument('uri')
+def load_file_info(uri: str):
+    import json
+    x = kc.load_file_info(uri)
+    if x is None:
+        return
+    print(json.dumps(x, indent=4))
+
 @click.command(help="Load file from kachery cloud and write to stdout")
 @click.argument('uri')
 def cat_file(uri: str):
@@ -54,7 +63,7 @@ def store_file_local(filename: str, reference: bool, label: str):
 @click.command(help="Share local files")
 @click.option('--project', required=False, default='')
 def share_local_files_experimental(project: str):
-    project = project if project is not '' else None
+    project = project if project != '' else None
     kc.share_local_files_experimental(project_id=project)
 
 @click.command(help="Request file")
@@ -68,6 +77,7 @@ cli.add_command(init)
 cli.add_command(store_file)
 cli.add_command(link_file)
 cli.add_command(load_file)
+cli.add_command(load_file_info)
 cli.add_command(cat_file)
 cli.add_command(store_file_local)
 cli.add_command(share_local_files_experimental)

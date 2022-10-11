@@ -15,13 +15,13 @@ from ._access_group_encrypt import _access_group_decrypt
 from .encrypt_uri import decrypt_uri
 
 
-def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Union[None, str]=None) -> Union[str, None]:
+def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Union[None, str]=None, _get_info: bool=False) -> Union[str, dict, None]:
     if uri.startswith('sha1-enc://'):
         # While it would be nice to send the sha1-enc hash directly to the API findFile,
         # we need to do it this way so that we can check locally... because files are stored
         # locally by the sha1 hash. Unfortunately, this means two http calls.
         uri_decrypted = decrypt_uri(uri)
-        return load_file(uri_decrypted, verbose=verbose, local_only=local_only, dest=dest)
+        return load_file(uri_decrypted, verbose=verbose, local_only=local_only, dest=dest, _get_info=_get_info)
     
     if uri.startswith('jot://'):
         jot_id = uri.split('?')[0].split('/')[2]
@@ -33,6 +33,8 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
     if local_only:
         return load_file_local(uri, dest=dest)
     if uri.startswith('/'):
+        if _get_info:
+            raise Exception('Cannot use _get_info for this uri')
         if os.path.exists(uri):
             if dest is not None:
                 shutil.copyfile(uri, dest)
@@ -41,12 +43,16 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
         else:
             return None
     if uri.startswith('sha1://'):
-        x = load_file_local(uri, dest=dest)
-        if x is not None:
-            return x
+        if not _get_info:
+            x = load_file_local(uri, dest=dest)
+            if x is not None:
+                return x
         sha1 = uri.split('?')[0].split('/')[2]
-        return _load_sha1_file_from_cloud(sha1, verbose=verbose, dest=dest)
-        
+        return _load_sha1_file_from_cloud(sha1, verbose=verbose, dest=dest, _get_info=_get_info)
+    
+    if _get_info:
+        raise Exception('Cannot use _get_info for this uri')
+
     assert uri.startswith('ipfs://'), f'Invalid or unsupported URI: {uri}'
     a = uri.split('?')[0].split('/')
     assert len(a) >= 3, f'Invalid or unsupported URI: {uri}'
@@ -97,7 +103,10 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
         return dest
     return filename
 
-def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, str]=None) -> Union[str, None]:
+def load_file_info(uri: str) -> dict:
+    return load_file(uri, _get_info=True)
+
+def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, str]=None, _get_info: bool=False) -> Union[str, dict, None]:
     payload = {
         'type': 'findFile',
         'hashAlg': 'sha1',
@@ -110,6 +119,11 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, st
         url = response['url']
     else:
         return None
+
+    if _get_info:
+        # we don't want the user to get the idea they should use the URL directly!
+        del response['url']
+        return response
 
     kachery_cloud_dir = get_kachery_cloud_dir()
     e = sha1
