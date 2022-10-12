@@ -50,6 +50,12 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
         sha1 = uri.split('?')[0].split('/')[2]
         return _load_sha1_file_from_cloud(sha1, verbose=verbose, dest=dest, _get_info=_get_info)
     
+    if uri.startswith('zenodo://') or uri.startswith('zenodo-sandbox://'):
+        x = load_file_local(uri, dest=dest)
+        if x is not None:
+            return x
+        return _load_zenodo_file_from_cloud(uri, dest=dest)
+
     if _get_info:
         raise Exception('Cannot use _get_info for this uri')
 
@@ -106,6 +112,49 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
 def load_file_info(uri: str) -> dict:
     return load_file(uri, _get_info=True)
 
+def _load_zenodo_file_from_cloud(uri: str, *, dest: Union[None, str]=None):
+    sandbox = uri.startswith('zenodo-sandbox://')
+    aa = uri.split('?')[0].split('/')
+    z_record_id = aa[2]
+    z_file_name = '/'.join(aa[3:])
+
+    record_url = f'https://{"sandbox.zenodo" if sandbox else "zenodo"}.org/api/records/{z_record_id}'
+    req_resp = requests.get(record_url)
+    if req_resp.status_code != 200:
+        raise Exception(f'Error downloading zenodo record info ({req_resp.status_code}) {req_resp.reason}: {req_resp.text}')
+    resp = req_resp.json()
+    if 'files' not in resp:
+        raise Exception('Error getting zenodo record')
+    cc = [f for f in resp['files'] if f['key'] == z_file_name]
+    if len(cc) == 0:
+        raise Exception('File not found in zenodo record')
+    dd = cc[0]
+    url = dd['links']['self']
+    
+    kachery_cloud_dir = get_kachery_cloud_dir()
+    filename = f'{kachery_cloud_dir}/{"zenodo-sandbox" if sandbox else "zenodo"}/{z_record_id}/{z_file_name}'
+    parent_dir = os.path.dirname(filename)
+    if not os.path.exists(parent_dir):
+        os.makedirs(parent_dir)
+    tmp_filename = f'{filename}.tmp.{_random_string(8)}'
+    with requests.get(url, stream=True) as r:
+        if r.status_code == 404:
+            raise Exception(f'Unexpected: file not found: {url}')
+        r.raise_for_status()
+        with open(tmp_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+    try:
+        os.rename(tmp_filename, filename)
+        # _chmod_file(filename)
+    except:
+        if not os.path.exists(filename): # maybe some other process beat us to it
+            raise Exception(f'Unexpected problem moving file {tmp_filename}')
+    if dest is not None:
+        shutil.copyfile(filename, dest)
+        return dest
+    return filename
+
 def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, str]=None, _get_info: bool=False) -> Union[str, dict, None]:
     payload = {
         'type': 'findFile',
@@ -153,6 +202,22 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, st
     return filename
 
 def load_file_local(uri: str, *, dest: Union[None, str]=None) -> Union[str, None]:
+    if uri.startswith('zenodo://') or uri.startswith('zenodo-sandbox://'):
+        sandbox = uri.startswith('zenodo-sandbox://')
+        aa = uri.split('?')[0].split('/')
+        z_record_id = aa[2]
+        z_file_name = '/'.join(aa[3:])
+
+        kcdir = get_kachery_cloud_dir()
+        pp = f'{kcdir}/{"zenodo-sandbox" if sandbox else "zenodo"}/{z_record_id}/{z_file_name}'
+        if os.path.exists(pp):
+            if dest is not None:
+                shutil.copyfile(pp, dest)
+                return dest
+            return pp
+        else:
+            return None
+
     query = _get_query_from_uri(uri)
     assert uri.startswith('sha1://'), f'Invalid local URI: {uri}'
     a = uri.split('?')[0].split('/')

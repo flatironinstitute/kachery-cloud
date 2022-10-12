@@ -22,3 +22,4 @@ from .TemporaryDirectory import TemporaryDirectory
 from ._sha1_of_dict import sha1_of_dict
 from .encrypt_uri import encrypt_uri, decrypt_uri
 from .share_local_files_experimental import share_local_files_experimental
+from .zenodo_upload.zenodo_upload import initiate_zenodo_upload
