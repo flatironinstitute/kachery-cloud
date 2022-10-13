@@ -1,7 +1,10 @@
 import os
+from typing import Any
 import requests
 import json
+
 from ..load_file import load_file
+from ..store_file_local import store_file_local, store_json_local
 
 
 class ZenodoUploader:
@@ -55,6 +58,43 @@ class ZenodoUploader:
             if r3.status_code not in [200, 201]:
                 raise Exception(f'Problem uploading file: {r3.status_code}')
         return f'{"zenodo-sandbox" if self._sandbox else "zenodo"}://{self._deposition_id}/{name}'
+    def upload_file_recursive(self, uri: str, *, name: str):
+        print(f'Uploading recursive {name}: {uri}')
+        file_path = load_file(uri)
+        if file_path is None:
+            raise Exception(f'Unable to load {uri}')
+        try:
+            with open(file_path, 'r') as ff:
+                file_obj = json.load(ff)
+        except:
+            file_obj = None
+            print(f'Warning: unable to load json from file: {uri}')
+        if file_obj is not None:
+            file_obj_processed = self._upload_file_recursive_process_obj(file_obj)
+            uri2 = store_json_local(file_obj_processed)
+            return self.upload_file(uri2, name=name)
+        else:
+            return self.upload_file(uri, name=name)
+    def _upload_file_recursive_process_obj(self, x: Any):
+        if isinstance(x, dict):
+            ret = {}
+            for k, v in x.items():
+                ret[k] = self._upload_file_recursive_process_obj(v)
+            return ret
+        elif isinstance(x, list):
+            ret = []
+            for i in range(len(x)):
+                ret.append(self._upload_file_recursive_process_obj(x[i]))
+            return ret
+        elif isinstance(x, str):
+            if x.startswith('sha1://') or x.startswith('zenodo://') or x.startswith('zenodo-sandbox://'):
+                uri0 = store_file_local(x) # make sure it's a sha-1 url
+                sha1 = uri0.split('?')[0].split('/')[2]
+                return self.upload_file_recursive(x, name=sha1)
+            else:
+                return x
+        else:
+            return x
     def finalize_upload(self):
         data = {
             'metadata': {

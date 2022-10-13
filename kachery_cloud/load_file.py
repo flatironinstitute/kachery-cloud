@@ -125,11 +125,11 @@ def _load_zenodo_file_from_cloud(uri: str, *, dest: Union[None, str]=None):
     resp = req_resp.json()
     if 'files' not in resp:
         raise Exception('Error getting zenodo record')
-    cc = [f for f in resp['files'] if f['key'] == z_file_name]
+    cc = [f for f in resp['files'] if f.get('filename', f.get('key', '')) == z_file_name]
     if len(cc) == 0:
         raise Exception('File not found in zenodo record')
     dd = cc[0]
-    url = dd['links']['self']
+    url = dd['links'].get('download', dd['links'].get('self'))
     
     kachery_cloud_dir = get_kachery_cloud_dir()
     filename = f'{kachery_cloud_dir}/{"zenodo-sandbox" if sandbox else "zenodo"}/{z_record_id}/{z_file_name}'

@@ -3,6 +3,7 @@ import json
 import hashlib
 import shutil
 import random
+from tempfile import TemporaryDirectory
 from urllib.parse import quote
 from typing import Union
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
@@ -12,6 +13,9 @@ from ._fs_operations import _makedirs, _chmod_file
 
 
 def store_file_local(filename: str, *, label: Union[str, None]=None, reference: Union[bool, None]=None):
+    from .load_file import load_file
+    if filename.startswith('sha1://'):
+        filename = load_file(filename)
     if not os.path.isabs(filename):
         filename = os.path.abspath(filename)
     sha1 = _compute_file_hash(filename, algorithm='sha1')
@@ -38,6 +42,13 @@ def store_file_local(filename: str, *, label: Union[str, None]=None, reference: 
             if not os.path.exists(kachery_storage_file_name):
                 raise Exception(f'Unexpected problem renaming file: {tmp_filename} {kachery_storage_file_name}')
     return uri
+
+def store_json_local(obj, *, label: Union[str, None]=None):
+    with TemporaryDirectory() as tmpdir:
+        fname = f'{tmpdir}/tmp.json'
+        with open(fname, 'w') as f:
+            json.dump(obj, f)
+        return store_file_local(fname, label=label)
 
 def _compute_file_hash(path: str, algorithm: str) -> str:
     if not os.path.isabs(path):
