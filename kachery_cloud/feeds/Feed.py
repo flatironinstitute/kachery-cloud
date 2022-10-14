@@ -112,38 +112,39 @@ class Feed:
             del self._messages_appended_callbacks[callback_id]
         
     def _initialize_pubsub_listener(self):
-        client_id = get_client_id()
+        pass
+        # client_id = get_client_id()
 
-        def subscribe_to_channel():
-            payload_sub = {
-                'type': 'subscribeToPubsubChannel',
-                'channelName': 'feedUpdates',
-                'projectId': self._project_id
-            }
-            response_sub = _kacherycloud_request(payload_sub)
-            return response_sub
+        # def subscribe_to_channel():s
+        #     payload_sub = {
+        #         'type': 'subscribeToPubsubChannel',
+        #         'channelName': 'feedUpdates',
+        #         'projectId': self._project_id
+        #     }
+        #     response_sub = _kacherycloud_request(payload_sub)
+        #     return response_sub
         
-        response_sub = subscribe_to_channel()
-        subscribe_key = response_sub['subscribeKey']
-        subscribe_token = response_sub['token']
-        pubsub_channel_name = response_sub['pubsubChannelName']
+        # response_sub = subscribe_to_channel()
+        # subscribe_key = response_sub['subscribeKey']
+        # subscribe_token = response_sub['token']
+        # pubsub_channel_name = response_sub['pubsubChannelName']
 
-        def handle_message(*, channel: str, message: dict):
-            if message['type'] == 'feedMessagesAppended':
-                if message['feedId'] == self._feed_id:
-                    callbacks = self._messages_appended_callbacks.values()
-                    for cb in callbacks:
-                        cb()
-        def renew_access_token():
-            r = subscribe_to_channel()
-            return r['token']
-        listener = PubsubListener(
-            channels=[pubsub_channel_name],
-            uuid=client_id,
-            subscribe_key=subscribe_key,
-            access_token=subscribe_token,
-            renew_access_token_callback=renew_access_token
-        )
-        listener.on_message(handle_message)
-        listener.start()
-        self._pubsub_listener = listener
+        # def handle_message(*, channel: str, message: dict):
+        #     if message['type'] == 'feedMessagesAppended':
+        #         if message['feedId'] == self._feed_id:
+        #             callbacks = self._messages_appended_callbacks.values()
+        #             for cb in callbacks:
+        #                 cb()
+        # def renew_access_token():
+        #     r = subscribe_to_channel()
+        #     return r['token']
+        # listener = PubsubListener(
+        #     channels=[pubsub_channel_name],
+        #     uuid=client_id,
+        #     subscribe_key=subscribe_key,
+        #     access_token=subscribe_token,
+        #     renew_access_token_callback=renew_access_token
+        # )
+        # listener.on_message(handle_message)
+        # listener.start()
+        # self._pubsub_listener = listener
