@@ -107,7 +107,8 @@ class Feed:
                 elapsed = time.time() - timer
                 if elapsed > timeout_sec:
                     return False
-                self._pubsub_listener.wait(0.05)
+                time.sleep(0.05)
+                # self._pubsub_listener.wait(0.05)
         finally:
             del self._messages_appended_callbacks[callback_id]
         
