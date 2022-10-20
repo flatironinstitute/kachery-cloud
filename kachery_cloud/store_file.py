@@ -30,7 +30,13 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
     }
     timer = time.time()
     while True:
-        response: dict = _kacherycloud_request(payload)
+        if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
+            response: dict = _kacherycloud_request(payload)
+        else:
+            del payload['projectId']
+            from ._kachery_gateway_request import _kachery_gateway_request
+            response: dict = _kachery_gateway_request(payload)
+            
         already_exists = response.get('alreadyExists', False)
         already_pending = response.get('alreadyPending', False)
         if already_exists:
@@ -60,7 +66,13 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
         'hash': hash0,
         'projectId': get_project_id()
     }
-    response2 = _kacherycloud_request(payload2)
+    if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
+        response2 = _kacherycloud_request(payload2)
+    else:
+        del payload2['projectId']
+        payload2['size'] = size
+        from ._kachery_gateway_request import _kachery_gateway_request
+        response2: dict = _kachery_gateway_request(payload2)
 
     if cache_locally:
         kachery_cloud_dir = get_kachery_cloud_dir()

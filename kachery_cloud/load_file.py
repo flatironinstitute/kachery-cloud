@@ -161,7 +161,12 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, st
         'hashAlg': 'sha1',
         'hash': sha1
     }
-    response= _kacherycloud_request(payload)
+    if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
+        response= _kacherycloud_request(payload)
+    else:
+        from ._kachery_gateway_request import _kachery_gateway_request
+        response= _kachery_gateway_request(payload)
+        
     found = response['found']
     uri = f'sha1://{sha1}'
     if found:
