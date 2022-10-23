@@ -9,6 +9,7 @@ from ._client_keys import _sign_message_as_client
 from ._kachery_gateway_url import _kachery_gateway_url
 from ._kachery_gateway_request import _kachery_gateway_request
 from ._get_local_client_config import _get_local_client_config
+from ._kacherycloud_request import _kacherycloud_request
 
 
 _global_init = {
@@ -23,7 +24,8 @@ def _get_client_info():
         'type': 'getClientInfo',
         'clientId': client_id
     }
-    response = _kachery_gateway_request(payload)
+    # response = _kachery_gateway_request(payload)
+    response = _kacherycloud_request(payload)
     found = response['found']
     if found:
         _global_init['client_info'] = response
