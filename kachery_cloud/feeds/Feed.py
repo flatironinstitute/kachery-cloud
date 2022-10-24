@@ -72,7 +72,9 @@ class Feed:
         if project_id is not None:
             payload['projectId'] = project_id
         else:
-            payload['projectId'] = get_project_id()
+            project_id = get_project_id()
+            if project_id:
+                payload['projectId'] = project_id
         response = _kacherycloud_request(payload)
         feed_id = response['feedId']
         project_id = response['projectId']

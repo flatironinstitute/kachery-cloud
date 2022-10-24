@@ -24,8 +24,8 @@ def _get_client_info():
         'type': 'getClientInfo',
         'clientId': client_id
     }
-    # response = _kachery_gateway_request(payload)
-    response = _kacherycloud_request(payload)
+    response = _kachery_gateway_request(payload)
+    # response = _kacherycloud_request(payload)
     found = response['found']
     if found:
         _global_init['client_info'] = response

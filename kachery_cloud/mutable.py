@@ -15,7 +15,9 @@ def set_mutable(key: str, value: str, *, project_id: Union[str, None]=None):
     if project_id is not None:
         payload['projectId'] = project_id
     else:
-        payload['projectId'] = get_project_id()
+        project_id = get_project_id()
+        if project_id:
+            payload['projectId'] = get_project_id()
     response = _kacherycloud_request(payload)
 
 def get_mutable(key: str, *, project_id: Union[str, None]=None):
