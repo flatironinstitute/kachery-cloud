@@ -6,7 +6,7 @@ from kachery_cloud.get_kachery_cloud_dir import get_kachery_cloud_dir
 
 from .get_client_id import get_client_id
 from ._client_keys import _sign_message_as_client
-from ._kachery_gateway_url import _kachery_gateway_url
+from ._get_kachery_gateway_url import _get_kachery_gateway_url
 from ._kachery_gateway_request import _kachery_gateway_request
 from ._get_local_client_config import _get_local_client_config
 from ._kacherycloud_request import _kacherycloud_request
@@ -41,7 +41,7 @@ def init():
             'type': 'addClient'
         })
         label = socket.gethostname()
-        url = f'{_kachery_gateway_url}/registerClient/{client_id}?signature={signature}&label={urllib.parse.quote(label)}'
+        url = f'{_get_kachery_gateway_url()}/registerClient/{client_id}?signature={signature}&label={urllib.parse.quote(label)}'
         print('')
         print(url)
         print('')
@@ -57,7 +57,7 @@ def init():
         client_id = get_client_id()
         print('This client has already been registered.')
         print('Click the following link to configure the client:')
-        url = f'{_kachery_gateway_url}/client/{client_id}'
+        url = f'{_get_kachery_gateway_url()}/client/{client_id}'
         print(url)
         print('')
     client = client_info['client']

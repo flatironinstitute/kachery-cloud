@@ -1,11 +1,9 @@
-# Configuring a Wasabi bucket for use with kachery-cloud
-
-Guide outline
+# Creating a public Wasabi bucket as part of a Kachery zone
 
 * Create an account and sign to [wasabi.com](https://wasabi.com/)
-    - You will need to create a paid account to enable public access to the bucket (required)
+    - You will need to create a paid account to enable public access to the bucket
 * Create a new bucket
-    - The bucket name is globally unique
+    - The bucket name is globally unique (for example `kachery-zone-zn1`)
     - Pay attention to the region you choose (I don't think you can modify that later)
     - You can use all default options
 * Allow public access
@@ -22,10 +20,6 @@ Guide outline
     - Access keys (left panel)
     - Create new access key
     - Copy the "Access Key" and the "Secret Key" and paste them somewhere temporary and safe. Note that once you close this box, you won't be able to retrieve the secret key ever again, but you can always create a new key pair.
-* Test the configuration
-    - TODO: not sure the best way to test this
-* Phew
-    - You did it!
 
 ## Example policy
 

@@ -1,13 +1,15 @@
-import os
+from typing import Union
 import requests
 from datetime import datetime
 from .get_client_id import get_client_id
 from ._client_keys import _sign_message_as_client
-from ._kachery_gateway_url import _kachery_gateway_url
+from ._get_kachery_gateway_url import _get_kachery_gateway_url
 
-def _kachery_gateway_request(request_payload: dict):
+def _kachery_gateway_request(request_payload: dict, kachery_gateway_url: Union[str, None]=None):
+    if kachery_gateway_url is None:
+        kachery_gateway_url = _get_kachery_gateway_url()
     client_id = get_client_id()
-    url = f'{_kachery_gateway_url}/api/gateway'
+    url = f'{kachery_gateway_url}/api/gateway'
     timestamp = int(datetime.timestamp(datetime.now()) * 1000)
     payload = {**request_payload, **{'timestamp': timestamp}}
     req = {
