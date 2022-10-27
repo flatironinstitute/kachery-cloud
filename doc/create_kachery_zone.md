@@ -80,9 +80,18 @@ Prerequisites
 
 Create an account on [Vercel](https://vercel.com)
 
-On your local system, git clone [kachery-gateway](https://github.com/scratchrealm/kachery-gateway) to a directory called `kachery-gateway-zn1`
+On your local system, clone [kachery-gateway](https://github.com/scratchrealm/kachery-gateway) to a directory called `kachery-gateway-zn1`
+
+```bash
+git clone https://github.com/scratchrealm/kachery-gateway kachery-gateway-zn1
+```
 
 cd to `kachery-gateway-zn1` and run `yarn install`
+
+```bash
+cd kachery-gateway-zn1
+yarn install
+```
 
 Run `vercel dev` and set up a new project called `kachery-gateway-zn1` (use the default settings)
 
@@ -137,3 +146,61 @@ kachery-cloud-cat sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_con
 # verify that it's finding it in the new bucket
 kachery-cloud-load-info sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt
 ```
+
+## Setting up Github actions
+
+On Github, Create a new empty public github repo called `kachery-gateway-zn1`.
+
+Add the new remote and push the main branch
+
+```bash
+git remote add zone https://github.com/<user>/kachery-gateway-zn1.git
+
+git push zone main:main
+```
+
+Look at the contents of `.vercel/project.json` to get the vercel `projectId` and `orgId`. You will need those in the environment variables below.
+
+Obtain a [vercel access token](https://vercel.com/guides/how-do-i-use-a-vercel-api-access-token).
+
+On Github, open your project and go to Settings -> Secrets -> Actions. Add the following repository secrets:
+
+```
+VERCEL_PROJECT_ID: from above
+VERCEL_ORG_ID: from above
+VERCEL_TOKEN: from above
+GOOGLE_CREDENTIALS: same as for vercel project
+ADMIN_BUCKET_URI: same as for vercel project
+ADMIN_BUCKET_CREDENTIALS: same as for vercel project
+```
+
+## Update the deployment
+
+When the kachery-gateway software has been updated, do the following to deploy the updates
+
+```bash
+cd kachery-gateway-zn1
+
+# Download the updates from the remote repo
+git remote update origin
+
+# Checkout the main branch
+git checkout main
+
+# Merge in the changes
+git merge origin/main
+
+# Push to your zone on Github
+git push zone main:main
+
+# Do the same for the deploy branch
+# This will trigger the deployment
+git checkout deploy
+git merge origin/deploy
+git push zone deploy:deploy
+
+# Switch back to the main branch.
+git checkout main
+```
+
+Check Github to monitor the deployment action.

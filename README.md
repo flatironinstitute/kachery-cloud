@@ -18,6 +18,7 @@ Contents
 * [Installation and setup](#installation-and-setup)
 * [Basic usage](#basic-usage)
 * [Environment variables](#environment-variables)
+* [Creating your own Kachery zone](#creating-your-own-kachery-zone)
 * [Sharing the kachery cloud directory between multiple users](#sharing-the-kachery-cloud-directory-between-multiple-users)
 * [Access groups and encrypted URIs](#access-groups-and-encrypted-uris)
 * [Notes](#notes)
@@ -82,6 +83,10 @@ export KACHERY_CLOUD_DIR="..."
 ```
 
 It is recommend that you set this variable in your `~/.bashrc` file.
+
+## Creating your own Kachery zone
+
+[Creating your own Kachery zone](./doc/create_kachery_zone.md)
 
 ## Sharing the kachery cloud directory between multiple users
 
