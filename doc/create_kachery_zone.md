@@ -181,8 +181,8 @@ When the kachery-gateway software has been updated, do the following to deploy t
 ```bash
 cd kachery-gateway-zn1
 
-# Download the updates from the remote repo
-git remote update origin
+# Download the changes from the remote repo
+git fetch origin
 
 # Checkout the main branch
 git checkout main
