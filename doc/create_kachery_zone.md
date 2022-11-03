@@ -2,20 +2,19 @@
 
 This guide will show how to set up your own Kachery zone which will allow you to host Kachery files on resources that you manage. Note that the final step is to notify us so that your zone can be added to the global configuration.
 
-## Choosing a name
+## Choose a name
 
 Since the name of the zone cannot be changed later and will be visible to users, you should consult with us about choosing an appropriate name.
 
 Let's assume the name of the new zone will be `zn1`. In the instructions below, replace `zn1` with the name of your zone.
 
-## Create two storage buckets
+## Create a storage bucket
 
-The first step is to create two storage buckets, one for shared Kachery files (public) and one for admin files (private).
+The first step is to create a storage bucket.
 
-Here we assume that you are using Wasabi to create the buckets. (Instructions for creating Google or AWS buckets can be found elsewhere.)
+Here we assume that you are using Wasabi. (Instructions for creating Google or AWS buckets can be found elsewhere.)
 
-* [Create public Wasabi bucket](./create_public_wasabi_bucket.md) - name: `kachery-zone-zn1`
-* [Create private Wasabi bucket](./create_private_wasabi_bucket.md) - name: `kachery-zone-zn1-admin`
+* [Create Wasabi bucket](./create_wasabi_bucket.md) - name: `kachery-zone-zn1`
 
 ## Create a Google Cloud Project and a Firestore database
 
@@ -28,7 +27,7 @@ The Firestore database is used to Kachery client IDs and the associate users IDs
     - Select "Native Mode"
     - Choose a region
 
-## Get credentials for default service account
+## Get Google credentials for default service account
 
 In order for the serverless API to have access to the Firestore database, you will need to create access credentials.
 
@@ -100,9 +99,7 @@ Run `vercel dev` and set up a new project called `kachery-gateway-zn1` (use the 
 
 Go to the vercel admin console on vercel.com, select the project, and set environment variables (Project -> Settings->Environment Variables):
 * BUCKET_URI: `wasabi://kachery-zone-zn1?region=us-east-1` (assuming a Wasabi bucket in the us-east-1 region)
-- BUCKET_CREDENTIALS: `{"accessKeyId":"...","secretAccessKey":"..."}` (obtained when creating the public bucket)
-- ADMIN_BUCKET_URI: `wasabi://kachery-zone-zn1-admin?region=us-east-1` (assuming a Wasabi bucket in the us-east-1 region)
-- ADMIN_BUCKET_CREDENTIALS: `{"accessKeyId":"...","secretAccessKey":"..."}` (same as bucket credentials if both were obtained from Wasabi)
+- BUCKET_CREDENTIALS: `{"accessKeyId":"...","secretAccessKey":"..."}` (obtained when creating the bucket)
 - REACT_APP_RECAPTCHA_KEY
 - RECAPTCHA_SECRET_KEY
 - REACT_APP_ADMIN_USERS: ["you@gmail.com"] (replace with your Google email)
@@ -170,8 +167,8 @@ VERCEL_PROJECT_ID: from above
 VERCEL_ORG_ID: from above
 VERCEL_TOKEN: from above
 GOOGLE_CREDENTIALS: same as for vercel project
-ADMIN_BUCKET_URI: same as for vercel project
-ADMIN_BUCKET_CREDENTIALS: same as for vercel project
+BUCKET_URI: same as for vercel project
+BUCKET_CREDENTIALS: same as for vercel project
 ```
 
 ## Update the deployment

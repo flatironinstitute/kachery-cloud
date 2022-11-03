@@ -13,6 +13,7 @@ from .store_file_local import _compute_file_hash
 from ._fs_operations import _makedirs, _chmod_file
 from ._access_group_encrypt import _access_group_decrypt
 from .encrypt_uri import decrypt_uri
+from ._load_github_file import _load_github_file
 
 
 def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Union[None, str]=None, _get_info: bool=False) -> Union[str, dict, None]:
@@ -29,6 +30,9 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
         if uri2 is None:
             raise Exception('Unable to get jot')
         uri = uri2
+    
+    if uri.startswith('github://'):
+        return _load_github_file(uri)
 
     if local_only:
         return load_file_local(uri, dest=dest)
