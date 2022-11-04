@@ -12,6 +12,8 @@ def _replace_float_by_int_when_appropriate(x):
     if isinstance(x, float):
         if x == floor(x):
             return int(x)
+        else:
+            return x
     elif isinstance(x, dict):
         ret = {}
         for k in x.keys():
