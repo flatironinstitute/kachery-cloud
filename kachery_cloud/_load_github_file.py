@@ -21,7 +21,7 @@ def _load_github_file(uri: str):
         return load_file_local(uri)
 
 def _parse_github_uri(uri: str):
-    if not uri.startswith('github://'):
+    if not uri.startswith('gh://'):
         raise Exception(f'Invalid github URI: {uri}')
     a = uri.split('/')
     if len(a) < 6:

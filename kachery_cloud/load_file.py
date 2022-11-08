@@ -31,7 +31,7 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
             raise Exception('Unable to get jot')
         uri = uri2
     
-    if uri.startswith('github://'):
+    if uri.startswith('gh://'):
         return _load_github_file(uri)
 
     if local_only:
