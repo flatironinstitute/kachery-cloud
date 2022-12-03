@@ -8,8 +8,9 @@ from ._kachery_gateway_request import _kachery_gateway_request
 @dataclass
 class RequestFileResult:
     found: Union[None, bool] = None
+    queued: Union[None, bool] = None
     completed: Union[None, bool] = None
-    uploading: Union[None, bool] = None
+    running: Union[None, bool] = None
     local: bool = False
     errored: bool = False
     error_message: str = ''
@@ -54,14 +55,15 @@ def request_file(uri: str, *, resource: str, timeout_sec: float, ignore_local: b
     if rr['type'] != 'fileUpload':
         raise Exception('Unexpected fileUpload response')
     status = rr['status']
-    status_str = status['status'] # 'not-found' | 'uploading' | 'completed' | 'error'
+    status_str = status['status'] # 'not-found' | 'queued' | 'running' | 'completed' | 'error'
     size = status.get('size', None)
     bytes_uploaded = status.get('bytesUploaded', None)
     error_str = status.get('error', '')
     return RequestFileResult(
-        found = status_str in ['uploading', 'completed'],
+        found = status_str in ['queued', 'running', 'completed'],
+        queued = status_str == 'queued',
         completed = status_str == 'completed',
-        uploading = status_str == 'uploading',
+        running = status_str == 'running',
         errored = status_str == 'error',
         error_message = error_str,
         size = size,
