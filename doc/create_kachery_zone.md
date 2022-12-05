@@ -2,70 +2,41 @@
 
 This guide will show how to set up your own Kachery zone which will allow you to host Kachery files on resources that you manage. Note that the final step is to notify us so that your zone can be added to the global configuration.
 
+During the setup process, you will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. You should delete this file once the setup is complete.
+
 ## Choose a name
 
 Since the name of the zone cannot be changed later and will be visible to users, you should consult with us about choosing an appropriate name.
 
-Let's assume the name of the new zone will be `zn1`. In the instructions below, replace `zn1` with the name of your zone.
+Let's assume the name of the new zone will be `example`. Throughout the instructions below, replace `example` with the name of your zone.
 
 ## Create a storage bucket
 
-The first step is to create a storage bucket.
+The first step is to create a [storage bucket](./storage_bucket.md). Here we assume that you are using Cloudflare. (Instructions for creating Google, AWS, or Wasabi buckets can be found elsewhere.)
 
-Here we assume that you are using Wasabi. (Instructions for creating Google or AWS buckets can be found elsewhere.)
+* [Create Cloudflare bucket](./create_cloudflare_bucket.md) - name: `kachery-zone-example`
 
-* [Create Wasabi bucket](./create_wasabi_bucket.md) - name: `kachery-zone-zn1`
+## Create a MongoDB Atlas database
 
-## Create a Google Cloud Project and a Firestore database
+Each Kachery zone requires access to a [MongoDB database](./what_is_mongodb.md).
 
-The Firestore database is used to Kachery client IDs and the associate users IDs, as well as some meta data for the stored files.
-
-* Log into the Google cloud console: https://console.cloud.google.com
-* Create a new project called `kachery-zone-zn1`
-* Make sure the newly created project is selected in the console
-* Create a Firestore database for the project
-    - Select "Native Mode"
-    - Choose a region
-
-## Get Google credentials for default service account
-
-In order for the serverless API to have access to the Firestore database, you will need to create access credentials.
-
-* Navigate to APIs & Services -> Credentials
-* Click on the default service account toward the bottom under "Service Accounts"
-* Click the KEYS tab and click "ADD KEY -> Create New Key" and save the JSON file somewhere secret
-* You'll need this below when setting up the serverless API
-
-## Create a Google API key and Client ID
-
-To allow users to log in to the website for this zone, for example to register a Kachery client, you will need to create a Google API key and Client ID for this project.
-
-* APIs & Services -> Credentials
-* Create Credentials -> API Key
-    - Copy the API key for use in env variable below
-* Configure consent screen
-    - External
-    - Leave most fields blank, use your email address for contact info
-    - App name: `kachery-zone-zn1`
-    - Authorize domain: `kachery-gateway-zn1.vercel.app`
-    - Add a non-sensitive scope: `.../auth/userinfo.email`
-    - Don't add any test users
-    - Back to dashboard
-    - Publish App
-* Create Credentials -> OAuth client ID
-    - Application type: Web application
-    - Name: `kachery-gateway-client` (doesn't need to be globally unique)
-    - Authorized javascript origins: `https://kachery-gateway-zn1.vercel.app`, `http://localhost:3000`, `http://localhost:3001`
-    - Copy client ID for use in env variable below (the client secret is not actually needed)
+* [Create Mongo Atlas database](./create_mongo_atlas_database.md)
 
 ## Create a reCAPTCHA site
 
-To prevent abuse on the serverless API, we need to require that the sensitive website actions be initiated by a human.
+To prevent abuse on the serverless API, you will need to ensure that the sensitive website actions are initiated by a human by configuring [reCAPTCHA](./what_is_recaptcha.md) for your zone.
 
 * Go to https://www.google.com/recaptcha/admin and log in with your Google account
 * Create a new reCAPTCHA site
-* In settings, add the following domains: `kachery-zone-zn1.vercel.app`, `localhost`
-* Copy the reCAPTCHA keys (site key and secret key)
+* In settings, add the following domains: `kachery-zone-example.vercel.app`, `localhost`
+* Copy the reCAPTCHA keys (site key and secret key) and store in a secure location
+
+## Set up a GitHub client ID for OAuth
+
+[What is OAuth?](./what_is_oauth.md)
+
+* Log in to GitHub go to [user settings](https://github.com/settings/profile)
+* Scroll down and click on "Developer Settings" on the left panel
 
 ## Host the serverless API with vercel
 
@@ -79,37 +50,53 @@ Prerequisites
 
 Create an account on [Vercel](https://vercel.com)
 
-On your local system, clone [kachery-gateway](https://github.com/scratchrealm/kachery-gateway) to a directory called `kachery-gateway-zn1`
+On your local system, clone [kachery-gateway](https://github.com/scratchrealm/kachery-gateway) to a directory called `kachery-gateway-example` (replace `example` with the name of your zone)
 
 ```bash
-git clone https://github.com/scratchrealm/kachery-gateway kachery-gateway-zn1
+git clone https://github.com/scratchrealm/kachery-gateway kachery-gateway-example
 ```
 
-cd to `kachery-gateway-zn1` and run `yarn install`
+Install the npm packages for the project
 
 ```bash
-cd kachery-gateway-zn1
+cd kachery-gateway-example
 yarn install
 ```
 
-Run `vercel dev` and set up a new project called `kachery-gateway-zn1` (use the default settings)
+Set up a new Vercel project called `kachery-gateway-example` by running
 
-`Ctrl+C` to exit out of dev server
+```bash
+vercel dev
+# use the default settings
 
+# Ctrl+C to exit out of dev server
+```
 
 Go to the vercel admin console on vercel.com, select the project, and set environment variables (Project -> Settings->Environment Variables):
-* BUCKET_URI: `wasabi://kachery-zone-zn1?region=us-east-1` (assuming a Wasabi bucket in the us-east-1 region)
+* BUCKET_URI: `r2://kachery-zone-example`
 - BUCKET_CREDENTIALS: `{"accessKeyId":"...","secretAccessKey":"..."}` (obtained when creating the bucket)
-- REACT_APP_RECAPTCHA_KEY
-- RECAPTCHA_SECRET_KEY
-- REACT_APP_ADMIN_USERS: ["you@gmail.com"] (replace with your Google email)
-- REACT_APP_GOOGLE_API_KEY
-- REACT_APP_GOOGLE_CLIENT_ID
-- GOOGLE_CREDENTIALS (the contents of the file downloaded when creating a key for the Google service account)
-* Deploy vercel app: `vercel --prod`
-    - Check that deployed site is: https://kachery-gateway-zn1.vercel.app
-* Visit the gateway website in browser
-    - https://kachery-gateway-zn1.vercel.app
+- REACT_APP_RECAPTCHA_KEY (obtained when configuring the reCAPTCHA site)
+- RECAPTCHA_SECRET_KEY (obtained when configuring the reCAPTCHA site)
+- REACT_APP_ADMIN_USERS: ["user"] (replace with your github user ID)
+- MONGO_URI (obtained when creating the Mongo Atlas database)
+- REACT_APP_GITHUB_CLIENT_ID (obtained when creating the GitHub client)
+- GITHUB_CLIENT_SECRET (obtained when creating the GitHub client)
+
+Deploy the vercel app:
+
+```bash
+vercel --prod
+```
+
+Check that deployed site is: https://kachery-gateway-example.vercel.app
+
+Visit the gateway website in browser
+
+For example, https://kachery-gateway-example.vercel.app
+
+## Configure CORS on the storage bucket
+
+TODO
 
 ## Notify us
 
@@ -120,14 +107,14 @@ You'll need to notify us about the new zone so we can add it to the global confi
 Set the following environment variable for all the below commands
 
 ```
-export KACHERY_ZONE=zn1
+export KACHERY_ZONE=example
 ```
 
 Register your Kachery client on your local system
 
 ```bash
 kachery-cloud-init
-# This should direct you to a url within `https://kachery-gateway-zn1.vercel.app`
+# This should direct you to a url within `https://kachery-gateway-example.vercel.app`
 ```
 
 Try storing a file and retrieving it
@@ -146,12 +133,14 @@ kachery-cloud-load-info sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=te
 
 ## Setting up Github actions
 
-On Github, Create a new empty public github repo called `kachery-gateway-zn1`.
+On Github, Create a new empty public github repo called `kachery-gateway-example`.
 
-Add the new remote and push the main branch
+Add the new remote and push the main branch:
 
 ```bash
-git remote add zone https://github.com/<user>/kachery-gateway-zn1.git
+cd kachery-gateway-example
+
+git remote add zone https://github.com/<user>/kachery-gateway-example.git
 
 git push zone main:main
 ```
@@ -163,12 +152,12 @@ Obtain a [vercel access token](https://vercel.com/guides/how-do-i-use-a-vercel-a
 On Github, open your project and go to Settings -> Secrets -> Actions. Add the following repository secrets:
 
 ```
-VERCEL_PROJECT_ID: from above
-VERCEL_ORG_ID: from above
-VERCEL_TOKEN: from above
-GOOGLE_CREDENTIALS: same as for vercel project
-BUCKET_URI: same as for vercel project
-BUCKET_CREDENTIALS: same as for vercel project
+VERCEL_PROJECT_ID (from above)
+VERCEL_ORG_ID (from above)
+VERCEL_TOKEN (from above)
+BUCKET_URI (same as for vercel project)
+BUCKET_CREDENTIALS (same as for vercel project)
+MONGO_URI (same as for vercel project)
 ```
 
 ## Update the deployment
@@ -176,7 +165,7 @@ BUCKET_CREDENTIALS: same as for vercel project
 When the kachery-gateway software has been updated, do the following to deploy the updates
 
 ```bash
-cd kachery-gateway-zn1
+cd kachery-gateway-example
 
 # Download the changes from the remote repo
 git fetch origin
