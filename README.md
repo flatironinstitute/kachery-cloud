@@ -88,6 +88,10 @@ export KACHERY_ZONE="..."
 
 It is recommend that you [set these variables](./doc//setting_environment_variables_in_bashrc.md) in your `~/.bashrc` file.
 
+## Creating your own Kachery zone
+
+[Creating your own Kachery zone](./doc/create_kachery_zone.md)
+
 ## Sharing the kachery cloud directory between multiple users
 
 [Share the kachery cloud directory between multiple users](./doc/share_kachery_cloud_directory_between_multiple_users.md)
