@@ -30,7 +30,7 @@ Kachery-cloud is a network for sharing scientific data files between lab compute
 
 Kachery-cloud is often installed as a dependency of other projects, but there are times when you may want to use it stand-alone.
 
-It is best to use a conda environment or a venv.
+It is best to use a [conda environment](./doc/conda_environments.md) or a virtual environment.
 
 Requirements
 * Python >= 3.8
