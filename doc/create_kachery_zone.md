@@ -4,6 +4,19 @@ This guide will show how to set up your own Kachery zone which will allow you to
 
 During the setup process, you will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. You should delete this file once the setup is complete.
 
+Here are the steps:
+* [Choose a name](#choose-a-name)
+* [Create a storage bucket](#create-a-storage-bucket)
+* [Create a MongoDB database](#create-a-mongodb-database)
+* [Create a reCAPTCHA site](#create-a-recaptcha-site)
+* [Set up a GitHub client for OAuth](#set-up-a-github-client-for-oauth)
+* [Host the serverless API with Vercel](#host-the-serverless-api-with-vercel)
+* [Configure CORS on the storage bucket](#configure-cors-on-the-storage-bucket)
+* [Notify us of the new zone](#notify-us-of-the-new-zone)
+* [Test the new zone](#test-the-new-zone)
+
+Once your zone is up and running you should periodically [update the deployment](#update-the-deployment) so that software updates can take effect.
+
 ## Choose a name
 
 Since the name of the zone cannot be changed later and will be visible to users, you should consult with us about choosing an appropriate name.
@@ -16,7 +29,7 @@ The first step is to create a [storage bucket](./what_is_object_storage.md). Her
 
 * [Create Cloudflare R2 bucket](./create_cloudflare_bucket.md) - name: `kachery-zone-example`
 
-## Create a MongoDB Atlas database
+## Create a MongoDB database
 
 Each Kachery zone requires access to a [MongoDB database](./what_is_mongodb.md).
 
@@ -31,7 +44,7 @@ To prevent abuse on the serverless API, you will need to ensure that the sensiti
 * In settings, add the following domains: `kachery-zone-example.vercel.app`, `localhost`
 * Copy the reCAPTCHA keys (site key and secret key) and store in a secure location
 
-## Set up a GitHub client ID for OAuth
+## Set up a GitHub client for OAuth
 
 [What is OAuth?](./what_is_oauth.md)
 
@@ -47,7 +60,7 @@ To prevent abuse on the serverless API, you will need to ensure that the sensiti
 * Copy and save the Client ID for a later step
 * Generate a new client secret and save it for a later step
 
-## Host the serverless API with vercel
+## Host the serverless API with Vercel
 
 Kachery clients will communicate with your Kachery zone via a [serverless API](./serverless_functions.md) which will be hosted on [Vercel](https://vercel.com). You will need to set up for the deployment on your local system.
 
@@ -114,7 +127,7 @@ In order for figurl.org to be able to access files stored in your Kachery zone, 
 * Click on Admin and then the "Configuration" Tab
 * Click on "Set Cloudflare bucket CORS"
 
-## Notify us
+## Notify us of the new zone
 
 In order to proceed, you'll need to notify us about the new zone so we can add it to the global configuration.
 
@@ -147,7 +160,7 @@ kachery-cloud-cat sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_con
 kachery-cloud-load-info sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt
 ```
 
-## Setting up Github actions
+## Set up Github actions
 
 On Github, Create a new empty public github repo called `kachery-gateway-example`.
 

@@ -1,7 +1,5 @@
 ## Conda environments
 
-> This page was created with the help of OpenAI ChatGPT
-
 A conda environment is a separate and isolated working space that allows you to have different versions of Python or other packages installed on your system without affecting the other environments. You can use conda environments to easily switch between different projects that have different package requirements.
 
 To create a new conda environment with Python, you can use the following command:
@@ -63,3 +61,5 @@ Run the installer by using the following command:
 Follow the instructions in the installer to complete the installation process.
 
 Once the installation is complete, you can verify that Miniconda has been installed successfully by running the conda command in the terminal. This should display the list of available conda commands. You can also use the `conda --version` command to check the version of Miniconda that you have installed.
+
+> This page was created with help from OpenAI
