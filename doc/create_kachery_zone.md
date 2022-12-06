@@ -11,7 +11,7 @@ Here are the steps:
 * [Create a reCAPTCHA site](#create-a-recaptcha-site)
 * [Set up a GitHub client for OAuth](#set-up-a-github-client-for-oauth)
 * [Host the serverless API with Vercel](#host-the-serverless-api-with-vercel)
-* [Configure CORS on the storage bucket](#configure-cors-on-the-storage-bucket)
+* [Configure the zone](#configure-the-zone)
 * [Notify us of the new zone](#notify-us-of-the-new-zone)
 * [Test the new zone](#test-the-new-zone)
 
@@ -116,7 +116,9 @@ Visit the gateway website in browser
 
 For example, https://kachery-gateway-example.vercel.app
 
-## Configure CORS on the storage bucket
+## Configure the zone
+
+**Configure CORS**
 
 [What is CORS?](./CORS.md)
 
@@ -126,6 +128,13 @@ In order for figurl.org to be able to access files stored in your Kachery zone, 
 * Log in using GitHub (user must be among the ADMIN_USERS configured above)
 * Click on Admin and then the "Configuration" Tab
 * Click on "Set Cloudflare bucket CORS"
+
+**Configure the authorization settings**
+
+* Open the kachery-gateway GUI (link above)
+* Log in using GitHub (user must be among the ADMIN_USERS configured above)
+* Click on Admin and then the "Authorization Settings" Tab
+* Allow public uploads (for now) and click the "SAVE" button
 
 ## Notify us of the new zone
 
