@@ -18,14 +18,13 @@ Contents
 * [Installation and setup](#installation-and-setup)
 * [Basic usage](#basic-usage)
 * [Environment variables](#environment-variables)
-* [Creating your own Kachery zone](#creating-your-own-kachery-zone)
-* [Sharing the kachery cloud directory between multiple users](#sharing-the-kachery-cloud-directory-between-multiple-users)
+* [Creating your own Kachery zone](./doc/create_kachery_zone.md)
 * [Access groups and encrypted URIs](#access-groups-and-encrypted-uris)
 * [Notes](#notes)
 
 ## Overview
 
-Kachery-cloud is a network for sharing scientific data files between lab computers and [browser-based user interfaces](https://github.com/flatironinstitute/figurl). Resources are are accessed via registered Python clients or by web applications. Using simple Python commands you can store [files](doc/store_load_data.md) and [data objects](doc/store_load_data.md), and then retrieve or access these on a remote machine (or in a browser via JavaScript) by referencing universal URI strings. Kachery URIs are essentially content hashes, thus forming a [content-addressable storage database](https://en.wikipedia.org/wiki/Content-addressable_storage). While the primary purpose of kachery-cloud at this time is to support [figurl](https://github.com/flatironinstitute/figurl), it can also be used independently in collaborative scientific research workflows and for improving scientific reproducibility and dissemination.
+Kachery-cloud is a network for sharing scientific data files between lab computers and [browser-based user interfaces](https://github.com/flatironinstitute/figurl). Resources are are accessed via registered Python clients or by web applications. Using simple Python commands you can store [files](doc/store_load_data.md) and [data objects](doc/store_load_data.md), and then retrieve or access these on a remote machine (or in a browser via JavaScript) by referencing universal URI strings. Kachery URIs are essentially content hashes, thus forming a [content-addressable storage database](./doc/content_addressable_storage.md). While the primary purpose of kachery-cloud at this time is to support [figurl](https://github.com/flatironinstitute/figurl), it can also be used independently in collaborative scientific research workflows for improving scientific reproducibility and dissemination.
 
 ## Installation and setup
 
@@ -80,56 +79,18 @@ You can use an environment variables to control the storage/configuration direct
 # You can share the same kachery-cloud directory between multiple users,
 # but you will need to set mult-user mode for the client
 export KACHERY_CLOUD_DIR="..."
+
+# Set the KACHERY_ZONE environment variable to control
+# which directory files are upload to and retrieved from.
+# If unset, the default zone is used.
+export KACHERY_ZONE="..."
 ```
 
-It is recommend that you set this variable in your `~/.bashrc` file.
-
-## Creating your own Kachery zone
-
-[Creating your own Kachery zone](./doc/create_kachery_zone.md)
+It is recommend that you [set these variables](./doc//setting_environment_variables_in_bashrc.md) in your `~/.bashrc` file.
 
 ## Sharing the kachery cloud directory between multiple users
 
-On a shared system, you may want to share your kachery cloud directory between multiple users. To enable this, follow these steps:
-
-**Create a new kachery cloud directory in a location where the users may access it with read and write permissions.**
-
-For example, this could be on a shared drive.
-
-**Have each user set the KACHERY_CLOUD_DIR environment variable to point to this directory on their system**
-
-See above.
-
-**Create a new UNIX group for users with access.**
-
-Let's assume the name of the group is `testshare`. Add all the desired users to this group.
-
-**Change the group ownership of all files in the kachery-cloud directory**
-
-```bash
-chgrp -R testshare $KACHERY_CLOUD_DIR
-```
-
-**Set the SGID bit for all directories**
-
-Set the SGID bit set on all directories. With this set, all new files and directories will inherit the group ownership.
-
-```bash
-chmod g+s $KACHERY_CLOUD_DIR
-find $KACHERY_CLOUD_DIR -type d -print0 | xargs -0 -n1 chmod g+s
-```
-
-**Set file permissions so that group members can read/write the files**
-
-```bash
-chmod -R g+rw $KACHERY_CLOUD_DIR
-```
-
-**Now, all users in `testgroup` will be able to use kachery-cloud with the same client directory**
-
-## Notes
-
-This project is in the beta stage of development and we do not guarantee that your data will be available forever.
+[Share the kachery cloud directory between multiple users](./doc/share_kachery_cloud_directory_between_multiple_users.md)
 
 ## Authors
 

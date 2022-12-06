@@ -12,9 +12,9 @@ Let's assume the name of the new zone will be `example`. Throughout the instruct
 
 ## Create a storage bucket
 
-The first step is to create a [storage bucket](./storage_bucket.md). Here we assume that you are using Cloudflare. (Instructions for creating Google, AWS, or Wasabi buckets can be found elsewhere.)
+The first step is to create a [storage bucket](./what_is_object_storage.md). Here we assume that you are using [Cloudflare R2](https://www.cloudflare.com/lp/pg-r2/). (Instructions for creating Google, AWS, or Wasabi buckets can be found elsewhere.)
 
-* [Create Cloudflare bucket](./create_cloudflare_bucket.md) - name: `kachery-zone-example`
+* [Create Cloudflare R2 bucket](./create_cloudflare_bucket.md) - name: `kachery-zone-example`
 
 ## Create a MongoDB Atlas database
 
@@ -37,10 +37,19 @@ To prevent abuse on the serverless API, you will need to ensure that the sensiti
 
 * Log in to GitHub go to [user settings](https://github.com/settings/profile)
 * Scroll down and click on "Developer Settings" on the left panel
+* Click "OAuth Apps"
+* Click "New OAuth App"
+* In the below steps replace `example` with the name of your zone.
+* For the name use `kachery-gateway-example`
+* For the homepage URL use `https://kachery-gateway-example.vercel.app`
+* For the authorized callback URL use `https://kachery-gateway-example.vercel.app/github/auth`
+* Click "Register Application"
+* Copy and save the Client ID for a later step
+* Generate a new client secret and save it for a later step
 
 ## Host the serverless API with vercel
 
-Kachery clients will communicate with your Kachery zone via a serverless API which will be hosted on [Vercel](https://vercel.com). You will need to set up for the deployment on your local system.
+Kachery clients will communicate with your Kachery zone via a [serverless API](./serverless_functions.md) which will be hosted on [Vercel](https://vercel.com). You will need to set up for the deployment on your local system.
 
 Prerequisites
 * Linux or Mac
@@ -96,11 +105,18 @@ For example, https://kachery-gateway-example.vercel.app
 
 ## Configure CORS on the storage bucket
 
-TODO
+[What is CORS?](./CORS.md)
+
+In order for figurl.org to be able to access files stored in your Kachery zone, you will need to configure CORS on the storage bucket for your zone. For Cloudflare buckets this is done using the following steps:
+
+* Open the kachery-gateway GUI (link above)
+* Log in using GitHub (user must be among the ADMIN_USERS configured above)
+* Click on Admin and then the "Configuration" Tab
+* Click on "Set Cloudflare bucket CORS"
 
 ## Notify us
 
-You'll need to notify us about the new zone so we can add it to the global configuration.
+In order to proceed, you'll need to notify us about the new zone so we can add it to the global configuration.
 
 ## Test the new zone
 
@@ -110,7 +126,7 @@ Set the following environment variable for all the below commands
 export KACHERY_ZONE=example
 ```
 
-Register your Kachery client on your local system
+Register your local Kachery client
 
 ```bash
 kachery-cloud-init
@@ -189,4 +205,4 @@ git push zone deploy:deploy
 git checkout main
 ```
 
-Check Github to monitor the deployment action.
+Check Github to monitor the deployment action workflow.
