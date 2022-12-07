@@ -1,6 +1,6 @@
 # Kachery zone cost estimate
 
-For these calculations we assume you are using a Cloudflare R2 bucket. Cloudflare does not charge for network egress (download bandwidth) which provides a potentially huge cost advantage compared with other services considering that kachery allows large files to be downloaded arbitrarily many times by the public.
+For these calculations we assume you are using a Cloudflare R2 bucket. Cloudflare does not charge for network egress (download bandwidth) which provides a potentially large cost advantage compared with other services that charge on the order of $100/TB.
 
 ## Estimate based on number of uploads/downloads and storage
 
