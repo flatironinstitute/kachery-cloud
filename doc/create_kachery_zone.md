@@ -2,7 +2,7 @@
 
 This guide will show how to set up your own Kachery zone which will allow you to host Kachery files on resources that you manage. Note that the final step is to notify us so that your zone can be added to the global configuration.
 
-For some of the services, you will need to supply a credit card to pay for the resources based on usage. [Here is an estimate of the expected cost](./kachery_zone_cost_estimate.md).
+For some of the services, you will need to supply a credit card to pay for the resources based on usage. A Kachery zone is very low cost, especially when the amount of data stored is less than 10 TB. [Here is an estimate of the expected cost](./kachery_zone_cost_estimate.md).
 
 During the setup process, you will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. You should delete this file once the setup is complete.
 
