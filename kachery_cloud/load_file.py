@@ -255,8 +255,12 @@ def load_file_local(uri: str, *, dest: Union[None, str]=None) -> Union[str, None
                 return location
     
     # check for linked file
-    a_txt = get_mutable_local(f'@linked_files/@sha1/{sha1}')
-    if a_txt is not None:
+    s = sha1
+    linked_file_record_parent_dir = f'{kachery_cloud_dir}/linked_files/sha1/{s[0]}{s[1]}/{s[2]}{s[3]}/{s[4]}{s[5]}'
+    linked_file_record_path = f'{linked_file_record_parent_dir}/{sha1}'
+    if os.path.exists(linked_file_record_path):
+        with open(linked_file_record_path, 'r') as f:
+            a_txt = f.read()
         a = json.loads(a_txt)
         path0 = a['path']
         size0 = a['size']
@@ -267,14 +271,15 @@ def load_file_local(uri: str, *, dest: Union[None, str]=None) -> Union[str, None
                     shutil.copyfile(path0, dest)
                     return dest
                 return path0
-            sha1_0 = _compute_file_hash(path0, algorithm='sha1')
-            if sha1_0 == sha1:
-                set_mutable_local(f'@linked_files/@sha1/{sha1}', json.dumps({
-                    'path': path0,
-                    'size': os.path.getsize(path0),
-                    'mtime': os.stat(path0).st_mtime,
-                    'sha1': sha1
-                }))
+            if (os.path.getsize(path0) == size0) and (_compute_file_hash(path0, algorithm='sha1') == sha1):
+                # file mtime has been updated, but hash is still the same
+                with open(linked_file_record_path, 'w') as f:
+                    f.write(json.dumps({
+                        'path': path0,
+                        'size': os.path.getsize(path0),
+                        'mtime': os.stat(path0).st_mtime,
+                        'sha1': sha1
+                    }))
                 if dest is not None:
                     shutil.copyfile(path0, dest)
                     return dest
