@@ -24,7 +24,7 @@ Contents
 
 ## Overview
 
-Kachery-cloud is a network that allows scientists to share data files between lab computers and [browser-based user interfaces](https://github.com/flatironinstitute/figurl). To access resources on the network, you can use registered Python clients or web applications. With simple Python commands, you can [store and retrieve files](doc/store_load_data.md) and [data objects](doc/store_load_data.md) on a remote machine or access them in a browser using JavaScript. Kachery URIs are essentially content hashes, and in this way, Kachery forms a [content-addressable storage database](./doc/content_addressable_storage.md). Although the primary purpose of kachery-cloud at the moment is to support [figurl](https://github.com/flatironinstitute/figurl), it can also be used independently in scientific research workflows to improve reproducibility and dissemination.
+Kachery-cloud is a network designed for scientists to share files between lab computers and between workstations and [web browsers](https://github.com/flatironinstitute/figurl). Access to the network is granted through registered Python clients and web applications that [store and access files](doc/store_load_data.md) and [data objects](doc/store_load_data.md). Kachery URIs are essentially content hashes, and in this way, Kachery forms a [content-addressable storage database](./doc/content_addressable_storage.md). While a primary purpose of kachery-cloud primarily is to support [figurl](https://github.com/flatironinstitute/figurl) in the browser, it can also be incorporated into scientific workflows in other ways to enhance reproducibility and dissemination.
 
 ## Installation and setup
 
