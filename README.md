@@ -48,10 +48,10 @@ To complete the setup, open a terminal and run
 # One-time initialization
 kachery-cloud-init
 
-# Follow the instructions to associate your computer with your Google user on the kachery-cloud network
+# Follow the instructions to associate your computer with your GitHub user on the kachery-cloud network
 ```
 
-Clicking the link will bring you to a page where you associate this account with a Google user ID for the purpose of managing projects and tracking usage. This initialization only needs to be performed once on your computer. The client information will be stored in `~/.kachery-cloud`.
+Clicking the link will bring you to a page where you associate this account with a GitHub user ID for the purpose of managing projects and tracking usage. This initialization only needs to be performed once on your computer. The client information will be stored in `~/.kachery-cloud`.
 
 If you are using a colab or jupyter notebook and do not have easy access to a terminal, you can also run this one-time step in the notebook:
 
@@ -60,7 +60,7 @@ If you are using a colab or jupyter notebook and do not have easy access to a te
 import kachery_cloud as kcl
 kcl.init()
 
-# Follow the instructions to associate the client with your Google user on the kachery-cloud network
+# Follow the instructions to associate the client with your GitHub user on the kachery-cloud network
 ```
 
 ## Basic usage
