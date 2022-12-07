@@ -19,7 +19,7 @@ Contents
 * [Basic usage](#basic-usage)
 * [Environment variables](#environment-variables)
 * [Creating your own Kachery zone](./doc/create_kachery_zone.md)
-* [Access groups and encrypted URIs](#access-groups-and-encrypted-uris)
+* [Hosting a Kachery resource](https://github.com/scratchrealm/kachery-resource/blob/main/README.md)
 * [Notes](#notes)
 
 ## Overview
@@ -91,6 +91,10 @@ It is recommend that you [set these variables](./doc//setting_environment_variab
 ## Creating your own Kachery zone
 
 [Creating your own Kachery zone](./doc/create_kachery_zone.md)
+
+## Hosting a Kachery resource
+
+[Hosting a Kachery resource](https://github.com/scratchrealm/kachery-resource/blob/main/README.md)
 
 ## Sharing the kachery cloud directory between multiple users
 
