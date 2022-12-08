@@ -98,13 +98,13 @@ vercel dev
 
 Go to the vercel admin console on vercel.com, select the project, and set environment variables (Project -> Settings->Environment Variables):
 * BUCKET_URI: `r2://kachery-zone-example`
-- BUCKET_CREDENTIALS: `{"accessKeyId":"...","secretAccessKey":"..."}` (obtained when creating the bucket)
+- BUCKET_CREDENTIALS: `{"accessKeyId":"...","secretAccessKey":"...", "endpoint":"..."}` (obtained when creating the bucket)
 - REACT_APP_RECAPTCHA_KEY (obtained when configuring the reCAPTCHA site)
 - RECAPTCHA_SECRET_KEY (obtained when configuring the reCAPTCHA site)
 - REACT_APP_ADMIN_USERS: ["user"] (replace with your github user ID)
 - MONGO_URI (obtained when creating the Mongo Atlas database)
-- REACT_APP_GITHUB_CLIENT_ID (obtained when creating the GitHub client)
-- GITHUB_CLIENT_SECRET (obtained when creating the GitHub client)
+- REACT_APP_GITHUB_CLIENT_ID (obtained when creating the GitHub OAuth client)
+- GITHUB_CLIENT_SECRET (obtained when creating the GitHub OAuth client)
 
 Deploy the vercel app:
 
@@ -140,13 +140,14 @@ In order for figurl.org to access files stored in your Kachery zone, you must co
 
 ## Notify us of the new zone
 
-In order to proceed, you'll need to notify us about the new zone so we can add it to the global configuration.
+In order to proceed, you'll need to notify us about the new zone so we can add it to the global configuration. Tell us the zone name and the gateway URL (e.g., `https://kachery-gateway-example.vercel.app`).
 
 ## Test the new zone
 
 Set the following environment variable for all the below commands
 
 ```
+# replace example with your zone name
 export KACHERY_ZONE=example
 ```
 
@@ -169,6 +170,8 @@ kachery-cloud-cat sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_con
 
 # verify that it's finding it in the new bucket
 kachery-cloud-load-info sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt
+
+# check that the bucketUri field in this output matches the zone
 ```
 
 ## Set up GitHub actions
@@ -182,8 +185,10 @@ Add the new remote and push the main branch:
 ```bash
 cd kachery-gateway-example
 
+# add a remote called 'zone' that points to your empty repo
 git remote add zone https://github.com/<user>/kachery-gateway-example.git
 
+# push the contents of your local repo to the remote
 git push zone main:main
 ```
 
@@ -202,7 +207,7 @@ BUCKET_CREDENTIALS (same as for vercel project)
 MONGO_URI (same as for vercel project)
 ```
 
-You can check whether this is working properly by manually triggering one of the GitHub actions from the GitHub web console for your repository.
+You can check whether this is working properly by manually triggering one of the GitHub actions from the GitHub web console for your repository. In your repo, click Actions in the top bar, then click "Process log items" on the left bar, and click the button to "Run Workflow".
 
 ## Update the deployment
 

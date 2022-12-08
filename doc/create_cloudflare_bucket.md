@@ -13,3 +13,7 @@
     - Copy and save the Access Key ID and the Secret Access Key
         - Store them in a secure location
         - These will be needed later
+    - Also copy and save the endpoint URL for the bucket
+        - This is the URL toward the top of the bucket page, except don't include the zone name
+        - So for example, you might see: `https://xxxxxxxxxxxxxxxxxxxx.r2.cloudflarestorage.com/kachery-zone-example`
+        - In this, case the endpoint URL is: `https://xxxxxxxxxxxxxxxxxxxx.r2.cloudflarestorage.com`
