@@ -171,9 +171,11 @@ kachery-cloud-cat sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_con
 kachery-cloud-load-info sha1://b971c6ef19b1d70ae8f0feb989b106c319b36230?label=test_content.txt
 ```
 
-## Set up Github actions
+## Set up GitHub actions
 
-On Github, Create a new empty public github repo called `kachery-gateway-example`.
+GitHub actions are needed to automate the deployment to Vercel of new software updates, and to perform maintenance tasks such as processing log items and clearing out expired cache records.
+
+On GitHub, Create a new empty public github repo called `kachery-gateway-example`.
 
 Add the new remote and push the main branch:
 
