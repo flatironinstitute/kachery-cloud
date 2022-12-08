@@ -1,10 +1,8 @@
 # Creating a Kachery Zone
 
-This guide will show how to set up your own Kachery zone which will allow you to host Kachery files on resources that you manage. Note that the final step is to notify us so that your zone can be added to the global configuration.
+This guide will show you how to set up your own Kachery zone which will allow you to host Kachery files on resources that you manage. You will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. Once the setup is complete, you should delete this file.
 
-For some of the services, you will need to supply a credit card to pay for the resources based on usage. A Kachery zone is very low cost, especially when the amount of data stored is less than 10 TB. [Here is an estimate of the expected cost](./kachery_zone_cost_estimate.md).
-
-During the setup process, you will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. You should delete this file once the setup is complete.
+For some of the provisioned services, you will need to use a credit card to pay for the resources. Kachery zones are relatively low cost, particularly when the amount of data stored is below 10 TB. A bill for light usage could be as low as $25/month. [Here is an estimate](./kachery_zone_cost_estimate.md) of the costs involved in hosting a zone.
 
 Here are the steps:
 * [Choose a name](#choose-a-name)
@@ -21,9 +19,9 @@ Once your zone is up and running you should periodically [update the deployment]
 
 ## Choose a name
 
-Since the name of the zone cannot be changed later and will be visible to users, you should consult with us about choosing an appropriate name.
+Before proceeding with the instructions below, please consult with us about an appropriate name for your zone. Since figURLs generated in your zone will have the name embedded, it may not be easy to change it later.
 
-Let's assume the name of the new zone will be `example`. Throughout the instructions below, replace `example` with the name of your zone.
+Let's assume that the name of the new zone is `example`. Whenever you see `example` in the instructions below, replace it with the name of your zone.
 
 ## Create a storage bucket
 
@@ -66,7 +64,7 @@ Kachery uses OAuth to allow users to log in using GitHub to manage kachery zones
 
 ## Host the serverless API with Vercel
 
-Kachery clients will communicate with your Kachery zone via a [serverless API](./serverless_functions.md) which will be hosted on [Vercel](https://vercel.com). You will need to set up for the deployment on your local system.
+Kachery clients will communicate with your Kachery zone via a [serverless API](./serverless_functions.md) which will be hosted on [Vercel](https://vercel.com). You will need to stage the deployment on your local system.
 
 Prerequisites
 * Linux or Mac
@@ -124,7 +122,7 @@ For example, https://kachery-gateway-example.vercel.app
 
 **Configure CORS**
 
-[What is CORS?](./CORS.md)
+[What is CORS?](https://gist.github.com/magland/1032f78dd866f07ce6a7a5dcc64e2b40)
 
 In order for figurl.org to be able to access files stored in your Kachery zone, you will need to configure CORS on the storage bucket for your zone. For Cloudflare buckets this is done using the following steps:
 
