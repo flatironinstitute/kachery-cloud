@@ -25,13 +25,13 @@ Contents
 * [License](#license)
 ## Overview
 
-Kachery-cloud is a network designed for scientists to share files between lab computers and between workstations and [web browsers](https://github.com/flatironinstitute/figurl). Access to the network is granted through registered Python clients and web applications that [store and access files](doc/store_load_data.md) and [data objects](doc/store_load_data.md). Kachery URIs are essentially content hashes, and in this way, Kachery forms a [content-addressable storage database](./doc/content_addressable_storage.md). While a primary purpose of kachery-cloud is to support [figurl](https://github.com/flatironinstitute/figurl) in the browser, it can also be incorporated into scientific workflows in other ways to enhance reproducibility and dissemination.
+Kachery-cloud is a network designed for scientists to share files between lab computers and between workstations and [web browsers](https://github.com/flatironinstitute/figurl). Access to the network is granted through registered Python clients and web applications that [store and access files](doc/store_load_data.md) and [data objects](doc/store_load_data.md). Kachery URIs are essentially content hashes, and in this way, Kachery forms a [content-addressable storage database](https://gist.github.com/magland/e41b6c0823fe308c6e4176a54cfbdbe9). While a primary purpose of kachery-cloud is to support [figurl](https://github.com/flatironinstitute/figurl) in the browser, it can also be incorporated into scientific workflows in other ways to enhance reproducibility and dissemination.
 
 ## Installation and setup
 
 Kachery-cloud is often installed as a dependency of other projects, but there are times when you may want to use it stand-alone.
 
-It is best to use a [conda environment](./doc/conda_environments.md) or a virtual environment.
+It is best to use a [conda environment](https://gist.github.com/magland/7f3fecc6cdcd3fae99868c10f6b585c7) or a virtual environment.
 
 Requirements
 * Python >= 3.8
@@ -87,7 +87,7 @@ export KACHERY_CLOUD_DIR="..."
 export KACHERY_ZONE="..."
 ```
 
-It is recommend that you [set these variables](./doc//setting_environment_variables_in_bashrc.md) in your `~/.bashrc` file.
+It is recommend that you [set these variables](https://gist.github.com/magland/518945134209c0c13789c963efda482f) in your `~/.bashrc` file.
 
 ## Creating your own Kachery zone
 

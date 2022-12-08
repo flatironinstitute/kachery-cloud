@@ -27,19 +27,21 @@ Let's assume the name of the new zone will be `example`. Throughout the instruct
 
 ## Create a storage bucket
 
-The first step is to create a [storage bucket](./what_is_object_storage.md). Here we assume that you are using [Cloudflare R2](https://www.cloudflare.com/lp/pg-r2/). (Instructions for creating Google, AWS, or Wasabi buckets can be found elsewhere.)
+The first step is to create a storage bucket.
+
+Each Kachery zone has a single storage bucket for storing content-addressable files and other information necessary for the functioning of the zone. Storage buckets are like file systems in the cloud, but instead of files and folders, buckets contain data objects. Here we assume that you are using [Cloudflare R2](https://www.cloudflare.com/lp/pg-r2/) which is the recommended method. (Instructions for creating Google, AWS, or Wasabi buckets can be found elsewhere.)
 
 * [Create Cloudflare R2 bucket](./create_cloudflare_bucket.md) - name: `kachery-zone-example`
 
 ## Create a MongoDB database
 
-Each Kachery zone requires access to a [MongoDB database](./what_is_mongodb.md).
+Each Kachery zone requires access to a [MongoDB database](https://en.wikipedia.org/wiki/MongoDB).
 
 * [Create Mongo Atlas database](./create_mongo_atlas_database.md)
 
 ## Create a reCAPTCHA site
 
-To prevent abuse on the serverless API, you will need to ensure that the sensitive website actions are initiated by a human by configuring [reCAPTCHA](./what_is_recaptcha.md) for your zone.
+To prevent abuse on the serverless API, you will need to ensure that the sensitive website actions are initiated by a human by configuring [reCAPTCHA](https://gist.github.com/magland/e1ffde94cff4f63a8cddb849a6b50637) for your zone.
 
 * Go to https://www.google.com/recaptcha/admin and log in with your Google account
 * Create a new reCAPTCHA site
@@ -48,7 +50,7 @@ To prevent abuse on the serverless API, you will need to ensure that the sensiti
 
 ## Set up a GitHub client for OAuth
 
-[What is OAuth?](./what_is_oauth.md)
+Kachery uses OAuth to allow users to log in using GitHub to manage kachery zones, kachery clients, and other kachery resources.
 
 * Log in to GitHub go to [user settings](https://github.com/settings/profile)
 * Scroll down and click on "Developer Settings" on the left panel
