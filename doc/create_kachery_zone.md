@@ -33,7 +33,7 @@ Each Kachery zone has a single storage bucket for storing content-addressable fi
 
 ## Create a MongoDB database
 
-Each Kachery zone requires access to a [MongoDB database](https://en.wikipedia.org/wiki/MongoDB).
+MongoDB is a NoSQL database that stores data in JSON-like documents. Each Kachery zone requires access to a MongoDB database in order to store ephemeral data such as query caches and temporary logs.
 
 * [Create Mongo Atlas database](./create_mongo_atlas_database.md)
 
@@ -48,7 +48,7 @@ To prevent abuse on the serverless API, you will need to ensure that the sensiti
 
 ## Set up a GitHub client for OAuth
 
-Kachery uses OAuth to allow users to log in using GitHub to manage kachery zones, kachery clients, and other kachery resources.
+OAuth is an open standard for authorization that enables users to securely access resources without sharing passwords. Kachery uses OAuth to allow users to log in using GitHub to manage clients, zones, and other resources.
 
 * Log in to GitHub go to [user settings](https://github.com/settings/profile)
 * Scroll down and click on "Developer Settings" on the left panel
@@ -72,7 +72,7 @@ Prerequisites
 * yarn
 * [Vercel command-line interface](https://vercel.com/docs/cli)
 
-Create an account on [Vercel](https://vercel.com)
+Create an account on [Vercel](https://vercel.com). 
 
 On your local system, clone [kachery-gateway](https://github.com/scratchrealm/kachery-gateway) to a directory called `kachery-gateway-example` (replace `example` with the name of your zone)
 
@@ -124,7 +124,7 @@ For example, https://kachery-gateway-example.vercel.app
 
 [What is CORS?](https://gist.github.com/magland/1032f78dd866f07ce6a7a5dcc64e2b40)
 
-In order for figurl.org to be able to access files stored in your Kachery zone, you will need to configure CORS on the storage bucket for your zone. For Cloudflare buckets this is done using the following steps:
+In order for figurl.org to access files stored in your Kachery zone, you must configure Cross-Origin Resource Sharing (CORS) on the storage bucket associated with your zone. To set up your Cloudflare bucket, follow these steps:
 
 * Open the kachery-gateway GUI (link above)
 * Log in using GitHub (user must be among the ADMIN_USERS configured above)
