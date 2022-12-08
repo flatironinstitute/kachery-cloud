@@ -8,7 +8,7 @@
 
 > **PLEASE NOTE**: At this point, uploaded files are not guaranteed to be available forever.
 
-Share scientific research data in the cloud using Python.
+Kachery-cloud is designed to make it easier for researchers to share data and files between different computers and with web applications. It provides a content-addressable storage database and a uniform way to access data and files across different machines. The goal is to make scientific research more reproducible and collaborative.
 
 Kachery-cloud is a core part of [figurl](https://github.com/flatironinstitute/figurl).
 
