@@ -202,9 +202,11 @@ BUCKET_CREDENTIALS (same as for vercel project)
 MONGO_URI (same as for vercel project)
 ```
 
+You can check whether this is working properly by manually triggering one of the GitHub actions from the GitHub web console for your repository.
+
 ## Update the deployment
 
-When the kachery-gateway software has been updated, do the following to deploy the updates
+Whenever the kachery-gateway software has been updated, you can deploy the updates by doing the following:
 
 ```bash
 cd kachery-gateway-example
@@ -231,4 +233,4 @@ git push zone deploy:deploy
 git checkout main
 ```
 
-Check Github to monitor the deployment action workflow.
+Check GitHub to monitor the deployment action workflow.
