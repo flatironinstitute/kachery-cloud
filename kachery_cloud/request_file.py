@@ -39,7 +39,7 @@ def request_file(uri: str, *, resource: str, timeout_sec: float, ignore_local: b
         'resourceName': resource,
         'request': {
             'type': 'fileUpload',
-            'uri': uri
+            'uri': _remove_query_string_from_uri(uri)
         },
         'timeoutMsec': timeout_sec * 1000
     }
@@ -73,6 +73,11 @@ def request_file(uri: str, *, resource: str, timeout_sec: float, ignore_local: b
 _global = {
     'proxy_urls': {}
 }
+
+def _remove_query_string_from_uri(uri: str):
+    i = uri.find('?')
+    if i < 0: return uri
+    return uri[:i]
 
 def _get_proxy_url_for_resource(resource: str):
     if resource in _global['proxy_urls']:
