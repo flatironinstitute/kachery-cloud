@@ -1,4 +1,4 @@
-import yaml
+import os
 import socket
 import urllib.parse
 
@@ -20,9 +20,11 @@ def _get_client_info():
     if _global_init['client_info'] != 0:
         return _global_init['client_info']
     client_id = get_client_id()
+    kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
     payload = {
         'type': 'getClientInfo',
-        'clientId': client_id
+        'clientId': client_id,
+        'zone': kachery_zone
     }
     response = _kachery_gateway_request(payload)
     # response = _kacherycloud_request(payload)

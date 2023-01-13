@@ -82,9 +82,11 @@ def _remove_query_string_from_uri(uri: str):
 def _get_proxy_url_for_resource(resource: str):
     if resource in _global['proxy_urls']:
         return _global['proxy_urls'][resource]
+    kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
     resp = _kachery_gateway_request({
         'type': 'getResourceInfo',
-        'resourceName': resource
+        'resourceName': resource,
+        'zone': kachery_zone
     })
     found = resp['found']
     if not found:

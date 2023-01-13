@@ -8,7 +8,7 @@
 
 > **PLEASE NOTE**: At this point, uploaded files are not guaranteed to be available forever.
 
-Kachery-cloud is designed to make it easier for researchers to share data and files between different computers and with web applications. It provides a content-addressable storage database and a uniform way to access data and files across different machines. The goal is to make scientific research more reproducible and collaborative.
+Kachery-cloud is designed to make it easier for researchers to share data and files between different computers and with web applications. It provides a content-addressable storage network and a uniform way to access data and files across different machines. The goal is to make scientific research more reproducible and collaborative.
 
 Kachery-cloud is a core part of [figurl](https://github.com/flatironinstitute/figurl).
 
@@ -18,8 +18,9 @@ Contents
 * [Installation and setup](#installation-and-setup)
 * [Basic usage](#basic-usage)
 * [Environment variables](#environment-variables)
-* [Creating your own Kachery zone](./doc/create_kachery_zone.md)
+* [Hosting a Kachery zone](./doc/create_kachery_zone.md)
 * [Hosting a Kachery resource](https://github.com/scratchrealm/kachery-resource/blob/main/README.md)
+* [Hosting a Kachery gateway](./doc/host_kachery_gateway.md)
 * [Frequenty asked questions](./doc/faq.md)
 * [Authors](#authors)
 * [License](#license)
@@ -96,6 +97,10 @@ It is recommend that you [set these variables](https://gist.github.com/magland/5
 ## Hosting a Kachery resource
 
 [Hosting a Kachery resource](https://github.com/scratchrealm/kachery-resource/blob/main/README.md)
+
+# Hosting a Kachery gateway
+
+[Hosting a Kachery gateway](./doc/host_kachery_gateway.md)
 
 ## Sharing the kachery cloud directory between multiple users
 

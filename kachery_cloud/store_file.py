@@ -21,12 +21,14 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
     alg = 'sha1'
     hash0 = _compute_file_hash(filename, algorithm=alg)
     uri = f'{alg}://{hash0}'
+    kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
     payload = {
         'type': 'initiateFileUpload',
         'size': size,
         'hashAlg': alg,
         'hash': hash0,
-        'projectId': get_project_id()
+        'projectId': get_project_id(), # not used
+        'zone': kachery_zone
     }
     timer = time.time()
     while True:
@@ -64,7 +66,8 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
         'objectKey': object_key,
         'hashAlg': alg,
         'hash': hash0,
-        'projectId': get_project_id()
+        'projectId': get_project_id(), # not used
+        'zone': kachery_zone
     }
     if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
         response2 = _kacherycloud_request(payload2)

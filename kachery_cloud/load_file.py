@@ -160,10 +160,12 @@ def _load_zenodo_file_from_cloud(uri: str, *, dest: Union[None, str]=None):
     return filename
 
 def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, str]=None, _get_info: bool=False) -> Union[str, dict, None]:
+    kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
     payload = {
         'type': 'findFile',
         'hashAlg': 'sha1',
-        'hash': sha1
+        'hash': sha1,
+        'zone': kachery_zone
     }
     if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
         response= _kacherycloud_request(payload)
