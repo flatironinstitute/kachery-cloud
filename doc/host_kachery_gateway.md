@@ -1,8 +1,8 @@
-# Hosting a Kachery gateway
+# Hosting a Kachery Gateway
 
-The Kachery network is organized into gateways and zones, with each gateway serving one or multiple zones. A zone is essentially a cloud storage bucket (Cloudflare, AWS, Google, or Wasabi) and a gateway is the infrastructure needed for the communication between Kachery clients and the zones. It is a lot easier to host a zone than a gateway. But if you create your own zone rather than a gateway, you will need to coordinate with the owner of a gateway to add your zone.
+The Kachery network is organized into gateways and zones, with each gateway serving one or more zones. A *zone* is essentially a cloud storage bucket (Cloudflare, AWS, Google, or Wasabi) and a *gateway* is the infrastructure needed for the communication between Kachery clients and the zones. Setting up a zone is a straightforward process. On the other hand, hosting a gateway requires signing up for and configuring several additional services; however, many users will not typically need to run their own gateways: you can coordinate with the owner of a gateway (such as the one maintained by the Flatiron Institute) to provide access to your zone. Be sure that you trust the gateway provider, as you will need to provide them with the credentials for the zone storage.
 
-This guide will show you how to set up your own Kachery gateway using cloud resources that you manage. You will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. Once the setup is complete, you should delete this file.
+If you do wish to host your own Kachery gateway using cloud resources that you manage, this guide will describe how to do so. You will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. Once the setup is complete, you should delete this file.
 
 For some of the provisioned services, you will need to use a credit card to pay for the resources. Kachery gateways are relatively low cost. A bill for light usage could be as low as $25/month. [Here is an estimate](./kachery_gateway_cost_estimate.md) of the costs involved in hosting a gateway.
 
@@ -41,8 +41,10 @@ OAuth is an open standard for authorization that enables users to securely acces
 * Click "OAuth Apps"
 * Click "New OAuth App"
 * In the below steps replace `example` with the chosen name of your gateway.
+  * Note that we follow a convention where the Vercel app name is a `kachery-gateway-` prefix followed by the name of the gateway.
 * For the name use `kachery-gateway-example`
 * For the homepage URL use `https://kachery-gateway-example.vercel.app`
+  * Note that this should match the domain added during the reCAPTCHA setup.
 * For the authorized callback URL use `https://kachery-gateway-example.vercel.app/github/auth`
 * Click "Register Application"
 * Copy and save the Client ID for a later step
@@ -79,7 +81,7 @@ Set up a new Vercel project called `kachery-gateway-example` by running
 vercel dev
 # use the default settings
 
-# Ctrl+C to exit out of dev server
+# Ctrl+C to exit out of dev server once it has finished loading
 ```
 
 Go to the vercel admin console on vercel.com, select the project, and set environment variables (Project -> Settings->Environment Variables):
@@ -177,7 +179,7 @@ In order for figurl.org to access files stored in the Kachery zone, you must con
 
 ## Update the deployment
 
-Whenever the kachery-gateway software has been updated, you can deploy the updates by doing the following:
+Whenever the kachery-gateway software has been updated, you will need to deploy those updates. You can deploy the updates by doing the following periodically:
 
 ```bash
 cd kachery-gateway-example
