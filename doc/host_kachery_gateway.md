@@ -1,6 +1,6 @@
 # Hosting a Kachery gateway
 
-The Kachery network is organized into gateways and zones, with each gateway serving one or multiple zones. A zone is essentially a cloud storage bucket (Cloudflare, AWS, Google, or Wasabi) and a gateway is the infrastructure needed for the communication between Kachery clients and the zones. It is a lot easier to host a zone than a gateway, but if you create your own zone, you will need to coordinate with the owner of a gateway to add your zone.
+The Kachery network is organized into gateways and zones, with each gateway serving one or multiple zones. A zone is essentially a cloud storage bucket (Cloudflare, AWS, Google, or Wasabi) and a gateway is the infrastructure needed for the communication between Kachery clients and the zones. It is a lot easier to host a zone than a gateway. But if you create your own zone rather than a gateway, you will need to coordinate with the owner of a gateway to add your zone.
 
 This guide will show you how to set up your own Kachery gateway using cloud resources that you manage. You will need to temporarily store some codes and passwords, so it is recommended that you create a temporary text file to store this information. Once the setup is complete, you should delete this file.
 
@@ -12,6 +12,7 @@ Here are the steps:
 * [Set up a GitHub client for OAuth](#set-up-a-github-client-for-oauth)
 * [Host the serverless API with Vercel](#host-the-serverless-api-with-vercel)
 * [Set up GitHub actions](#set-up-github-actions)
+* [Register new zones](#register-new-zones)
 * [Update the deployment](#update-the-deployment)
 
 Once your gateway is up and running you should periodically [update the deployment](#update-the-deployment) so that software updates can take effect.
@@ -152,7 +153,9 @@ zones:
         ...
 ```
 
-The redeploy the gateway on Vercel.
+Then redeploy the gateway on Vercel.
+
+You will also need to register zone in the global Kachery zone directory. Contact the Kachery maintainers for information how to do this.
 
 **Configuring CORS for the zone**
 

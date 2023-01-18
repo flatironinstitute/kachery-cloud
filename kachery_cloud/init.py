@@ -43,7 +43,8 @@ def init():
             'type': 'addClient'
         })
         label = socket.gethostname()
-        url = f'{_get_kachery_gateway_url()}/registerClient/{client_id}?signature={signature}&label={urllib.parse.quote(label)}'
+        kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
+        url = f'{_get_kachery_gateway_url()}/registerClient/{client_id}?signature={signature}&zone={kachery_zone}&label={urllib.parse.quote(label)}'
         print('')
         print(url)
         print('')

@@ -1,10 +1,10 @@
 # Creating a Kachery Zone
 
-This guide will show you how to set up your own Kachery zone (essentially a cloud storage bucket) which will allow you to host Kachery files on resources that you manage. You will need to register your zone with a gateway (you will need to coordinate with a gateway owner, or host your own gateway). A gateway is the infrastructure needed for the communication between Kachery clients and the zones, and each gateway serves one or multiple zones.
+This guide will show you how to set up your own Kachery zone (essentially a cloud storage bucket) which will allow you to host Kachery files on resources that you manage. You will need to register your zone with a gateway (coordinate with a gateway owner, or host your own gateway). A gateway is the infrastructure needed for the communication between Kachery clients and Kachery zones, with each gateway serving one or multiple zones.
 
-Kachery zones are relatively low cost, particularly when the amount of data stored is below 10 TB. A bill for light usage would be less than $15/month. [Here is an estimate](./kachery_zone_cost_estimate.md) of the costs involved in hosting a zone.
+Kachery zones are relatively low cost, particularly when the amount of data stored is below 1 TB. When using Cloudflare as the service provider, a bill for light usage would be less than $15/month. Cloudflare does not charge for network egress (download bandwidth) which provides a potentially large cost advantage compared with other services that charge on the order of $100/TB.
 
-Here are the steps:
+Here are the steps for creating a zone:
 * [Choose a name](#choose-a-name)
 * [Create a storage bucket](#create-a-storage-bucket)
 * [Register your zone with a gateway](#register-your-zone-with-a-gateway)
@@ -35,11 +35,9 @@ As described above, each zone needs to be registered with a gateway. You will ne
 * If using Cloudflare, the endpoint URL (obtained when setting up the bucket)
 * Access Key ID and the Secret Access Key (obtained when setting up the bucket)
 
-In addition, to add your zone to the global directory, you will also need to send the name of your zone, and the URL of the gateway to the central gateway maintainers (the authors of this package). You can obtain the gateway URL from the gateway owner.
-
 ## Test the new zone
 
-Set the following environment variable for all the below commands
+Once the gateway owner has notified you that the zone has been registered, set the following environment variable for all the below commands
 
 ```
 # replace example with your zone name
@@ -50,7 +48,7 @@ Register your local Kachery client
 
 ```bash
 kachery-cloud-init
-# This should direct you to a url within `https://kachery-gateway-example.vercel.app`
+# This should direct you to a URL where you will associate your local client with a GitHub user
 ```
 
 Try storing a file and retrieving it
