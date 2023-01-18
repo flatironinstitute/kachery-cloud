@@ -28,7 +28,7 @@ Each Kachery zone has a single storage bucket for storing content-addressable fi
 
 ## Register your zone with a gateway
 
-As described above, each zone needs to be registered with a gateway. You will need to coordinate with a gateway owner. Send them the following information in a secure way, such as via voice, or through a secure messaging service approved by your institution. (Remember, email is typically not encrypted and thus not a secure way to transmit passwords or other important credentials.)
+As described above, each zone needs to be registered with a gateway. You will need to coordinate with a gateway owner. Send them the following information in a secure way, through a secure messaging service approved by your institution. (Email is typically not a secure way to transmit passwords or other important credentials.)
 
 * Your zone name (e.g. `example`)
 * The cloud storage provider (e.g., Cloudflare)
