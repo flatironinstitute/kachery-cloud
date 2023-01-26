@@ -14,6 +14,6 @@
         - Store them in a secure location
         - These will be needed later
     - Also copy and save the endpoint URL for the bucket
-        - This is the URL toward the top of the bucket page, except don't include the zone name
+        - This is the URL toward the top of the bucket page (navigate back to R2 and then the bucket), except don't include the zone name
         - So for example, you might see: `https://xxxxxxxxxxxxxxxxxxxx.r2.cloudflarestorage.com/kachery-zone-example`
         - In this, case the endpoint URL is: `https://xxxxxxxxxxxxxxxxxxxx.r2.cloudflarestorage.com`
