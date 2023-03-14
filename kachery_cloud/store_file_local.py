@@ -9,7 +9,7 @@ from typing import Union
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from .mutable_local import get_mutable_local, set_mutable_local
 from ._sha1_of_string import _sha1_of_string
-from ._fs_operations import _makedirs, _chmod_file
+from ._fs_operations import _makedirs
 
 
 def store_file_local(filename: str, *, label: Union[str, None]=None, reference: Union[bool, None]=None):

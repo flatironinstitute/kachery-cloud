@@ -6,9 +6,6 @@ from .get_kachery_cloud_dir import get_kachery_cloud_dir
 # {dir: {client_private_key_hex: '...', client_public_key_hex: '...}}
 _global_client_keys_by_kachery_dir = {}
 
-def _ephemeral_mode():
-    return os.environ.get('KACHERY_CLOUD_EPHEMERAL') == 'TRUE'
-
 def _get_client_keys_hex(): # public, private
     KACHERY_CLOUD_CLIENT_ID = os.getenv('KACHERY_CLOUD_CLIENT_ID', None)
     KACHERY_CLOUD_PRIVATE_KEY = os.getenv('KACHERY_CLOUD_PRIVATE_KEY', None)

@@ -2,7 +2,7 @@ import os
 import shutil
 from typing import Union
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
-from ._fs_operations import _makedirs, _chmod_file
+from ._fs_operations import _makedirs
 
 
 def set_mutable_local(key: str, value: str):

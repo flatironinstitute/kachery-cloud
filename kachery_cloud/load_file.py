@@ -5,32 +5,15 @@ import shutil
 from typing import Union
 import requests
 import random
+import time
 
-from kachery_cloud.mutable_local import get_mutable_local, set_mutable_local
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
-from ._kacherycloud_request import _kacherycloud_request
 from .store_file_local import _compute_file_hash
-from ._fs_operations import _makedirs, _chmod_file
-from ._access_group_encrypt import _access_group_decrypt
-from .encrypt_uri import decrypt_uri
+from ._fs_operations import _makedirs
 from ._load_github_file import _load_github_file
 
 
-def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Union[None, str]=None, _get_info: bool=False) -> Union[str, dict, None]:
-    if uri.startswith('sha1-enc://'):
-        # While it would be nice to send the sha1-enc hash directly to the API findFile,
-        # we need to do it this way so that we can check locally... because files are stored
-        # locally by the sha1 hash. Unfortunately, this means two http calls.
-        uri_decrypted = decrypt_uri(uri)
-        return load_file(uri_decrypted, verbose=verbose, local_only=local_only, dest=dest, _get_info=_get_info)
-    
-    if uri.startswith('jot://'):
-        jot_id = uri.split('?')[0].split('/')[2]
-        uri2 = _get_jot_value(jot_id)
-        if uri2 is None:
-            raise Exception('Unable to get jot')
-        uri = uri2
-    
+def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Union[None, str]=None, _get_info: bool=False, do_request: Union[bool, None]=None) -> Union[str, dict, None]:
     if uri.startswith('gh://'):
         return _load_github_file(uri)
 
@@ -52,7 +35,29 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
             if x is not None:
                 return x
         sha1 = uri.split('?')[0].split('/')[2]
-        return _load_sha1_file_from_cloud(sha1, verbose=verbose, dest=dest, _get_info=_get_info)
+        fname = _load_sha1_file_from_cloud(sha1, verbose=verbose, dest=dest, _get_info=_get_info)
+        if fname is not None:
+            return fname
+        resource_url = os.getenv('KACHERY_RESOURCE_URL', None)
+        if resource_url is not None and do_request is not False:
+            from .request_file import request_file
+            while True:
+                # the timeout refers to how long we will wait for the file to upload before returning
+                rr = request_file(uri, resource_url=resource_url, timeout_sec=5, ignore_local=True, ignore_bucket=True)
+                if not rr.found:
+                    return None
+                if rr.completed:
+                    print('Downloading file')
+                    return load_file(uri, dest=dest, do_request=False) # set do_request=False to avoid possibility of infinnite recursion
+                if rr.queued:
+                    print('File queued for upload')
+                elif rr.running:
+                    print('File uploading')
+                elif rr.error_message:
+                    raise Exception('Error uploading file.')
+                time.sleep(4)
+        else:
+            return None
     
     if uri.startswith('zenodo://') or uri.startswith('zenodo-sandbox://'):
         x = load_file_local(uri, dest=dest)
@@ -63,55 +68,7 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
     if _get_info:
         raise Exception('Cannot use _get_info for this uri')
 
-    assert uri.startswith('ipfs://'), f'Invalid or unsupported URI: {uri}'
-    a = uri.split('?')[0].split('/')
-    assert len(a) >= 3, f'Invalid or unsupported URI: {uri}'
-    cid = a[2]
-
-    kachery_cloud_dir = get_kachery_cloud_dir()
-    e = cid[-6:]
-    parent_dir = f'{kachery_cloud_dir}/ipfs/{e[0]}{e[1]}/{e[2]}{e[3]}/{e[4]}{e[5]}'
-    filename = f'{parent_dir}/{cid}'
-    if os.path.exists(filename):
-        if dest is not None:
-            shutil.copyfile(filename, dest)
-            return dest
-        return filename
-
-    payload = {
-        'type': 'findIpfsFile',
-        'cid': cid
-    }
-    response= _kacherycloud_request(payload)
-    found = response['found']
-    if found:
-        url = response['url']
-    else:
-        return None
-        # url = f'https://{cid}.ipfs.dweb.link'
-        # url = f'https://cloudflare-ipfs.com/ipfs/{cid}'
-        # url = f'https://ipfs.filebase.io/ipfs/{cid}'
-
-    if verbose:
-        print(f'Loading file from kachery cloud: {uri}')    
-    if not os.path.exists(parent_dir):
-        _makedirs(parent_dir)
-    tmp_filename = f'{filename}.tmp.{_random_string(8)}'
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(tmp_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                f.write(chunk)
-    try:
-        os.rename(tmp_filename, filename)
-        # _chmod_file(filename)
-    except:
-        if not os.path.exists(filename): # maybe some other process beat us to it
-            raise Exception(f'Unexpected problem moving file {tmp_filename}')
-    if dest is not None:
-        shutil.copyfile(filename, dest)
-        return dest
-    return filename
+    assert f'Invalid or unsupported URI: {uri}'
 
 def load_file_info(uri: str) -> dict:
     return load_file(uri, _get_info=True)
@@ -167,11 +124,8 @@ def _load_sha1_file_from_cloud(sha1: str, *, verbose: bool, dest: Union[None, st
         'hash': sha1,
         'zone': kachery_zone
     }
-    if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
-        response= _kacherycloud_request(payload)
-    else:
-        from ._kachery_gateway_request import _kachery_gateway_request
-        response= _kachery_gateway_request(payload)
+    from ._kachery_gateway_request import _kachery_gateway_request
+    response= _kachery_gateway_request(payload)
         
     found = response['found']
     uri = f'sha1://{sha1}'

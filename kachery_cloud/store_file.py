@@ -8,10 +8,8 @@ import time
 
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 
-from ._kacherycloud_request import _kacherycloud_request
-from .get_project_id import get_project_id
 from .load_file import _random_string
-from ._fs_operations import _makedirs, _chmod_file
+from ._fs_operations import _makedirs
 from .store_file_local import _compute_file_hash, store_file_local
 
 def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bool=False, local: bool=False):
@@ -27,17 +25,13 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
         'size': size,
         'hashAlg': alg,
         'hash': hash0,
-        'projectId': get_project_id(), # not used
         'zone': kachery_zone
     }
     timer = time.time()
     while True:
-        if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
-            response: dict = _kacherycloud_request(payload)
-        else:
-            del payload['projectId']
-            from ._kachery_gateway_request import _kachery_gateway_request
-            response: dict = _kachery_gateway_request(payload)
+            
+        from ._kachery_gateway_request import _kachery_gateway_request
+        response: dict = _kachery_gateway_request(payload)
             
         already_exists = response.get('alreadyExists', False)
         already_pending = response.get('alreadyPending', False)
@@ -66,16 +60,11 @@ def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bo
         'objectKey': object_key,
         'hashAlg': alg,
         'hash': hash0,
-        'projectId': get_project_id(), # not used
         'zone': kachery_zone
     }
-    if os.environ.get('USE_KACHERY_GATEWAY', '') == '0':
-        response2 = _kacherycloud_request(payload2)
-    else:
-        del payload2['projectId']
-        payload2['size'] = size
-        from ._kachery_gateway_request import _kachery_gateway_request
-        response2: dict = _kachery_gateway_request(payload2)
+    payload2['size'] = size
+    from ._kachery_gateway_request import _kachery_gateway_request
+    response2: dict = _kachery_gateway_request(payload2)
 
     if cache_locally:
         kachery_cloud_dir = get_kachery_cloud_dir()

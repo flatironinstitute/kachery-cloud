@@ -17,7 +17,11 @@ class RequestFileResult:
     size: Union[None, int] = None
     bytes_uploaded: Union[None, int] = None
 
-def request_file(uri: str, *, resource: str, timeout_sec: float, ignore_local: bool=False) -> RequestFileResult:
+def request_file(uri: str, *, timeout_sec: float, ignore_local: bool=False, ignore_bucket: bool=False, resource_url: Union[str, None]=None) -> RequestFileResult:
+    if resource_url is None:
+        resource_url = os.getenv('KACHERY_RESOURCE_URL', None)
+        if resource_url is None:
+            raise Exception('In request_file: environment variable not set: KACHERY_RESOURCE_URL')
     if not ignore_local:
         a0 = load_file_local(uri)
         if a0 is not None:
@@ -26,24 +30,27 @@ def request_file(uri: str, *, resource: str, timeout_sec: float, ignore_local: b
                 size=os.path.getsize(a0),
                 local=True
             )
-    x0 = load_file_info(uri)
-    if (x0 is not None) and (x0['found']):
-        return RequestFileResult(
-            found=True,
-            size=x0['size'],
-            completed=True
-        )
-    proxy_url = _get_proxy_url_for_resource(resource)
+    if not ignore_bucket:
+        x0 = load_file_info(uri)
+        if (x0 is not None) and (x0['found']):
+            return RequestFileResult(
+                found=True,
+                size=x0['size'],
+                completed=True
+            )
+    resource_name = resource_url.split('/')[-1]
     req = {
         'type': 'requestFromClient',
-        'resourceName': resource,
+        'resourceName': resource_name,
+        'zone': os.getenv('KACHERY_ZONE', 'default'),
         'request': {
             'type': 'fileUpload',
-            'uri': _remove_query_string_from_uri(uri)
+            'uri': _remove_query_string_from_uri(uri),
+            'timeoutMsec': timeout_sec * 1000
         },
-        'timeoutMsec': timeout_sec * 1000
+        'timeoutMsec': (timeout_sec + 5) * 1000 # add a few seconds to account for the overhead (not ideal system)
     }
-    resp = requests.post(proxy_url + '/api', json=req)
+    resp = requests.post(resource_url, json=req)
     if resp.status_code != 200:
         raise Exception(f'Error in requestFromClient: ({resp.status_code}) {resp.reason}: {resp.text}')
     response = resp.json()
@@ -70,27 +77,7 @@ def request_file(uri: str, *, resource: str, timeout_sec: float, ignore_local: b
         bytes_uploaded = bytes_uploaded
     )
 
-_global = {
-    'proxy_urls': {}
-}
-
 def _remove_query_string_from_uri(uri: str):
     i = uri.find('?')
     if i < 0: return uri
     return uri[:i]
-
-def _get_proxy_url_for_resource(resource: str):
-    if resource in _global['proxy_urls']:
-        return _global['proxy_urls'][resource]
-    kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
-    resp = _kachery_gateway_request({
-        'type': 'getResourceInfo',
-        'resourceName': resource,
-        'zone': kachery_zone
-    })
-    found = resp['found']
-    if not found:
-        raise Exception(f'Resource not found in zone: {resource}')
-    proxy_url = resp['resource']['proxyUrl']
-    _global['proxy_urls'][resource] = proxy_url
-    return proxy_url

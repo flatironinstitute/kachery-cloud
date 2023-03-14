@@ -9,7 +9,6 @@ from ._client_keys import _sign_message_as_client
 from ._get_kachery_gateway_url import _get_kachery_gateway_url
 from ._kachery_gateway_request import _kachery_gateway_request
 from ._get_local_client_config import _get_local_client_config
-from ._kacherycloud_request import _kacherycloud_request
 
 
 _global_init = {
