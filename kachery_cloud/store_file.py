@@ -15,6 +15,8 @@ from .store_file_local import _compute_file_hash, store_file_local
 def store_file(filename: str, *, label: Union[str, None]=None, cache_locally: bool=False, local: bool=False):
     if local:
         return store_file_local(filename, label=label)
+    if os.environ.get('KACHERY_STORE_FILE_DIR') is not None:
+        return store_file_local(filename, label=label, store_file_dir=os.environ['KACHERY_STORE_FILE_DIR'], store_file_prefix=os.environ['KACHERY_STORE_FILE_PREFIX'])
     size = os.path.getsize(filename)
     alg = 'sha1'
     hash0 = _compute_file_hash(filename, algorithm=alg)

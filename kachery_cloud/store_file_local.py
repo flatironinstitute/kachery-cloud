@@ -12,23 +12,30 @@ from ._sha1_of_string import _sha1_of_string
 from ._fs_operations import _makedirs
 
 
-def store_file_local(filename: str, *, label: Union[str, None]=None, reference: Union[bool, None]=None):
+def store_file_local(filename: str, *, label: Union[str, None]=None, reference: Union[bool, None]=None, store_file_dir: Union[str, None]=None, store_file_prefix: Union[str, None]=None):
     from .load_file import load_file
     if filename.startswith('sha1://'):
         filename = load_file(filename)
     if not os.path.isabs(filename):
         filename = os.path.abspath(filename)
     sha1 = _compute_file_hash(filename, algorithm='sha1')
-    uri = f'sha1://{sha1}'
+    if store_file_prefix is None:
+        uri = f'sha1://{sha1}'
+    else:
+        uri = f'{store_file_prefix}/sha1/{sha1}'
     if label is not None:
         uri = f'{uri}?label={quote(label)}'
     if reference:
         delim = '&' if '?' in uri else '?'
         uri = f'{uri}{delim}location={filename}'
         return uri
-    kachery_cloud_dir = get_kachery_cloud_dir()
-    kachery_storage_parent_dir = f'{kachery_cloud_dir}/sha1/{sha1[0]}{sha1[1]}/{sha1[2]}{sha1[3]}/{sha1[4]}{sha1[5]}'
-    kachery_storage_file_name = f'{kachery_storage_parent_dir}/{sha1}'
+    if store_file_dir is None:
+        kachery_cloud_dir = get_kachery_cloud_dir()
+        kachery_storage_parent_dir = f'{kachery_cloud_dir}/sha1/{sha1[0]}{sha1[1]}/{sha1[2]}{sha1[3]}/{sha1[4]}{sha1[5]}'
+        kachery_storage_file_name = f'{kachery_storage_parent_dir}/{sha1}'
+    else:
+        kachery_storage_parent_dir = f'{store_file_dir}/sha1'
+        kachery_storage_file_name = f'{kachery_storage_parent_dir}/{sha1}'
     if not os.path.exists(kachery_storage_file_name):
         if not os.path.exists(kachery_storage_parent_dir):
             _makedirs(kachery_storage_parent_dir)
