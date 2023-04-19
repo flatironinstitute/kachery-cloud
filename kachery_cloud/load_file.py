@@ -1,5 +1,4 @@
 import json
-from multiprocessing.dummy import shutdown
 import os
 import shutil
 from typing import Union
@@ -44,6 +43,9 @@ def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Un
             while True:
                 # the timeout refers to how long we will wait for the file to upload before returning
                 rr = request_file(uri, resource_url=resource_url, timeout_sec=5, ignore_local=True, ignore_bucket=True)
+                if rr.errored:
+                    print(f'Error: {rr.error_message}')
+                    return None
                 if not rr.found:
                     return None
                 if rr.completed:
