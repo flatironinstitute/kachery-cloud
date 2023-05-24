@@ -8,12 +8,13 @@ all_file_mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat
 
 def _makedirs(path: str):
     config = _get_local_client_config()
+    multiuser = (os.getenv('KACHERY_CLOUD_MULTI_USER', '0') == '1')
     # multiuser = config['multiuser']
-    # if multiuser:
-    #     os.makedirs(path, mode=all_dir_mode)
-    # else:
-    #     os.makedirs(path)
-    os.makedirs(path)
+    if multiuser:
+        os.makedirs(path, mode=all_dir_mode)
+    else:
+        os.makedirs(path)
+    # os.makedirs(path)
 
 def _chmod_dir(path: str):
     raise Exception('Should not be used')
