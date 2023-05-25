@@ -74,10 +74,10 @@ z = kcl.load_pkl("sha1://20d178d5a1264fc3267e38ca238c23f3e2dcd5d2?label=example.
 
 ## Limitations and explanations
 
-All uploaded data is publicly available, although a person needs to know the URI in order to download it.
+All uploaded data in the default zone is publicly available, although a person needs to know the URI in order to download it.
 
 Uploads are subject to some limits which will change over time during development. Right now, individual uploads are limited to 5 GiB.
 
-How is this free? By default, we use very inexpensive storage on the distributed web. Those who plan to store large amounts of data, or who want greater control of their data, should configure their own storage buckets (Google, AWS, Wasabi, or Filebase).
+How is this free? By default, we use very inexpensive storage providers. Those who plan to store large amounts of data, or who want greater control of their data, should configure their own storage buckets (Google, AWS, Wasabi, or Filebase).
 
 If you plan to use our freely-available storage space, you should be aware that uploaded files are not guaranteed to be available forever.
