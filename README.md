@@ -21,6 +21,7 @@ Contents
 * [Hosting a Kachery zone](./doc/create_kachery_zone.md)
 * [Hosting a Kachery resource](https://github.com/scratchrealm/kachery-resource/blob/main/README.md)
 * [Hosting a Kachery gateway](./doc/host_kachery_gateway.md)
+* [Administering a Kachery zone](./doc/zone_admin.md)
 * [Frequenty asked questions](./doc/faq.md)
 * [Authors](#authors)
 * [License](#license)
@@ -93,6 +94,8 @@ It is recommend that you [set these variables](https://gist.github.com/magland/5
 ## Creating your own Kachery zone
 
 [Creating your own Kachery zone](./doc/create_kachery_zone.md)
+
+[Administering your Kachery zone](./doc/zone_admin.md)
 
 ## Hosting a Kachery resource
 
