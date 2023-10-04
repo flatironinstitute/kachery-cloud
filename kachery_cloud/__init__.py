@@ -15,3 +15,4 @@ from .TemporaryDirectory import TemporaryDirectory
 from ._sha1_of_dict import sha1_of_dict
 from .zenodo_upload.zenodo_upload import initiate_zenodo_upload
 from .request_file import request_file
+from .admin_delete_file import admin_delete_file

@@ -60,6 +60,11 @@ def store_file_local(filename: str, reference: bool, label: str):
     uri = kc.store_file_local(filename, label=label, reference=reference)
     print(uri)
 
+@click.command(help="Delete a file from cloud bucket - admin only - only do this during batch cleanup")
+@click.argument('uri')
+def admin_delete_file(uri: str):
+    kc.admin_delete_file(uri)
+
 cli.add_command(init)
 cli.add_command(store_file)
 cli.add_command(link_file)
@@ -67,3 +72,4 @@ cli.add_command(load_file)
 cli.add_command(load_file_info)
 cli.add_command(cat_file)
 cli.add_command(store_file_local)
+cli.add_command(admin_delete_file)

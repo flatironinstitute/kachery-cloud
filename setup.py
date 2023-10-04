@@ -2,25 +2,28 @@ from setuptools import setup, find_packages
 
 setup(
     packages=find_packages(),
-    scripts=[
-        'bin/kachery-cloud',
-        'bin/kachery-cloud-store',
-        'bin/kachery-cloud-link',
-        'bin/kachery-cloud-load',
-        'bin/kachery-cloud-load-info',
-        'bin/kachery-cloud-init',
-        'bin/kachery-cloud-cat',
-        'bin/kachery-cloud-store-local',
-        'bin/kachery-cloud-share-local-files-experimental',
-        'bin/kachery-cloud-request-file-experimental'
-    ],
     include_package_data = True,
     install_requires=[
         'requests',
         'click',
         'simplejson',
         'cryptography',
-        'pubnub==6.3.*', # There is a bug in 6.4.0
+        'pubnub>=7.2.0', # There is a bug in 6.4.0
         'dask[distributed]'
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'kachery-cloud = kachery_cloud.cli:cli',
+            'kachery-cloud-store = kachery_cloud.cli:store_file',
+            'kachery-cloud-link = kachery_cloud.cli:link_file',
+            'kachery-cloud-load = kachery_cloud.cli:load_file',
+            'kachery-cloud-load-info = kachery_cloud.cli:load_file_info',
+            'kachery-cloud-init = kachery_cloud.cli:init',
+            'kachery-cloud-cat = kachery_cloud.cli:cat_file',
+            'kachery-cloud-store-local = kachery_cloud.cli:store_file_local',
+            'kachery-cloud-share-local-files-experimental = kachery_cloud.cli:share_local_files_experimental',
+            'kachery-cloud-request-file-experimental = kachery_cloud.cli:request_file_experimental',
+            'kachery-cloud-admin-delete-file = kachery_cloud.cli:admin_delete_file'
+        ]
+    }
 )
