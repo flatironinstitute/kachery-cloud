@@ -9,12 +9,15 @@ import time
 from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from .store_file_local import _compute_file_hash
 from ._fs_operations import _makedirs
-from ._load_github_file import _load_github_file
+from ._load_github_file import _load_github_file, _load_http_file
 
 
 def load_file(uri: str, *, verbose: bool=False, local_only: bool=False, dest: Union[None, str]=None, _get_info: bool=False, do_request: Union[bool, None]=None) -> Union[str, dict, None]:
     if uri.startswith('gh://'):
         return _load_github_file(uri)
+    
+    if uri.startswith('http://') or uri.startswith('https://'):
+        return _load_http_file(uri)
 
     if local_only:
         return load_file_local(uri, dest=dest)
