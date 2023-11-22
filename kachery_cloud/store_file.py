@@ -10,7 +10,7 @@ from .get_kachery_cloud_dir import get_kachery_cloud_dir
 from .load_file import _random_string
 from ._fs_operations import _makedirs
 from .store_file_local import _compute_file_hash, store_file_local
-from ._custom_storage_backend import _custom_storage_backend
+from ._custom_storage_backend import get_custom_storage_backend
 
 def store_file(filename: str, *, label: Union[str, None] = None, cache_locally: bool = False, local: bool = False):
     if local:
@@ -18,6 +18,7 @@ def store_file(filename: str, *, label: Union[str, None] = None, cache_locally: 
     if os.environ.get('KACHERY_STORE_FILE_DIR') is not None:
         return store_file_local(filename, label=label, store_file_dir=os.environ['KACHERY_STORE_FILE_DIR'], store_file_prefix=os.getenv('KACHERY_STORE_FILE_PREFIX', None))
 
+    _custom_storage_backend = get_custom_storage_backend()
     use_custom_storage_backend = _custom_storage_backend is not None and hasattr(_custom_storage_backend, 'store_file')
     if not use_custom_storage_backend:
         size = os.path.getsize(filename)

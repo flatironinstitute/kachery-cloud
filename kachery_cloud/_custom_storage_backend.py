@@ -16,3 +16,7 @@ _custom_storage_backend: Union[Any, None] = None
 def set_custom_storage_backend(backend: Union[Any, None]):
     global _custom_storage_backend
     _custom_storage_backend = backend
+
+def get_custom_storage_backend() -> Union[Any, None]:
+    global _custom_storage_backend
+    return _custom_storage_backend
