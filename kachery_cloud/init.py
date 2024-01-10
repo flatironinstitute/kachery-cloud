@@ -22,8 +22,8 @@ def get_client_info():
 
     Returns
     -------
-    response: requests.Response
-        The response from the Kachery Gateway
+    response: dict
+        The response dict from the Kachery Gateway
     """
     if _global_init['client_info'] != 0:
         return _global_init['client_info']
