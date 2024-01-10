@@ -17,3 +17,4 @@ from .zenodo_upload.zenodo_upload import initiate_zenodo_upload
 from .request_file import request_file
 from .admin_delete_file import admin_delete_file
 from ._custom_storage_backend import set_custom_storage_backend
+from .init import get_client_info
