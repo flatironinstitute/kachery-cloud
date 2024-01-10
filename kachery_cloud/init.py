@@ -15,7 +15,16 @@ _global_init = {
     'client_info': 0 # 0 means we have not yet queried. None means not found.
 }
 
-def _get_client_info():
+def get_client_info():
+    """
+    Returns kachery cloud client info.
+    If the client is not registered, returns None.
+
+    Returns
+    -------
+    response: dict
+        The response dict from the Kachery Gateway
+    """
     if _global_init['client_info'] != 0:
         return _global_init['client_info']
     client_id = get_client_id()
@@ -35,7 +44,7 @@ def _get_client_info():
         return None
 
 def init():
-    client_info = _get_client_info()
+    client_info = get_client_info()
     if client_info is None:
         client_id = get_client_id()
         signature = _sign_message_as_client({
@@ -51,7 +60,7 @@ def init():
         print('')
         input()
         print('Checking...')
-        client_info = _get_client_info()
+        client_info = get_client_info()
         if client_info is None:
             raise Exception('Failed to initialize this kachery client')
         print(f'Client initialized successfully.')
