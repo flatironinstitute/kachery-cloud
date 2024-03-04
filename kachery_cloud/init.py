@@ -1,6 +1,7 @@
 import os
 import socket
 import urllib.parse
+import logging
 
 from kachery_cloud.get_kachery_cloud_dir import get_kachery_cloud_dir
 
@@ -26,6 +27,10 @@ def get_client_info():
         The response dict from the Kachery Gateway
     """
     if _global_init['client_info'] != 0:
+        if _global_init['client_info']["client"]["clientId"] != get_client_id():
+            logging.warning("Client ID in current `KACHERY_CLOUD_DIR`, does not match cached client info. \n"
+                            + "If experiencing issues, please restart your python session and register the client again "
+                            + f"with `KACHERY_CLOUD_DIR` set to {os.getenv('KACHERY_CLOUD_DIR')}")
         return _global_init['client_info']
     client_id = get_client_id()
     kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
