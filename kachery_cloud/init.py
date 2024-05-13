@@ -26,6 +26,16 @@ def get_client_info():
     response: dict
         The response dict from the Kachery Gateway
     """
+    # first check if we are using a custom storage backend
+    from ._custom_storage_backend import get_custom_storage_backend
+    sb = get_custom_storage_backend()
+    if sb is not None and hasattr(sb, 'store_file'):
+        return {
+            'type': 'getClientInfo',
+            'found': True,
+            'client': 'custom_storage_backend'
+        }
+
     if _global_init['client_info'] != 0:
         if _global_init['client_info']["client"]["clientId"] != get_client_id():
             logging.warning("Client ID in current `KACHERY_CLOUD_DIR`, does not match cached client info. \n"
