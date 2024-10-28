@@ -43,6 +43,8 @@ def get_client_info():
                             + f"with `KACHERY_CLOUD_DIR` set to {os.getenv('KACHERY_CLOUD_DIR')}")
         return _global_init['client_info']
     client_id = get_client_id()
+    if client_id is None:
+        return None
     kachery_zone = os.environ.get('KACHERY_ZONE', 'default')
     payload = {
         'type': 'getClientInfo',
@@ -61,7 +63,7 @@ def get_client_info():
 def init():
     client_info = get_client_info()
     if client_info is None:
-        client_id = get_client_id()
+        client_id = get_client_id(generate_if_missing=True)
         signature = _sign_message_as_client({
             'type': 'addClient'
         })

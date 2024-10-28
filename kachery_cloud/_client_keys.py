@@ -6,7 +6,7 @@ from .get_kachery_cloud_dir import get_kachery_cloud_dir
 # {dir: {client_private_key_hex: '...', client_public_key_hex: '...}}
 _global_client_keys_by_kachery_dir = {}
 
-def _get_client_keys_hex(): # public, private
+def _get_client_keys_hex(generate_if_missing: bool): # public, private
     KACHERY_CLOUD_CLIENT_ID = os.getenv('KACHERY_CLOUD_CLIENT_ID', None)
     KACHERY_CLOUD_PRIVATE_KEY = os.getenv('KACHERY_CLOUD_PRIVATE_KEY', None)
     if KACHERY_CLOUD_CLIENT_ID is not None:
@@ -22,6 +22,8 @@ def _get_client_keys_hex(): # public, private
     private_key_fname = f'{kachery_cloud_dir}/private.pem'
     public_key_fname = f'{kachery_cloud_dir}/public.pem'
     if not os.path.exists(private_key_fname):
+        if not generate_if_missing:
+            return None, None
         _generate_client_keys()
     with open(private_key_fname, 'r') as f:
         private_key = f.read()
@@ -53,7 +55,10 @@ def _generate_client_keys():
     os.chmod(private_key_fname, 0o600) # only owner can read and write
 
 def _sign_message_as_client(msg: dict):
-    public_key_hex, private_key_hex = _get_client_keys_hex()
+    public_key_hex, private_key_hex = _get_client_keys_hex(generate_if_missing=False)
+    if public_key_hex is None:
+        raise Exception('Client keys not found.')
+    assert private_key_hex is not None
     return _sign_message(msg, public_key_hex, private_key_hex)
 
 ed25519PubKeyPrefix = "302a300506032b6570032100"
